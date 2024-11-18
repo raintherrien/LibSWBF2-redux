@@ -18,8 +18,9 @@
 
 #endif //_WIN32
 
-namespace LibSWBF2
-{
+#ifdef __cplusplus
+namespace LibSWBF2 {
+#endif
 	// only reason for a ChunkSize definition here is so we
 	// can easily change the type to uin64_t if ever necessary
 	typedef uint32_t ChunkSize;
@@ -30,4 +31,7 @@ namespace LibSWBF2
 	typedef uint16_t SWBF2Handle;
 
 #define SWBF2HANDLE_INVALID 0xffff
-}
+
+#ifdef __cplusplus
+} // namespace LibSWBF2
+#endif

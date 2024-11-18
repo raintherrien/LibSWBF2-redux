@@ -1,227 +1,235 @@
 #pragma once
-#include <type_traits>
-#include "req.h"
-#include "LibString.h"
+#include "../req.h"
 
-namespace LibSWBF2
-{
-	enum class ELogType : uint8_t
+#ifdef __cplusplus
+#define LIBSWBF2_ENUMCLASS enum class
+#define LIBSWBF2_ENUML(E,L) L
+#else
+#define LIBSWBF2_ENUMCLASS enum
+#define LIBSWBF2_ENUML(E,L) E##_##L
+#endif
+
+#ifdef __cplusplus
+namespace LibSWBF2 {
+#endif
+
+	LIBSWBF2_ENUMCLASS ELogType : uint8_t
 	{
-		Info = 0,
-		Warning = 1,
-		Error = 2
+		LIBSWBF2_ENUML(ELogType,Info) = 0,
+		LIBSWBF2_ENUML(ELogType,Warning) = 1,
+		LIBSWBF2_ENUML(ELogType,Error) = 2
 	};
 
 	// Bitmap flags
-	enum class EModelPurpose : uint16_t
+	LIBSWBF2_ENUMCLASS EModelPurpose : uint16_t
 	{
 		// Unknown
-		Miscellaneous = 0,
+		LIBSWBF2_ENUML(EModelPurpose,Miscellaneous) = 0,
 
 		// Meshes
-		Mesh = 63,
-		Mesh_Regular = 1,
-		Mesh_Lowrez = 2,
-		Mesh_Collision = 4,
-		Mesh_VehicleCollision = 8,
-		Mesh_ShadowVolume = 16,
-		Mesh_TerrainCut = 32,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh) = 63,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_Regular) = 1,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_Lowrez) = 2,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_Collision) = 4,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_VehicleCollision) = 8,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_ShadowVolume) = 16,
+		LIBSWBF2_ENUML(EModelPurpose,Mesh_TerrainCut) = 32,
 
 		// Just Points
-		Point = 448,
-		Point_EmptyTransform = 64,
-		Point_DummyRoot = 128,
-		Point_HardPoint = 256,
+		LIBSWBF2_ENUML(EModelPurpose,Point) = 448,
+		LIBSWBF2_ENUML(EModelPurpose,Point_EmptyTransform) = 64,
+		LIBSWBF2_ENUML(EModelPurpose,Point_DummyRoot) = 128,
+		LIBSWBF2_ENUML(EModelPurpose,Point_HardPoint) = 256,
 
 		// Skeleton
-		Skeleton = 7680,
-		Skeleton_Root = 512,
-		Skeleton_BoneRoot = 1024,
-		Skeleton_BoneLimb = 2048,
-		Skeleton_BoneEnd = 4096,
+		LIBSWBF2_ENUML(EModelPurpose,Skeleton) = 7680,
+		LIBSWBF2_ENUML(EModelPurpose,Skeleton_Root) = 512,
+		LIBSWBF2_ENUML(EModelPurpose,Skeleton_BoneRoot) = 1024,
+		LIBSWBF2_ENUML(EModelPurpose,Skeleton_BoneLimb) = 2048,
+		LIBSWBF2_ENUML(EModelPurpose,Skeleton_BoneEnd) = 4096,
 	};
 
-	enum class EModelType : uint32_t
+	LIBSWBF2_ENUMCLASS EModelType : uint32_t
 	{
-		Null = 0,
-		Skin = 1,
-		Envelope = 3,
-		Static = 4,
-		Shadow = 6
+		LIBSWBF2_ENUML(EModelType,Null) = 0,
+		LIBSWBF2_ENUML(EModelType,Skin) = 1,
+		LIBSWBF2_ENUML(EModelType,Envelope) = 3,
+		LIBSWBF2_ENUML(EModelType,Static) = 4,
+		LIBSWBF2_ENUML(EModelType,Shadow) = 6
 	};
 
-	enum class ELODLevel : uint8_t
+	LIBSWBF2_ENUMCLASS ELODLevel : uint8_t
 	{
-		NONE = 0,
-		LOD1 = 1,
-		LOD2 = 2,
-		LOD3 = 3,
-		LOWD = 4
+		LIBSWBF2_ENUML(ELODLevel,NONE) = 0,
+		LIBSWBF2_ENUML(ELODLevel,LOD1) = 1,
+		LIBSWBF2_ENUML(ELODLevel,LOD2) = 2,
+		LIBSWBF2_ENUML(ELODLevel,LOD3) = 3,
+		LIBSWBF2_ENUML(ELODLevel,LOWD) = 4
 	};
 
-	enum class ETopology : int32_t
+	LIBSWBF2_ENUMCLASS ETopology : int32_t
 	{
-		PointList = 1,
-		LineList = 2,
-		LineStrip = 3,
-		TriangleList = 4,
-		TriangleStrip = 5,
-		TriangleFan = 6
+		LIBSWBF2_ENUML(ETopology,PointList) = 1,
+		LIBSWBF2_ENUML(ETopology,LineList) = 2,
+		LIBSWBF2_ENUML(ETopology,LineStrip) = 3,
+		LIBSWBF2_ENUML(ETopology,TriangleList) = 4,
+		LIBSWBF2_ENUML(ETopology,TriangleStrip) = 5,
+		LIBSWBF2_ENUML(ETopology,TriangleFan) = 6
 	};
 
 	// copied from: https://github.com/SleepKiller/swbf-unmunge
-	enum class EMaterialFlags : uint32_t
+	LIBSWBF2_ENUMCLASS EMaterialFlags : uint32_t
 	{
-		Normal = 1,
-		Hardedged = 2,
-		Transparent = 4,
-		Glossmap = 8,
-		Glow = 16,
-		BumpMap = 32,
-		Additive = 64,
-		Specular = 128,
-		EnvMap = 256,
-		VertexLighting = 512,
-		TiledNormalmap = 2048,
-		Doublesided = 65536,
+		LIBSWBF2_ENUML(EMaterialFlags,Normal) = 1,
+		LIBSWBF2_ENUML(EMaterialFlags,Hardedged) = 2,
+		LIBSWBF2_ENUML(EMaterialFlags,Transparent) = 4,
+		LIBSWBF2_ENUML(EMaterialFlags,Glossmap) = 8,
+		LIBSWBF2_ENUML(EMaterialFlags,Glow) = 16,
+		LIBSWBF2_ENUML(EMaterialFlags,BumpMap) = 32,
+		LIBSWBF2_ENUML(EMaterialFlags,Additive) = 64,
+		LIBSWBF2_ENUML(EMaterialFlags,Specular) = 128,
+		LIBSWBF2_ENUML(EMaterialFlags,EnvMap) = 256,
+		LIBSWBF2_ENUML(EMaterialFlags,VertexLighting) = 512,
+		LIBSWBF2_ENUML(EMaterialFlags,TiledNormalmap) = 2048,
+		LIBSWBF2_ENUML(EMaterialFlags,Doublesided) = 65536,
 
-		Scrolling = 16777216,
-		Energy = 33554432,
-		Animated = 67108864,
+		LIBSWBF2_ENUML(EMaterialFlags,Scrolling) = 16777216,
+		LIBSWBF2_ENUML(EMaterialFlags,Energy) = 33554432,
+		LIBSWBF2_ENUML(EMaterialFlags,Animated) = 67108864,
 
-		AttachedLight = 134217728,
+		LIBSWBF2_ENUML(EMaterialFlags,AttachedLight) = 134217728,
 	};
 
-	enum class EConfigType : uint32_t
+	LIBSWBF2_ENUMCLASS EConfigType : uint32_t
 	{
-		All = 0xffffffff,
-        Lighting = 0x7468676c,
-        Effect = 0x5f5f7866,
-        Boundary = 0x5f646e62,
-        Skydome = 0x5f796b73,
-        Path = 0x68746170,
-        Combo = 0x626d6f63,
-        Music = 0x5f73756d,
-        FoleyFX = 0x5f786666,
-        Sound = 0x5f646e73,
-        TriggerSoundRegion = 0x5f727374,
-        HUD = 0x5f647568,
+		LIBSWBF2_ENUML(EConfigType,All) = 0xffffffff,
+		LIBSWBF2_ENUML(EConfigType,Lighting) = 0x7468676c,
+		LIBSWBF2_ENUML(EConfigType,Effect) = 0x5f5f7866,
+		LIBSWBF2_ENUML(EConfigType,Boundary) = 0x5f646e62,
+		LIBSWBF2_ENUML(EConfigType,Skydome) = 0x5f796b73,
+		LIBSWBF2_ENUML(EConfigType,Path) = 0x68746170,
+		LIBSWBF2_ENUML(EConfigType,Combo) = 0x626d6f63,
+		LIBSWBF2_ENUML(EConfigType,Music) = 0x5f73756d,
+		LIBSWBF2_ENUML(EConfigType,FoleyFX) = 0x5f786666,
+		LIBSWBF2_ENUML(EConfigType,Sound) = 0x5f646e73,
+		LIBSWBF2_ENUML(EConfigType,TriggerSoundRegion) = 0x5f727374,
+		LIBSWBF2_ENUML(EConfigType,HUD) = 0x5f647568,
 	};
 
-	enum class ECollisionMaskFlags : uint32_t
+	LIBSWBF2_ENUMCLASS ECollisionMaskFlags : uint32_t
 	{
-		All = 0xffffffff,
-		Ordnance = 1,
-        Vehicle = 2,
-        Building = 4,
-        Terrain = 8,
-        Soldier = 16,
-        Flag = 32,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,All) = 0xffffffff,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Ordnance) = 1,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Vehicle) = 2,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Building) = 4,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Terrain) = 8,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Soldier) = 16,
+		LIBSWBF2_ENUML(ECollisionMaskFlags,Flag) = 32,
 	};
 
-	enum class EWorldAnimKeyTransitionType : uint8_t
+	LIBSWBF2_ENUMCLASS EWorldAnimKeyTransitionType : uint8_t
 	{
-		Pop = 0,
-		Linear = 1,
-		Spline = 2,
+		LIBSWBF2_ENUML(EWorldAnimKeyTransitionType,Pop) = 0,
+		LIBSWBF2_ENUML(EWorldAnimKeyTransitionType,Linear) = 1,
+		LIBSWBF2_ENUML(EWorldAnimKeyTransitionType,Spline) = 2,
 	};
 
-	enum class ECollisionPrimitiveType : uint32_t
+	LIBSWBF2_ENUMCLASS ECollisionPrimitiveType : uint32_t
 	{
-		Sphere = 1,//can also be 0...
-		Cylinder = 2,
-		Empty = 3, //not confirmed in documentation read so far 
-		Cube = 4,
+		LIBSWBF2_ENUML(ECollisionPrimitiveType,Sphere) = 1,//can also be 0...
+		LIBSWBF2_ENUML(ECollisionPrimitiveType,Cylinder) = 2,
+		LIBSWBF2_ENUML(ECollisionPrimitiveType,Empty) = 3, //not confirmed in documentation read so far
+		LIBSWBF2_ENUML(ECollisionPrimitiveType,Cube) = 4,
 	};
 
-	enum class EVBUFFlags : uint32_t
+	LIBSWBF2_ENUMCLASS EVBUFFlags : uint32_t
 	{
-		None = 0b0u,
-		Position = 0b10u,
-		Unknown1 = 0b100u,		// definetly not bone indices
+		LIBSWBF2_ENUML(EVBUFFlags,None) = 0b0u,
+		LIBSWBF2_ENUML(EVBUFFlags,Position) = 0b10u,
+		LIBSWBF2_ENUML(EVBUFFlags,Unknown1) = 0b100u,		// definetly not bone indices
 
 		// this is questionable... not found in all of sides/rep.lvl. Another UV maybe (2 float)?
-		BlendWeight = 0b1000u,
+		LIBSWBF2_ENUML(EVBUFFlags,BlendWeight) = 0b1000u,
 
-		Normal = 0b100000u,
-		Tangents = 0b1000000u,
-		Color = 0b10000000u,
-		StaticLighting = 0b100000000u,
-		TexCoord = 0b1000000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,Normal) = 0b100000u,
+		LIBSWBF2_ENUML(EVBUFFlags,Tangents) = 0b1000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,Color) = 0b10000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,StaticLighting) = 0b100000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,TexCoord) = 0b1000000000u,
 
-		PositionCompressed = 0b1000000000000u,
-		BlendWeightCompressed = 0b10000000000000u,
-		NormalCompressed = 0b100000000000000u,
-		TexCoordCompressed = 0b1000000000000000u
+		LIBSWBF2_ENUML(EVBUFFlags,PositionCompressed) = 0b1000000000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,BlendWeightCompressed) = 0b10000000000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,NormalCompressed) = 0b100000000000000u,
+		LIBSWBF2_ENUML(EVBUFFlags,TexCoordCompressed) = 0b1000000000000000u
 	};
 
-	enum class ETextureFormat : uint8_t
+	LIBSWBF2_ENUMCLASS ETextureFormat : uint8_t
 	{
-		R8_G8_B8_A8,
-		B8_G8_R8_A8
+		LIBSWBF2_ENUML(ETextureFormat,R8_G8_B8_A8),
+		LIBSWBF2_ENUML(ETextureFormat,B8_G8_R8_A8)
 	};
 
-	enum class ETerrainBufferType : uint32_t
+	LIBSWBF2_ENUMCLASS ETerrainBufferType : uint32_t
 	{
-		Geometry = 290,
-		Texture = 20770,
-		TextureExtra = 130
+		LIBSWBF2_ENUML(ETerrainBufferType,Geometry) = 290,
+		LIBSWBF2_ENUML(ETerrainBufferType,Texture) = 20770,
+		LIBSWBF2_ENUML(ETerrainBufferType,TextureExtra) = 130
 	};
 
-	enum class ELightType : uint32_t
+	LIBSWBF2_ENUMCLASS ELightType : uint32_t
 	{
-	    Omni = 2,
-		Dir = 1,
-		Spot = 3,
-		Unknown = 0,
+		LIBSWBF2_ENUML(ELightType,Omni) = 2,
+		LIBSWBF2_ENUML(ELightType,Dir) = 1,
+		LIBSWBF2_ENUML(ELightType,Spot) = 3,
+		LIBSWBF2_ENUML(ELightType,Unknown) = 0,
 	};
 
-	enum class EEntityClassType
+	LIBSWBF2_ENUMCLASS EEntityClassType
 	{
-		GameObjectClass,
-		OrdnanceClass,
-		WeaponClass,
-		ExplosionClass
+		LIBSWBF2_ENUML(EEntityClassType,GameObjectClass),
+		LIBSWBF2_ENUML(EEntityClassType,OrdnanceClass),
+		LIBSWBF2_ENUML(EEntityClassType,WeaponClass),
+		LIBSWBF2_ENUML(EEntityClassType,ExplosionClass)
 	};
 
-	enum class ELoadStatus
+	LIBSWBF2_ENUMCLASS ELoadStatus
 	{
-		Uninitialized,
-		Loading,
-		Loaded,
-		Failed
+		LIBSWBF2_ENUML(ELoadStatus,Uninitialized),
+		LIBSWBF2_ENUML(ELoadStatus,Loading),
+		LIBSWBF2_ENUML(ELoadStatus,Loaded),
+		LIBSWBF2_ENUML(ELoadStatus,Failed)
 	};
 
-	enum class ESoundFormat : uint32_t
+	LIBSWBF2_ENUMCLASS ESoundFormat : uint32_t
 	{
-		PCM8 = 1,
-		PCM16 = 2,
-		VAG = 3,
-		XADPCM = 4,
-		IMAADPCM = 5,
-		Unity = 6
+		LIBSWBF2_ENUML(ESoundFormat,PCM8) = 1,
+		LIBSWBF2_ENUML(ESoundFormat,PCM16) = 2,
+		LIBSWBF2_ENUML(ESoundFormat,VAG) = 3,
+		LIBSWBF2_ENUML(ESoundFormat,XADPCM) = 4,
+		LIBSWBF2_ENUML(ESoundFormat,IMAADPCM) = 5,
+		LIBSWBF2_ENUML(ESoundFormat,Unity) = 6
 	};
 
 
-	enum class EArcFilterFlags : uint32_t
+	LIBSWBF2_ENUMCLASS EArcFilterFlags : uint32_t
 	{
-		Soldier = 1,
-		Small = 2,
-		Medium = 4,
-		Hover = 8,
-		Large = 16,
-		Huge = 32
+		LIBSWBF2_ENUML(EArcFilterFlags,Soldier) = 1,
+		LIBSWBF2_ENUML(EArcFilterFlags,Small) = 2,
+		LIBSWBF2_ENUML(EArcFilterFlags,Medium) = 4,
+		LIBSWBF2_ENUML(EArcFilterFlags,Hover) = 8,
+		LIBSWBF2_ENUML(EArcFilterFlags,Large) = 16,
+		LIBSWBF2_ENUML(EArcFilterFlags,Huge) = 32
 	};
 
 
-	enum class EArcAttributeFlags : uint32_t
+	LIBSWBF2_ENUMCLASS EArcAttributeFlags : uint32_t
 	{
-		OneWay = 1,
-		Jump = 2,
-		JetJump = 4
+		LIBSWBF2_ENUML(EArcAttributeFlags,OneWay) = 1,
+		LIBSWBF2_ENUML(EArcAttributeFlags,Jump) = 2,
+		LIBSWBF2_ENUML(EArcAttributeFlags,JetJump) = 4
 	};
 
-
+#ifdef __cplusplus
 	Types::String LIBSWBF2_API LogTypeToString(ELogType type);
 	Types::String LIBSWBF2_API TopologyToString(ETopology topology);
 	Types::String LIBSWBF2_API MaterialFlagsToString(EMaterialFlags flags);
@@ -258,7 +266,7 @@ namespace LibSWBF2
 	bool LIBSWBF2_API operator ==(EConfigType lhs, std::underlying_type<EConfigType>::type rhs);
 
 	bool LIBSWBF2_API operator ==(EWorldAnimKeyTransitionType lhs, std::underlying_type<EWorldAnimKeyTransitionType>::type rhs);
-	
+
 	bool LIBSWBF2_API operator ==(ESoundFormat lhs, std::underlying_type<ESoundFormat>::type rhs);
 
 	EArcFilterFlags LIBSWBF2_API operator &(EArcFilterFlags lhs, EArcFilterFlags rhs);
@@ -268,4 +276,8 @@ namespace LibSWBF2
 	EArcAttributeFlags LIBSWBF2_API operator &(EArcAttributeFlags lhs, EArcAttributeFlags rhs);
 	bool LIBSWBF2_API operator ==(EArcAttributeFlags lhs, std::underlying_type<EArcAttributeFlags>::type rhs);
 	bool LIBSWBF2_API operator !=(EArcAttributeFlags lhs, std::underlying_type<EArcAttributeFlags>::type rhs);
-}
+#endif
+
+#ifdef __cplusplus
+} // namespace LibSWBF2
+#endif
