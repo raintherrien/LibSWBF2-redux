@@ -47,19 +47,23 @@ namespace LibSWBF2::Logging
 		return true;
 	}
 	
-	void Logger::Log(const std::string &message, const ELogType level, const unsigned long line, const char* file)
+	void Logger::Log(const std::string &message, const ELogType level, const unsigned long line, const char* file) noexcept
 	{
-		if (message.length() > 0 && level >= m_LogfileLevel)
-		{
-			LOCK(m_Lock);
-			LoggerEntry entry(message.c_str(), level, line, file);
-			m_Writer->WriteLine(entry.ToString());
-
-			m_Logs.push(std::move(entry));
-			while (m_Logs.size() > MAX_ENTRIES)
+		try {
+			LOCK(m_Instance->m_Lock);
+			if (message.length() > 0 && level >= m_Instance->m_LogfileLevel)
 			{
-				m_Logs.pop();
+				LoggerEntry entry(message.c_str(), level, line, file);
+				m_Instance->m_Writer->WriteLine(entry.ToString());
+
+				m_Instance->m_Logs.push(std::move(entry));
+				while (m_Instance->m_Logs.size() > MAX_ENTRIES)
+				{
+					m_Instance->m_Logs.pop();
+				}
 			}
+		} catch (...) {
+			// We cannot throw!
 		}
 	}
 }

@@ -22,16 +22,16 @@ namespace LibSWBF2::Logging
 		Logger(); // do not call anywhere else
 		~Logger();
 
-		static std::unique_ptr<Logger>& GetInstance();
-
 		LIBSWBF2_API static void SetLogfileLevel(const ELogType LogfileLevel);
 		LIBSWBF2_API static bool GetNextLog(LoggerEntry& nextLogEntry);
 
-		void Log(const std::string &message, const ELogType level, const unsigned long line, const char* file);
+		static void Log(const std::string &message, const ELogType level, const unsigned long line, const char* file) noexcept;
 
 	private:
-		const String LOG_FILE = "LibSWBF2.log";
-		const int MAX_ENTRIES = 10000;
+		static std::unique_ptr<Logger>& GetInstance();
+
+		static constexpr char *LOG_FILE = "LibSWBF2.log";
+		static const int MAX_ENTRIES = 10000;
 
 		static std::unique_ptr<Logger> m_Instance;
 		FileWriter* m_Writer;
