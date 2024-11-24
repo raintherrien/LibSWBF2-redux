@@ -15,6 +15,8 @@
 #include "MemoryMappedReader.h"
 #include "StreamReader.h"
 
+#include <stdio.h>
+
 namespace LibSWBF2
 {
 #define CheckPtr(PTR, ...) if (PTR == nullptr) { LOG_ERROR("[API] Given Pointer was NULL!"); return __VA_ARGS__; }
@@ -72,6 +74,15 @@ namespace LibSWBF2
 		values = nullptr;
 		count = 0;
 		return false;
+	}
+
+	// Helpers //
+
+	uint32_t FNVHashString(const char *string) noexcept
+	{
+		return catchall([&] {
+			return FNV::Hash(string);
+		});
 	}
 
 	// AnimationBank //
@@ -146,7 +157,7 @@ namespace LibSWBF2
 	{
 		return catchall([&] {
 			static String nameCache;
-			CheckPtr(skelPtr, (const char *)nullptr);
+			CheckPtr(skelPtr, static_cast<const char *>(nullptr));
 			nameCache = skelPtr->GetName();
 
 			return nameCache.Buffer();
@@ -220,12 +231,44 @@ namespace LibSWBF2
 		});
 	}
 
+	const char *Bone_GetName(const Bone *bone) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(bone, static_cast<const char *>(nullptr));
+			return bone->m_BoneName.Buffer();
+		});
+	}
+
+	const char *Bone_GetParentName(const Bone *bone) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(bone, static_cast<const char *>(nullptr));
+			return bone->m_Parent.Buffer();
+		});
+	}
+
+	Vector3 Bone_GetPosition(const Bone *bone) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(bone, Vector3{});
+			return bone->m_Position;
+		});
+	}
+
+	Vector4 Bone_GetRotation(const Bone *bone) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(bone, Vector4{});
+			return bone->m_Rotation;
+		});
+	}
+
 	// CollisionMesh //
 
 	uint8_t CollisionMesh_FetchAllFields(const CollisionMesh *cmPtr, uint32_t *out_iCount, uint16_t **out_iBuf, uint32_t *out_vCount, Vector3 **out_vBuf, uint32_t *out_maskFlags, const char **out_namePtr, const char **out_nodeNamePtr) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(cmPtr, (uint8_t)0);
+			CheckPtr(cmPtr, static_cast<uint8_t>(0));
 
 			static String name;
 			static String nodeName;
@@ -244,6 +287,27 @@ namespace LibSWBF2
 		});
 	}
 
+	void CollisionMesh_GetIndexBuffer(const CollisionMesh *mesh, uint16_t **out_indices, uint32_t *out_numInds) noexcept
+	{
+		catchall([&] {
+			if (mesh == nullptr) {
+				*out_numInds = 0;
+			} else {
+				mesh->GetIndexBuffer(ETopology::TriangleList, *out_numInds, *out_indices);
+			}
+		});
+	}
+
+	void CollisionMesh_GetVertexBuffer(const CollisionMesh *mesh, Vector3 **out_verts, uint32_t *out_numVerts) noexcept
+	{
+		catchall([&] {
+			if (mesh == nullptr) {
+				*out_numVerts = 0;
+			} else {
+				mesh->GetVertexBuffer(*out_numVerts, *out_verts);
+			}
+		});
+	}
 
 	// CollisionPrimitive //
 
@@ -287,6 +351,75 @@ namespace LibSWBF2
 		});
 	}
 
+	const char *CollisionPrimitive_GetParentName(const CollisionPrimitive *cp) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(cp, static_cast<const char *>(nullptr));
+			return cp->GetParentName().Buffer();
+		});
+	}
+
+	Vector3 CollisionPrimitive_GetPosition(const CollisionPrimitive *cp) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(cp, Vector3{});
+			return cp->GetPosition();
+		});
+	}
+
+	Vector4 CollisionPrimitive_GetRotation(const CollisionPrimitive *cp) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(cp, Vector4{});
+			return cp->GetRotation();
+		});
+	}
+
+	ECollisionPrimitiveType CollisionPrimitive_GetType(const CollisionPrimitive *cp) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(cp, static_cast<ECollisionPrimitiveType>(0));
+			return cp->GetPrimitiveType();
+		});
+	}
+
+	void CollisionPrimitive_GetCubeDims(const CollisionPrimitive *cp, float *sx, float *sy, float *sz) noexcept
+	{
+		catchall([&] {
+			if (cp == nullptr) {
+				*sx = 0.0f;
+				*sy = 0.0f;
+				*sz = 0.0f;
+			} else {
+				cp->GetCubeDims(*sx, *sy, *sz);
+			}
+		});
+	}
+
+	void CollisionPrimitive_GetCylinderDims(const CollisionPrimitive *cp, float *sr, float *sh) noexcept
+	{
+		catchall([&] {
+			if (cp == nullptr) {
+				*sr = 0.0f;
+				*sh = 0.0f;
+			} else {
+				cp->GetCylinderDims(*sr, *sh);
+			}
+		});
+	}
+
+	void CollisionPrimitive_GetSphereRadius(const CollisionPrimitive *cp, float *sr) noexcept
+	{
+		catchall([&] {
+			if (cp == nullptr) {
+				*sr = 0.0f;
+			} else {
+				cp->GetSphereRadius(*sr);
+			}
+		});
+	}
+
+
 	// Config //
 
 	uint8_t Config_FetchSimpleFields(const Config *cfg, uint32_t *out_name) noexcept
@@ -298,14 +431,21 @@ namespace LibSWBF2
 		});
 	}
 
-	const Field **Config_GetFields(Config *ptr, uint32_t hash, uint32_t *out_count) noexcept
+	const Field *Config_GetField(const Config *cfg, uint32_t hash) noexcept
 	{
 		return catchall([&] {
-			static List<const Field *> cache;
-			cache = ptr->GetFields(hash);
+			CheckPtr(cfg, static_cast<const Field *>(nullptr));
+			return &cfg->GetField(hash);
+		});
+	}
 
-			*out_count = (uint32_t)cache.Size();
-			return cache.GetArrayPtr();
+	const Field **Config_GetFields(const Config *cfg, uint32_t hash, size_t *out_fieldCount) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(cfg, (const Field **)nullptr);
+			const List<const Field *> fields = cfg->GetFields(hash);
+			*out_fieldCount = fields.Size();
+			return fields.GetArrayPtr();
 		});
 	}
 
@@ -335,66 +475,18 @@ namespace LibSWBF2
 
 	// Container //
 
-	const Container *Container_Initialize() noexcept
+	Container *Container_Initialize() noexcept
 	{
 		return catchall([&] {
 			return Container::Create();
 		});
 	}
 
-	uint16_t Container_AddLevel(Container *container, const char *path) noexcept
+	const Level *Container_AddLevel(Container *container, const char *path) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(container, UINT32_MAX)
-			return (uint32_t) container->AddLevel(path);
-		});
-	}
-
-	uint16_t Container_AddLevelFiltered(Container *container, const char *path, const char **subLVLs, uint32_t subLVLCount) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(container, UINT32_MAX)
-			CheckPtr(subLVLs, UINT32_MAX)
-
-			List<String> filter;
-			for (uint32_t i = 0; i < subLVLCount; ++i)
-			{
-				filter.Add(subLVLs[i]);
-			}
-
-			return (uint32_t)container->AddLevel(path, &filter);
-		});
-	}
-
-	void Container_FreeAll(Container *container, uint8_t force) noexcept
-	{
-		catchall([&] {
-			CheckPtr(container)
-			container->FreeAll((bool)force);
-		});
-	}
-
-	float Container_GetProgress(Container *container, uint32_t handleNum) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(container, -1.0f)
-			return container->GetLevelProgress((uint16_t) handleNum);
-		});
-	}
-
-	float Container_GetOverallProgress(Container *container) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(container, -1.0f)
-			return container->GetOverallProgress();
-		});
-	}
-
-	bool Container_IsDone(Container *container) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(container, false);
-			return container->IsDone();
+			CheckPtr(container, static_cast<const Level *>(nullptr))
+			return const_cast<const Level *>(container->AddLevel(path));
 		});
 	}
 
@@ -403,33 +495,6 @@ namespace LibSWBF2
 		return catchall([&] {
 			CheckPtr(container,(Level*)nullptr);
 			return container->GetLevel((uint16_t) handleNum);
-		});
-	}
-
-	void Container_GetLoadedLevels(Container *container, uint16_t **out_handles, uint16_t handleCount) noexcept
-	{
-		catchall([&] {
-			CheckPtr(container);
-			static List<uint16_t> HANDLES;
-			HANDLES = container->GetLoadedLevels();
-			*out_handles = HANDLES.GetArrayPtr();
-			handleCount = (uint16_t)HANDLES.Size();
-		});
-	}
-
-	uint8_t Container_GetStatus(Container *container, uint32_t handle) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(container, (uint8_t)ELoadStatus::Uninitialized);
-			return (uint8_t)container->GetStatus(handle);
-		});
-	}
-
-	void Container_LoadLevels(Container *container) noexcept
-	{
-		catchall([&] {
-			CheckPtr(container);
-			container->StartLoading();
 		});
 	}
 
@@ -465,11 +530,35 @@ namespace LibSWBF2
 		});
 	}
 
-	const Config *Container_GetConfig(Container *container, uint32_t type, uint32_t nameHash) noexcept
+	const Config *Container_FindConfig(Container *container, EConfigType type, uint32_t nameHash) noexcept
 	{
 		return catchall([&] {
 			CheckPtr(container, (const Config *)nullptr);
-			return container->FindConfig((EConfigType) type, nameHash);
+			return container->FindConfig(type, nameHash);
+		});
+	}
+
+	const Texture *Container_FindTexture(Container *container, uint32_t nameHash) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(container, (const Texture *)nullptr);
+			return container->FindTexture(nameHash);
+		});
+	}
+
+	const Model *Container_FindModel(Container *container, uint32_t nameHash) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(container, (const Model *)nullptr);
+			return container->FindModel(nameHash);
+		});
+	}
+
+	const EntityClass *Container_FindEntityClass(Container *container, uint32_t nameHash) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(container, (const EntityClass *)nullptr);
+			return container->FindEntityClass(nameHash);
 		});
 	}
 
@@ -526,11 +615,8 @@ namespace LibSWBF2
 	const char *EntityClass_GetName(const EntityClass *ec) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(ec, "")
-			static String typeName;
-
-			typeName = ec->GetTypeName();
-			return typeName.Buffer();
+			CheckPtr(ec, static_cast<const char *>(nullptr))
+			return ec->GetTypeName().Buffer();
 		});
 	}
 
@@ -545,11 +631,8 @@ namespace LibSWBF2
 	const char *EntityClass_GetBaseName(const EntityClass *ec) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(ec, "")
-			static String baseName;
-
-			baseName = ec->GetBaseName();
-			return baseName.Buffer();
+			CheckPtr(ec, static_cast<const char *>(nullptr))
+			return ec->GetBaseName().Buffer();
 		});
 	}
 
@@ -584,35 +667,6 @@ namespace LibSWBF2
 			*out_count = (int32_t)values.Size();
 			GetStringListPtrs(values, ptrsBuffer);
 			*out_valuesBuffer = ptrsBuffer.GetArrayPtr();
-		});
-	}
-
-	// Enum //
-
-	const char *ENUM_TopologyToString(ETopology topology) noexcept
-	{
-		return catchall([&] {
-			static Types::String lastToString;
-			lastToString = TopologyToString(topology);
-			return lastToString.Buffer();
-		});
-	}
-
-	const char *ENUM_MaterialFlagsToString(EMaterialFlags flags) noexcept
-	{
-		return catchall([&] {
-			static Types::String lastToString;
-			lastToString = MaterialFlagsToString(flags);
-			return lastToString.Buffer();
-		});
-	}
-
-	const char *ENUM_VBUFFlagsToString(EVBUFFlags flags) noexcept
-	{
-		return catchall([&] {
-			static String lastToString;
-			lastToString = VBUFFlagsToString(flags);
-			return lastToString.Buffer();
 		});
 	}
 
@@ -685,18 +739,24 @@ namespace LibSWBF2
 	const char *Field_GetString(const Field *cfg, uint8_t index) noexcept
 	{
 		return catchall([&] {
-			static String cache;
-			cache = cfg->GetString(index);
-			return cache.Buffer();
+			CheckPtr(cfg, static_cast<const char *>(nullptr));
+			return cfg->GetString(index).Buffer();
 		});
 	}
 
 	const char *Field_GetName(const Field *cfg) noexcept
 	{
 		return catchall([&] {
-			static String cache;
-			cache = cfg->GetName();
-			return cache.Buffer();
+			CheckPtr(cfg, static_cast<const char *>(nullptr));
+			return cfg->GetName().Buffer();
+		});
+	}
+
+	const Scope *Field_GetScope(const Field *field) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(field, static_cast<const Scope *>(nullptr));
+			return &field->m_Scope;
 		});
 	}
 
@@ -892,6 +952,38 @@ namespace LibSWBF2
 		});
 	}
 
+	const char *Instance_GetName(const Instance *instance) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(instance, static_cast<const char *>(nullptr));
+			return instance->GetName().Buffer();
+		});
+	}
+
+	const char *Instance_GetEntityClassName(const Instance *instance) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(instance, static_cast<const char *>(nullptr));
+			return instance->GetEntityClassName().Buffer();
+		});
+	}
+
+	Vector3 Instance_GetPosition(const Instance *instance) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(instance, Vector3{});
+			return instance->GetPosition();
+		});
+	}
+
+	Vector4 Instance_GetRotation(const Instance *instance) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(instance, Vector4{});
+			return instance->GetRotation();
+		});
+	}
+
 	// Level //
 
 	Level *Level_FromFile(const char *path) noexcept
@@ -931,7 +1023,7 @@ namespace LibSWBF2
 	uint8_t Level_IsWorldLevel(const Level *level) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(level, (uint8_t)0);
+			CheckPtr(level, static_cast<uint8_t>(0));
 			return (uint8_t)level->IsWorldLevel();
 		});
 	}
@@ -1089,20 +1181,16 @@ namespace LibSWBF2
 	const char *Level_GetName(const Level *level) noexcept
 	{
 		return catchall([&] {
-			static String cache;
-			CheckPtr(level, (const char *)nullptr);
-			cache = level->GetLevelName();
-			return cache.Buffer();
+			CheckPtr(level, static_cast<const char *>(nullptr));
+			return level->GetLevelName().Buffer();
 		});
 	}
 
 	const char *Level_GetPath(const Level *level) noexcept
 	{
 		return catchall([&] {
-			static String cache;
-			CheckPtr(level, (const char *)nullptr);
-			cache = level->GetLevelPath();
-			return cache.Buffer();
+			CheckPtr(level, static_cast<const char *>(nullptr));
+			return level->GetLevelPath().Buffer();
 		});
 	}
 
@@ -1131,12 +1219,28 @@ namespace LibSWBF2
 		});
 	}
 
+	size_t Level_GetWorldCount(const Level *level) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(level, static_cast<size_t>(0));
+			return level->GetWorlds().Size();
+		});
+	}
+
+	const World *Level_GetWorld(const Level *level, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(level, static_cast<const World *>(nullptr));
+			return &level->GetWorlds()[index];
+		});
+	}
+
 	// Localization //
 
 	const char *Localization_GetName(const Localization *local) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(local, (const char *)nullptr);
+			CheckPtr(local, static_cast<const char *>(nullptr));
 			return local->GetName().Buffer();
 		});
 	}
@@ -1144,25 +1248,12 @@ namespace LibSWBF2
 	uint8_t Localization_GetLocalizedWideString(const Localization *local, const char *path, uint16_t **out_chars, uint32_t *out_count) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(local, (uint8_t)0);
+			CheckPtr(local, static_cast<uint8_t>(0));
 			return (uint8_t)local->GetLocalizedWideString(path, *out_chars, *out_count);
 		});
 	}
 
 	// Logging //
-
-	uint8_t LOG_GetNextLog(const char **out_msg, ELogType *out_level, uint32_t *out_line, const char **out_file) noexcept
-	{
-		return catchall([&] {
-			static Logging::LoggerEntry current;
-			bool hasLogEntry = Logging::Logger::GetNextLog(current);
-			*out_msg = current.m_Message.Buffer();
-			*out_level = current.m_Level;
-			*out_line = current.m_Line;
-			*out_file = current.m_File.Buffer();
-			return hasLogEntry;
-		});
-	}
 
 	void LOG_SetLogfileLevel(ELogType LogfileLevel) noexcept
 	{
@@ -1181,7 +1272,7 @@ namespace LibSWBF2
 			static String namesCache[4];
 			static char *attachedLightNameCache = nullptr;
 
-			CheckPtr(matPtr, (uint8_t)0);
+			CheckPtr(matPtr, static_cast<uint8_t>(0));
 
 			*out_numTexes = 0;
 			while (*out_numTexes < 4 && matPtr->GetTextureName(*out_numTexes, namesCache[*out_numTexes]))
@@ -1213,6 +1304,22 @@ namespace LibSWBF2
 		});
 	}
 
+	const Texture *Material_GetTexture(const Material *mat, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(mat, (const Texture *)nullptr);
+			return mat->GetTexture(index);
+		});
+	}
+
+	EMaterialFlags Material_GetFlags(const Material *mat) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(mat, (EMaterialFlags)0);
+			return mat->GetFlags();
+		});
+	}
+
 	// Memory //
 
 	void Memory_Blit(void *dest, void *src, int numBytes) noexcept
@@ -1227,8 +1334,6 @@ namespace LibSWBF2
 	uint8_t Model_FetchSimpleFields(const Model *model, const char **out_name, uint8_t *out_skinned, uint8_t *out_skelBroken, const Segment **out_segArr, int32_t *out_segCount, int32_t *out_segInc, const Bone **out_boneArr, int32_t *out_boneCount, int32_t *out_boneInc, const CollisionMesh **out_collMeshPtr) noexcept
 	{
 		return catchall([&] {
-			static List<Bone> boneCache;
-
 			CheckPtr(model, false);
 
 			*out_name = model->GetName().Buffer();
@@ -1242,9 +1347,8 @@ namespace LibSWBF2
 			*out_segInc = sizeof(Segment);
 
 			*out_boneCount = 0;
-			if (model->GetSkeleton(boneCache)) {
-				*out_boneCount = (int32_t)boneCache.Size();
-			}
+			const List<Bone> &boneCache = model->GetBones();
+			*out_boneCount = (int32_t)boneCache.Size();
 			*out_boneArr = boneCache.GetArrayPtr();
 			*out_boneInc = sizeof(Bone);
 
@@ -1254,26 +1358,62 @@ namespace LibSWBF2
 		});
 	}
 
-	void Model_GetPrimitivesMasked(const Model *model, uint32_t mask, int *out_numPrims, CollisionPrimitive ***out_primArrayPtr) noexcept
+	size_t Model_GetSegmentCount(const Model *model) noexcept
 	{
-		catchall([&] {
-			static List<CollisionPrimitive> primsList;
-			static List<CollisionPrimitive *> primPtrs;
-
-			*out_numPrims = 0;
-			CheckPtr(model);
-
-			primsList = model->GetCollisionPrimitives((ECollisionMaskFlags) mask);
-			primPtrs.Clear();
-
-			for (size_t i = 0; i < primsList.Size(); i++) {
-				primPtrs.Add(&primsList[i]);
-			}
-
-			*out_primArrayPtr = primPtrs.GetArrayPtr();
-			*out_numPrims = (uint32_t) primPtrs.Size();
+		return catchall([&] {
+			CheckPtr(model, static_cast<size_t>(0));
+			return model->GetSegments().Size();
 		});
 	}
+
+	const Segment *Model_GetSegment(const Model *model, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<const Segment *>(nullptr));
+			return &model->GetSegments()[index];
+		});
+	}
+
+	size_t Model_GetBoneCount(const Model *model) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<size_t>(0));
+			return model->GetBones().Size();
+		});
+	}
+
+	const Bone *Model_GetBone(const Model *model, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<const Bone *>(nullptr));
+			return &model->GetBones()[index];
+		});
+	}
+
+	const CollisionMesh *Model_GetCollisionMesh(const Model *model) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<const CollisionMesh *>(nullptr));
+			return &model->GetCollisionMesh();
+		});
+	}
+
+	size_t Model_GetCollisionPrimitiveCount(const Model *model) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<size_t>(0));
+			return model->GetCollisionPrimitives().Size();
+		});
+	}
+
+	const CollisionPrimitive *Model_GetCollisionPrimitive(const Model *model, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(model, static_cast<const CollisionPrimitive *>(nullptr));
+			return const_cast<const CollisionPrimitive *>(&model->GetCollisionPrimitives()[index]);
+		});
+	}
+
 
 	// MODL //
 
@@ -1359,7 +1499,7 @@ namespace LibSWBF2
 	uint8_t Region_FetchAllFields(const Region *regPtr, const Vector3 **out_size, const Vector3 **out_pos, const Vector4 **out_rot, const char **out_name, const char **out_type) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(regPtr, (uint8_t)0);
+			CheckPtr(regPtr, static_cast<uint8_t>(0));
 			static Vector4 rotCache;
 
 			*out_size = &(regPtr->GetSize());
@@ -1395,13 +1535,21 @@ namespace LibSWBF2
 
 	// Scope //
 
-	const Field **Scope_GetFields(Scope *ptr, uint32_t hash, uint32_t *out_count) noexcept
+	const Field *Scope_GetField(const Scope *scope, uint32_t hash) noexcept
 	{
 		return catchall([&] {
-			static List<const Field *> cache;
-			cache = ptr->GetFields(hash);
-			*out_count = (uint32_t)cache.Size();
-			return cache.GetArrayPtr();
+			CheckPtr(scope, static_cast<const Field *>(nullptr));
+			return &scope->GetField(hash);
+		});
+	}
+
+	const Field **Scope_GetFields(const Scope *scope, uint32_t hash, size_t *out_fieldCount) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(scope, (const Field **)nullptr);
+			const List<const Field *> fields = scope->GetFields(hash);
+			*out_fieldCount = fields.Size();
+			return fields.GetArrayPtr();
 		});
 	}
 
@@ -1410,7 +1558,7 @@ namespace LibSWBF2
 	LIBSWBF2_API const char *Script_GetName(const Script *script) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(script, (const char *)nullptr);
+			CheckPtr(script, static_cast<const char *>(nullptr));
 			static String nameCache;
 			nameCache = script->GetName();
 			return nameCache.Buffer();
@@ -1420,7 +1568,7 @@ namespace LibSWBF2
 	LIBSWBF2_API uint8_t Script_GetData(const Script *script, const uint8_t **out_data, uint32_t *out_size) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(script, (uint8_t)0);
+			CheckPtr(script, static_cast<uint8_t>(0));
 			size_t sz;
 			uint8_t res = (uint8_t)script->GetData(*out_data, sz);
 			*out_size = (uint32_t)sz;
@@ -1471,12 +1619,81 @@ namespace LibSWBF2
 		});
 	}
 
+	void Segment_GetIndexBuffer(const Segment *seg, uint16_t **out_indices, uint32_t *out_numInds) noexcept
+	{
+		catchall([&] {
+			if (seg == nullptr) {
+				*out_numInds = 0;
+			} else {
+				seg->GetIndexBuffer(*out_numInds, *out_indices);
+			}
+		});
+	}
+
+	void Segment_GetVertexBuffer(const Segment *seg, Vector3 **out_verts, uint32_t *out_numVerts) noexcept
+	{
+		catchall([&] {
+			if (seg == nullptr) {
+				*out_numVerts = 0;
+			} else {
+				seg->GetVertexBuffer(*out_numVerts, *out_verts);
+			}
+		});
+	}
+
+	void Segment_GetUVBuffer(const Segment *seg, Vector2 **out_uvs, uint32_t *out_numUVs) noexcept
+	{
+		catchall([&] {
+			if (seg == nullptr) {
+				*out_numUVs = 0;
+			} else {
+				seg->GetUVBuffer(*out_numUVs, *out_uvs);
+			}
+		});
+	}
+
+	void Segment_GetNormalBuffer(const Segment *seg, Vector3 **out_normals, uint32_t *out_numNormals) noexcept
+	{
+		catchall([&] {
+			if (seg == nullptr) {
+				*out_numNormals = 0;
+			} else {
+				seg->GetNormalBuffer(*out_numNormals, *out_normals);
+			}
+		});
+	}
+
+	ETopology Segment_GetTopology(const Segment *seg) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(seg, static_cast<ETopology>(0));
+			return seg->GetTopology();
+		});
+	}
+
+	const Material *Segment_GetMaterial(const Segment *seg) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(seg, (const Material *)nullptr);
+			return &seg->GetMaterial(); // Segment returns a reference to Material... Why?
+		});
+	}
+
+	const char *Segment_GetBoneName(const Segment *seg) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(seg, static_cast<const char *>(nullptr));
+			fprintf(stderr, "!!! Segment bone name: %s\n", seg->GetBone().Buffer());
+			return seg->GetBone().Buffer();
+		});
+	}
+
 	// Sound //
 
 	uint8_t Sound_GetData(const Sound *sound, uint32_t *out_sampleRate, uint32_t *out_sampleCount, uint8_t *out_blockAlign, const uint8_t **out_data) noexcept
 	{
 		return catchall([&] {
-			CheckPtr(sound, (uint8_t)0);
+			CheckPtr(sound, static_cast<uint8_t>(0));
 			return (uint8_t)sound->GetData(*out_sampleRate, *out_sampleCount, *out_blockAlign, *out_data);
 		});
 	}
@@ -1645,7 +1862,7 @@ namespace LibSWBF2
 	{
 		return catchall([&] {
 			static List<const char*> texNamesPtrs;
-			CheckPtr(ter, (uint8_t)0);
+			CheckPtr(ter, static_cast<uint8_t>(0));
 
 			const List<String>& texNames = ter->GetLayerTextures();
 			*out_numTexes = (int32_t)texNames.Size();
@@ -1679,13 +1896,50 @@ namespace LibSWBF2
 		});
 	}
 
-	void Terrain_GetIndexBuffer(const Terrain *terr, uint32_t **out_indicies, uint32_t *out_numInds) noexcept
+	void Terrain_GetIndexBuffer(const Terrain *terr, uint32_t **out_indices, uint32_t *out_numInds) noexcept
 	{
 		catchall([&] {
-			if (terr == nullptr || !terr->GetIndexBuffer(ETopology::TriangleList, *out_numInds, *out_indicies))
-			{
+			if (terr == nullptr || !terr->GetIndexBuffer(ETopology::TriangleList, *out_numInds, *out_indices)) {
 				*out_numInds = 0;
 			}
+		});
+	}
+
+	void Terrain_GetVertexBuffer(const Terrain *terr, Vector3 **out_verts, uint32_t *out_numVerts) noexcept
+	{
+		catchall([&] {
+			if (terr == nullptr) {
+				*out_numVerts = 0;
+			} else {
+				terr->GetVertexBuffer(*out_numVerts, *out_verts);
+			}
+		});
+	}
+
+	void Terrain_GetUVBuffer(const Terrain *terr, Vector2 **out_uvs, uint32_t *out_numUVs) noexcept
+	{
+		catchall([&] {
+			if (terr == nullptr) {
+				*out_numUVs = 0;
+			} else {
+				terr->GetUVBuffer(*out_numUVs, *out_uvs);
+			}
+		});
+	}
+
+	size_t Terrain_GetLayerTextureCount(const Terrain *terrain) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(terrain, (size_t)0);
+			return terrain->GetLayerTextures().Size();
+		});
+	}
+
+	const char *Terrain_GetLayerTextureName(const Terrain *terrain, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(terrain, static_cast<const char *>(nullptr));
+			return terrain->GetLayerTextures()[index].Buffer();
 		});
 	}
 
@@ -1785,6 +2039,54 @@ namespace LibSWBF2
 			}
 
 			return *out_listPtr != nullptr;
+		});
+	}
+
+	const char *World_GetName(const World *world) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, static_cast<const char *>(nullptr));
+			return world->GetName().Buffer();
+		});
+	}
+
+	const char *World_GetSkyName(const World *world) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, static_cast<const char *>(nullptr));
+			return world->GetSkyName().Buffer();
+		});
+	}
+
+	const Terrain *World_GetTerrain(const World *world) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, (const Terrain *)nullptr);
+			return world->GetTerrain();
+		});
+	}
+
+	const char *World_GetTerrainName(const World *world) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, static_cast<const char *>(nullptr));
+			return world->GetTerrainName().Buffer();
+		});
+	}
+
+	size_t World_GetInstanceCount(const World *world) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, (size_t)0);
+			return world->GetInstances().Size();
+		});
+	}
+
+	const Instance *World_GetInstance(const World *world, size_t index) noexcept
+	{
+		return catchall([&] {
+			CheckPtr(world, (const Instance *)nullptr);
+			return &world->GetInstances()[index];
 		});
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "TranslationFrame.h"
 #include "RotationFrame.h"
-#include "List.h"
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -20,7 +20,7 @@ namespace LibSWBF2::Types
 		CRCChecksum m_CRCchecksum = 0;		// The Bone this refers to
 		uint32_t m_KeyFrameType = 0;
 
-		List<TranslationFrame> m_TranslationFrames;
-		List<RotationFrame> m_RotationFrames;
+		std::vector<TranslationFrame> m_TranslationFrames;
+		std::vector<RotationFrame> m_RotationFrames;
 	};
 }

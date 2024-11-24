@@ -1,5 +1,5 @@
 #pragma once
-#include "Types/LibString.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -17,7 +17,7 @@ namespace LibSWBF2::Types
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		String m_AnimationName;
+		std::string m_AnimationName;
 		float_t m_FrameRate = 0.0f;
 		uint32_t m_PlayStyle = 0;
 		uint32_t m_FirstFrame = 0;

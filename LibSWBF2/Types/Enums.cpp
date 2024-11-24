@@ -5,7 +5,7 @@
 
 namespace LibSWBF2
 {
-	Types::String LogTypeToString(ELogType type)
+	std::string LogTypeToString(ELogType type)
 	{
 		switch (type)
 		{
@@ -19,7 +19,7 @@ namespace LibSWBF2
 		return fmt::format("Unknown Log Type: {}", (int)type).c_str();
 	}
 
-	Types::String TopologyToString(ETopology topology)
+	std::string TopologyToString(ETopology topology)
 	{
 		switch (topology)
 		{
@@ -39,7 +39,7 @@ namespace LibSWBF2
 		return fmt::format("Unknown Topology: {}", (int)topology).c_str();
 	}
 
-	Types::String MaterialFlagsToString(EMaterialFlags flags)
+	std::string MaterialFlagsToString(EMaterialFlags flags)
 	{
 		std::string result = "[";
 		if ((flags & EMaterialFlags::Normal) != 0)
@@ -117,7 +117,7 @@ namespace LibSWBF2
 		return result.c_str();
 	}
 
-	Types::String ModelPurposeToString(EModelPurpose purpose)
+	std::string ModelPurposeToString(EModelPurpose purpose)
 	{
 		switch (purpose)
 		{
@@ -162,7 +162,7 @@ namespace LibSWBF2
 		return fmt::format("Unknown Model Purpose: {}", (int)purpose).c_str();
 	}
 
-	Types::String VBUFFlagsToString(EVBUFFlags flags)
+	std::string VBUFFlagsToString(EVBUFFlags flags)
 	{
 		std::string result = "[";
 		if ((flags & EVBUFFlags::Position) != 0)
@@ -218,7 +218,7 @@ namespace LibSWBF2
 		return result.c_str();
 	}
 
-	Types::String TerrainBufferTypeToString(ETerrainBufferType type)
+	std::string TerrainBufferTypeToString(ETerrainBufferType type)
 	{
 		switch (type)
 		{
@@ -233,7 +233,7 @@ namespace LibSWBF2
 		}
 	}
 
-	Types::String LIBSWBF2_API LightTypeToString(ELightType type)
+	std::string LIBSWBF2_API LightTypeToString(ELightType type)
 	{
 		switch (type)
 		{
@@ -248,7 +248,7 @@ namespace LibSWBF2
 		}
 	}
 
-	Types::String EntityClassToString(EEntityClassType type)
+	std::string EntityClassToString(EEntityClassType type)
 	{
 		switch (type)
 		{
@@ -265,7 +265,7 @@ namespace LibSWBF2
 		}
 	}
 
-	Types::String CollisionMaskTypeToString(ECollisionMaskFlags type)
+	std::string CollisionMaskTypeToString(ECollisionMaskFlags type)
 	{
 		std::string result = "[";
 
@@ -314,7 +314,7 @@ namespace LibSWBF2
 		return result.c_str();
 	}
 
-	Types::String CollisionPrimitiveTypeToString(ECollisionPrimitiveType type)
+	std::string CollisionPrimitiveTypeToString(ECollisionPrimitiveType type)
 	{
 		if (type == ECollisionPrimitiveType::Sphere || (uint32_t) type == 0x0)
 		{
@@ -339,24 +339,7 @@ namespace LibSWBF2
 		return fmt::format("Unknown Collision Primitive Type: {}", (uint32_t)type).c_str();
 	}
 
-	Types::String LoadStatusToString(ELoadStatus type)
-	{
-		switch (type)
-		{
-			case ELoadStatus::Uninitialized:
-				return "Uninitialized";
-			case ELoadStatus::Loading:
-				return "Loading";
-			case ELoadStatus::Loaded:
-				return "Loaded";
-			case ELoadStatus::Failed:
-				return "Failed";
-			default:
-				return fmt::format("Unknown ELoadStatus: {}", (int)type).c_str();
-		}
-	}
-
-	Types::String WorldAnimKeyTransitionTypeToString(EWorldAnimKeyTransitionType type)
+	std::string WorldAnimKeyTransitionTypeToString(EWorldAnimKeyTransitionType type)
 	{
 		switch (type)
 		{
@@ -371,7 +354,7 @@ namespace LibSWBF2
 		}
 	}
 
-	Types::String LIBSWBF2_API SoundFormatToString(ESoundFormat format)
+	std::string LIBSWBF2_API SoundFormatToString(ESoundFormat format)
 	{
 		switch (format)
 		{
@@ -392,7 +375,7 @@ namespace LibSWBF2
 		}	
 	}
 
-	Types::String LIBSWBF2_API ArcFilterToString(EArcFilterFlags flags)
+	std::string LIBSWBF2_API ArcFilterToString(EArcFilterFlags flags)
 	{
 		std::string result = "[";
 		if ((flags & EArcFilterFlags::Soldier) != 0)
@@ -430,7 +413,7 @@ namespace LibSWBF2
 		return result.c_str();
 	}
 
-	Types::String LIBSWBF2_API ArcAttributesToString(EArcAttributeFlags flags)
+	std::string LIBSWBF2_API ArcAttributesToString(EArcAttributeFlags flags)
 	{
 		std::string result = "[";
 		if ((flags & EArcAttributeFlags::OneWay) != 0)

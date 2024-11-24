@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include "List.h"
 
 namespace LibSWBF2::Types
 {
@@ -9,6 +8,6 @@ namespace LibSWBF2::Types
 		Polygon() = default;
 		~Polygon() = default;
 
-		List<uint16_t> m_VertexIndices;
+		std::vector<uint16_t> m_VertexIndices;
 	};
 }

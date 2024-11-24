@@ -26,42 +26,43 @@ namespace LibSWBF2
 	using LibSWBF2::Wrappers::AnimationSkeleton;
 	using LibSWBF2::Wrappers::Config;
 
-	struct Schedule
-	{
-		SWBF2Handle m_Handle;
-		String m_Path;
-		List<String> m_SubLVLsToLoad;
-		bool bRegisterContents = true;
-	};
-
 	// Procedure:
-	// - Schedule levels and sound banks to load via AddLevel
-	// - Call StartLoading();
-	// - Repeat as many times as you want. Also possible while loading.
+	// - Load levels and sound banks via AddLevel
+	// - Repeat as many times as you want
 	class LIBSWBF2_API Container
 	{
 	private:
-		Container();
-		~Container();
+		Container() = default;
+		~Container() = default;
 
-		class ContainerMembers* m_ThreadSafeMembers = nullptr;
+		List<Level *> m_Levels;
+
+		// TODO: rework once we allow modifications (add / delete) in Levels
+		std::unordered_map<FNVHash, const Texture*> m_TextureDB;
+		std::unordered_map<FNVHash,	const Model*> m_ModelDB;
+		std::unordered_map<FNVHash, const World*> m_WorldDB;
+		std::unordered_map<FNVHash, const Terrain*> m_TerrainDB;
+		std::unordered_map<FNVHash, const Script*> m_ScriptDB;
+		std::unordered_map<FNVHash, const EntityClass*> m_EntityClassDB;
+		std::unordered_map<FNVHash, const AnimationBank*> m_AnimationBankDB;
+		std::unordered_map<FNVHash, const AnimationSkeleton*> m_AnimationSkeletonDB;
+		std::unordered_map<FNVHash, const Config*> m_ConfigDB;
+		std::unordered_map<FNVHash, const Sound*> m_SoundDB;
+		std::unordered_map<FNVHash, List<const Localization*>> m_LocalizationDB;
+
+
+		List<const World*> m_Worlds;
+
 		uint64_t m_OverallSize = 0;
 
-		void LoadLevelAsync(const Schedule& scheduled);
+		Level *LoadLevel(const String& path, const List<String>* subLVLsToLoad, bool bRegisterContents);
 
 	public:
 		static Container* Create();
 		static void Delete(Container* instance);
 
-		SWBF2Handle AddLevel(const String& path, const List<String>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
-		void StartLoading();
-		void FreeAll(bool bForce=false);
-		bool IsDone() const;
-		List<SWBF2Handle> GetLoadedLevels() const;
-		ELoadStatus GetStatus(SWBF2Handle handle) const;
-		float_t GetLevelProgress(SWBF2Handle handle) const;
-		Level* GetLevel(SWBF2Handle handle) const;
-		float_t GetOverallProgress();
+		Level *AddLevel(const String& path, const List<String>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
+		Level *GetLevel(size_t index) const;
 
 		// will return the first encountered world LVL, if existent
 		Level* TryGetWorldLevel() const;

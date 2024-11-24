@@ -13,10 +13,18 @@ namespace LibSWBF2
         const string LIB_NAME = "SWBF2";
 #endif
 
-        // Memory //
+	// Hash Lookup //
+
+        [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool Hashing_Lookup(uint hash, ref IntPtr str);
+
+	// Memory //
+
         [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
         public static unsafe extern void Memory_Blit(void *dest, void *src, int numBytes);
 
+	// XXX Below this line
 
         // FileReader // 
 
@@ -25,11 +33,6 @@ namespace LibSWBF2
         
         [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
         public static extern void FileReader_Delete(IntPtr readerPtr);
-
-        // Hash lookup //
-        [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool Hashing_Lookup(uint hash, out IntPtr str);
 
 
         // Logging //

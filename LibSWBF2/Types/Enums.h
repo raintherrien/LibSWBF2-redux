@@ -2,6 +2,11 @@
 #include "../req.h"
 
 #ifdef __cplusplus
+// Required for enum to string
+#include <string>
+#endif
+
+#ifdef __cplusplus
 #define LIBSWBF2_ENUMCLASS enum class
 #define LIBSWBF2_ENUML(E,L) L
 #else
@@ -192,14 +197,6 @@ namespace LibSWBF2 {
 		LIBSWBF2_ENUML(EEntityClassType,ExplosionClass)
 	};
 
-	LIBSWBF2_ENUMCLASS ELoadStatus
-	{
-		LIBSWBF2_ENUML(ELoadStatus,Uninitialized),
-		LIBSWBF2_ENUML(ELoadStatus,Loading),
-		LIBSWBF2_ENUML(ELoadStatus,Loaded),
-		LIBSWBF2_ENUML(ELoadStatus,Failed)
-	};
-
 	LIBSWBF2_ENUMCLASS ESoundFormat : uint32_t
 	{
 		LIBSWBF2_ENUML(ESoundFormat,PCM8) = 1,
@@ -230,21 +227,20 @@ namespace LibSWBF2 {
 	};
 
 #ifdef __cplusplus
-	Types::String LIBSWBF2_API LogTypeToString(ELogType type);
-	Types::String LIBSWBF2_API TopologyToString(ETopology topology);
-	Types::String LIBSWBF2_API MaterialFlagsToString(EMaterialFlags flags);
-	Types::String LIBSWBF2_API ModelPurposeToString(EModelPurpose flags);
-	Types::String LIBSWBF2_API VBUFFlagsToString(EVBUFFlags flags);
-	Types::String LIBSWBF2_API TerrainBufferTypeToString(ETerrainBufferType type);
-	Types::String LIBSWBF2_API LightTypeToString(ELightType type);
-	Types::String LIBSWBF2_API EntityClassToString(EEntityClassType type);
-	Types::String LIBSWBF2_API CollisionMaskTypeToString(ECollisionMaskFlags type);
-	Types::String LIBSWBF2_API CollisionPrimitiveTypeToString(ECollisionPrimitiveType type);
-	Types::String LIBSWBF2_API LoadStatusToString(ELoadStatus type);
-	Types::String LIBSWBF2_API WorldAnimKeyTransitionTypeToString(EWorldAnimKeyTransitionType type);
-	Types::String LIBSWBF2_API SoundFormatToString(ESoundFormat format);
-	Types::String LIBSWBF2_API ArcFilterToString(EArcFilterFlags filter);
-	Types::String LIBSWBF2_API ArcAttributesToString(EArcAttributeFlags attributes);
+	std::string LIBSWBF2_API LogTypeToString(ELogType type);
+	std::string LIBSWBF2_API TopologyToString(ETopology topology);
+	std::string LIBSWBF2_API MaterialFlagsToString(EMaterialFlags flags);
+	std::string LIBSWBF2_API ModelPurposeToString(EModelPurpose flags);
+	std::string LIBSWBF2_API VBUFFlagsToString(EVBUFFlags flags);
+	std::string LIBSWBF2_API TerrainBufferTypeToString(ETerrainBufferType type);
+	std::string LIBSWBF2_API LightTypeToString(ELightType type);
+	std::string LIBSWBF2_API EntityClassToString(EEntityClassType type);
+	std::string LIBSWBF2_API CollisionMaskTypeToString(ECollisionMaskFlags type);
+	std::string LIBSWBF2_API CollisionPrimitiveTypeToString(ECollisionPrimitiveType type);
+	std::string LIBSWBF2_API WorldAnimKeyTransitionTypeToString(EWorldAnimKeyTransitionType type);
+	std::string LIBSWBF2_API SoundFormatToString(ESoundFormat format);
+	std::string LIBSWBF2_API ArcFilterToString(EArcFilterFlags filter);
+	std::string LIBSWBF2_API ArcAttributesToString(EArcAttributeFlags attributes);
 
 	EMaterialFlags LIBSWBF2_API operator &(EMaterialFlags lhs, EMaterialFlags rhs);
 	bool LIBSWBF2_API operator ==(EMaterialFlags lhs, std::underlying_type<EMaterialFlags>::type rhs);

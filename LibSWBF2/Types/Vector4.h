@@ -1,24 +1,32 @@
 #pragma once
 #include "Vector3.h"
 
+#ifdef __cplusplus
 namespace LibSWBF2::Types
 {
+#endif
+
 	struct LIBSWBF2_API Vector4
 	{
-		static const ChunkSize SIZE = sizeof(float_t) * 4;
+		float m_X;
+		float m_Y;
+		float m_Z;
+		float m_W;
+
+#ifdef __cplusplus
+		static const ChunkSize SIZE = sizeof(float) * 4;
 
 		Vector4();
-		Vector4(const float_t x, const float_t y, const float_t z, const float_t w);
+		Vector4(const float x, const float y, const float z, const float w);
 		~Vector4();
 
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		float_t m_X = 0;
-		float_t m_Y = 0;
-		float_t m_Z = 0;
-		float_t m_W = 0;
-
 		String ToString() const;
+#endif
 	};
-}
+
+#ifdef __cplusplus
+} // namespace LibSWBF2::Vector4
+#endif

@@ -3,9 +3,6 @@
 #include "Types/LibString.h"
 #include "Chunks/HeaderNames.h"
 #include "Chunks/BaseChunk.h"
-#include <memory>
-#include <queue>
-#include <mutex>
 
 
 namespace LibSWBF2
@@ -23,20 +20,16 @@ namespace LibSWBF2::Logging
 		~Logger();
 
 		LIBSWBF2_API static void SetLogfileLevel(const ELogType LogfileLevel);
-		LIBSWBF2_API static bool GetNextLog(LoggerEntry& nextLogEntry);
 
 		static void Log(const std::string &message, const ELogType level, const unsigned long line, const char* file) noexcept;
 
 	private:
-		static std::unique_ptr<Logger>& GetInstance();
+		static Logger &GetInstance();
 
 		static constexpr char *LOG_FILE = "LibSWBF2.log";
 		static const int MAX_ENTRIES = 10000;
 
-		static std::unique_ptr<Logger> m_Instance;
 		FileWriter* m_Writer;
 		ELogType m_LogfileLevel = ELogType::Warning;
-		std::queue<LoggerEntry> m_Logs;
-		std::mutex m_Lock;
 	};
 }

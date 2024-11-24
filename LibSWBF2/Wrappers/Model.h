@@ -60,6 +60,7 @@ namespace LibSWBF2::Wrappers
 
 		CollisionMesh m_CollisionMesh;
 		List<CollisionPrimitive> m_CollisionPrimitives;
+		List<Bone> m_Bones;
 
 	public:
 		static bool FromChunk(Level* mainContainer, modl* modelChunk, Model& out);
@@ -67,12 +68,11 @@ namespace LibSWBF2::Wrappers
 		const String& GetName() const;
 		const List<Segment>& GetSegments() const;
 		bool IsSkeletalMesh() const;
-		bool GetSkeleton(List<Bone>& bones) const;
 		bool IsSkeletonBroken() const;
+		const List<Bone> &GetBones() const;
 
 
 		const CollisionMesh& GetCollisionMesh() const;
-		List<CollisionPrimitive> GetCollisionPrimitives(ECollisionMaskFlags mask =
-															ECollisionMaskFlags::All) const;
+		const List<CollisionPrimitive> &GetCollisionPrimitives() const;
 	};
 }

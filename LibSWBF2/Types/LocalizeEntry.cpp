@@ -8,14 +8,14 @@ namespace LibSWBF2::Types
 {
 	void LocalizeEntry::RefreshSize()
 	{
-		m_EntrySize = (uint8_t)(m_WideString.Size() * sizeof(uint16_t) + 6);
+		m_EntrySize = (uint8_t)(m_WideString.size() * sizeof(m_WideString[0]) + 6);
 	}
 
 	void LocalizeEntry::WriteToStream(FileWriter& stream)
 	{
 		stream.WriteUInt16(m_LocalizePathHash);
 		stream.WriteUInt16(m_EntrySize);
-		stream.WriteBytes((uint8_t*)m_WideString.GetArrayPtr(), m_WideString.Size() * sizeof(uint16_t));
+		stream.WriteBytes((uint8_t*)m_WideString.c_str(), m_WideString.size() * sizeof(m_WideString[0]));
 	}
 
 	void LocalizeEntry::ReadFromStream(FileReader& stream)
@@ -30,10 +30,10 @@ namespace LibSWBF2::Types
 			return;
 		}
 
-		m_WideString.Resize(numWideChars);
+		m_WideString.resize(numWideChars);
 		for (int i = 0; i < numWideChars; ++i)
 		{
-			m_WideString.Add(stream.ReadUInt16());
+			m_WideString.append(stream.ReadUInt16());
 		}
 
 		int i = numWideChars - 1;
@@ -45,18 +45,6 @@ namespace LibSWBF2::Types
 			}
 		}
 
-		m_WideString.Resize((size_t)i + 1);
+		m_WideString.resize((size_t)i + 1);
 	}
-
-	//String LocalizeEntry::ToString() const
-	//{
-	//	return fmt::format(
-	//		"Localize Path Hash: {}\n"
-	//		"Entry Size: {}\n"
-	//		"Wide String: {}",
-	//		m_LocalizePathHash,
-	//		m_EntrySize,
-	//		(const char*)m_WideString.GetArrayPtr()
-	//	).c_str();
-	//}
 }

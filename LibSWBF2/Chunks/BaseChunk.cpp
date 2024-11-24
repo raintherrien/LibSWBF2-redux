@@ -5,7 +5,6 @@
 #include "FileReader.h"
 #include "Logging/Logger.h"
 #include <string>
-#include <mutex>
 
 #include "MemoryMappedReader.h"
 
@@ -15,7 +14,6 @@ namespace LibSWBF2::Chunks
 	{
 	public:
 		FileReader* m_CurrentReader = nullptr;
-		std::mutex m_Lock;
 	};
 
 
@@ -58,7 +56,7 @@ namespace LibSWBF2::Chunks
 		}
 	}
 
-	bool BaseChunk::WriteToFile(const String& Path)
+	bool BaseChunk::WriteToFile(const char *Path)
 	{
 		FileWriter writer;
 		if (writer.Open(Path))
@@ -81,11 +79,10 @@ namespace LibSWBF2::Chunks
 		return false;
 	}
 
-	bool BaseChunk::ReadFromFile(const String& Path)
+	bool BaseChunk::ReadFromFile(const char *Path)
 	{
 		MemoryMappedReader reader;
 		{
-			LOCK(m_ThreadHandling->m_Lock);
 			m_ThreadHandling->m_CurrentReader = &reader;
 		}
 		bool bSuccess = false;
@@ -94,7 +91,6 @@ namespace LibSWBF2::Chunks
 			try
 			{
 				ReadFromStream(reader);
-				LOCK(m_ThreadHandling->m_Lock);
 				reader.Close();
 				LOG_INFO("Successfully finished reading process!");
 				bSuccess = true;
@@ -103,7 +99,6 @@ namespace LibSWBF2::Chunks
 			{
 				LOG_ERROR("{}", e.what());
 				LOG_ERROR("Aborting read process...");
-				LOCK(m_ThreadHandling->m_Lock);
 				reader.Close();
 			}
 		}
@@ -112,7 +107,6 @@ namespace LibSWBF2::Chunks
 			LOG_WARN("Could not open File {}! Non existent?", Path);
 		}
 		{
-			LOCK(m_ThreadHandling->m_Lock);
 			m_ThreadHandling->m_CurrentReader = nullptr;
 		}
 
@@ -213,7 +207,6 @@ namespace LibSWBF2::Chunks
 
 	float_t BaseChunk::GetReadingProgress()
 	{
-		LOCK(m_ThreadHandling->m_Lock);
 		if (m_ThreadHandling->m_CurrentReader == nullptr)
 		{
 			return 1.0f;

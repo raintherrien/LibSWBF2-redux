@@ -35,6 +35,26 @@ namespace LibSWBF2::Wrappers
 				out.m_Segments.Add(segment);
 			}
 		}
+
+		// Create m_Bones list
+		if (out.p_Skeleton != nullptr) {
+			uint32_t count = out.p_Skeleton->p_Info->m_BoneCount;
+			List<String>& names = out.p_Skeleton->p_BoneNames->m_Texts;
+			List<String>& parents = out.p_Skeleton->p_BoneParents->m_Texts;
+			List<Matrix3x3>& rotations = out.p_Skeleton->p_BoneTransforms->m_BoneRotations;
+			List<Vector3>& positions = out.p_Skeleton->p_BoneTransforms->m_BonePositions;
+
+
+			int offset = out.IsSkeletonBroken() ? 1 : 0;
+
+			//for (size_t i = 0; i < p_Skeleton->p_Info->m_BoneCount; ++i)
+			for (size_t i = 0; i < out.p_Skeleton->p_BoneNames->m_Texts.Size(); ++i)
+			{
+				// first entry (root) doesn't have a parent
+				out.m_Bones.Add({ names[i], i > 0 ? parents[i - 1] : empty, positions[i + offset], MatrixToQuaternion(rotations[i + offset]) });
+			}
+		}
+
 		return true;
 	}
 
@@ -99,33 +119,10 @@ namespace LibSWBF2::Wrappers
 		return false;
 	}
 
-
-
-
-	bool Model::GetSkeleton(List<Bone>& bones) const
+	const List<Bone> &Model::GetBones() const
 	{
-		if (p_Skeleton == nullptr)
-			return false;
-
-		uint32_t count = p_Skeleton->p_Info->m_BoneCount;
-		List<String>& names = p_Skeleton->p_BoneNames->m_Texts;
-		List<String>& parents = p_Skeleton->p_BoneParents->m_Texts;
-		List<Matrix3x3>& rotations = p_Skeleton->p_BoneTransforms->m_BoneRotations;
-		List<Vector3>& positions = p_Skeleton->p_BoneTransforms->m_BonePositions;
-
-
-		bones.Clear();
-		int offset = IsSkeletonBroken() ? 1 : 0;
-
-		//for (size_t i = 0; i < p_Skeleton->p_Info->m_BoneCount; ++i)
-		for (size_t i = 0; i < p_Skeleton->p_BoneNames->m_Texts.Size(); ++i)
-		{
-			// first entry (root) doesn't have a parent
-			bones.Add({ names[i], i > 0 ? parents[i - 1] : empty, positions[i + offset], MatrixToQuaternion(rotations[i + offset]) });
-		}
-		return true;
+		return m_Bones;
 	}
-
 
 	const CollisionMesh& Model::GetCollisionMesh() const
 	{
@@ -133,20 +130,8 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	List<CollisionPrimitive> Model::GetCollisionPrimitives(ECollisionMaskFlags mask) const
+	const List<CollisionPrimitive> &Model::GetCollisionPrimitives() const
 	{
-		List<CollisionPrimitive> maskedPrimitives;
-		
-		for (int i = 0; i < m_CollisionPrimitives.Size(); i++)
-		{
-			const CollisionPrimitive& curPrimitive = m_CollisionPrimitives[i];
-
-			if ((curPrimitive.GetMaskFlags() & mask) != 0)
-			{
-				maskedPrimitives.Add(curPrimitive);
-			}
-		}
-
-		return maskedPrimitives;
+		return m_CollisionPrimitives;
 	}
 }

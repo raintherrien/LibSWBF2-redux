@@ -4,7 +4,6 @@
 #include "Types/Vector4.h"
 #include "Types/Vector3u8.h"
 #include "Types/List.h"
-#include "Types/LibString.h"
 
 #include <chrono>
 
@@ -22,12 +21,11 @@ namespace LibSWBF2::Chunks
 	using Types::Vector3u8;
 	using Types::Vector4;
 	using Types::List;
-	using Types::String;
 
 	struct LIBSWBF2_API BaseChunk
 	{
-		bool WriteToFile(const String& Path);
-		bool ReadFromFile(const String& Path);
+		bool WriteToFile(const char *Path);
+		bool ReadFromFile(const char *Path);
 
 		BaseChunk();
 		virtual ~BaseChunk();
