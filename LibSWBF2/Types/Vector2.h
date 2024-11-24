@@ -13,7 +13,6 @@ namespace LibSWBF2
 #ifdef __cplusplus
 namespace LibSWBF2::Types
 {
-	struct String;
 #endif
 
 	struct LIBSWBF2_API Vector2
@@ -31,7 +30,7 @@ namespace LibSWBF2::Types
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		Types::String ToString() const;
+		std::string ToString() const;
 #endif
 	};
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -10,7 +11,7 @@ namespace LibSWBF2::Chunks::MSH
 		ENVL() = default;
 		~ENVL() = default;
 
-		List<uint32_t> m_ModelIndices;
+		std::vector<uint32_t> m_ModelIndices;
 
 	protected:
 		friend GEOM;

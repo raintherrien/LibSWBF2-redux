@@ -48,8 +48,8 @@ namespace LibSWBF2::Chunks::LVL
 	bool LVL::FindAndReadSoundStream(FileReader& stream, FNVHash StreamName, Stream *& streamChunk)
 	{
 		// First check if we already loaded the stream...
-		const List<GenericBaseChunk*>& children = GetChildren();
-		for (int i = 0; i < children.Size(); i++)
+		const std::vector<GenericBaseChunk*>& children = GetChildren();
+		for (int i = 0; i < children.size(); i++)
 		{
 			streamChunk = dynamic_cast<Stream*>(children[i]);
 			if (streamChunk != nullptr && 
@@ -101,9 +101,9 @@ namespace LibSWBF2::Chunks::LVL
 
 
 
-	bool LVL::ReadFromFile(String Path, const List<String>* subLVLsToLoad)
+	bool LVL::ReadFromFile(std::string Path, const std::vector<std::string>* subLVLsToLoad)
 	{
-		m_SubLVLsToLoad.Clear();
+		m_SubLVLsToLoad.clear();
 
 		// Loading a LVL file can be accompanied by additional parameters.
 		// These parameters usually describe what sub LVLs to load (at least
@@ -112,16 +112,16 @@ namespace LibSWBF2::Chunks::LVL
 		// If not a single parameter is specified, currently ALL sub LVL are loaded!
 		if (subLVLsToLoad != nullptr)
 		{
-			for (size_t i = 0; i < subLVLsToLoad->Size(); ++i)
+			for (size_t i = 0; i < subLVLsToLoad->size(); ++i)
 			{
-				m_SubLVLsToLoad.Add(FNV::Hash((*subLVLsToLoad)[i]));
+				m_SubLVLsToLoad.push_back(FNV::Hash((*subLVLsToLoad)[i]));
 			}
 		}
 		
 		// There seems to be another pattern to be used aswell, where
 		// parameters are just concatenated to the path using ';' as delimiter
 		std::vector<std::string> params;
-		std::istringstream stream(Path.Buffer());
+		std::istringstream stream(Path);
 		std::string nextParam;
 		for (bool first = true; std::getline(stream, nextParam, ';'); first = false)
 		{
@@ -141,7 +141,7 @@ namespace LibSWBF2::Chunks::LVL
 		{
 			for (std::string param : params)
 			{
-				m_SubLVLsToLoad.Add(FNV::Hash(param.c_str()));
+				m_SubLVLsToLoad.push_back(FNV::Hash(param.c_str()));
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace LibSWBF2::Chunks::LVL
 		}
 
 		bool success = BaseChunk::ReadFromFile(Path);
-		m_SubLVLsToLoad.Clear();
+		m_SubLVLsToLoad.clear();
 		return success;
 	}
 }

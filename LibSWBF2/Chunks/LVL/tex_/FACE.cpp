@@ -24,7 +24,7 @@ namespace LibSWBF2::Chunks::LVL::texture
 		{
 			LVL_* lvl;
 			READ_CHILD(stream, lvl);
-			m_LVLs.Add(lvl);
+			m_LVLs.push_back(lvl);
 		}
 
 		BaseChunk::EnsureEnd(stream);

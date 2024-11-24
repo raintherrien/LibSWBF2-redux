@@ -5,6 +5,7 @@
 #include "PCHS.h"
 #include "LTEX.h"
 #include "DTEX.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
@@ -23,6 +24,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

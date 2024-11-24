@@ -1,6 +1,8 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Types/Enums.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL
 {
@@ -12,7 +14,7 @@ namespace LibSWBF2::Chunks::LVL
 	struct LIBSWBF2_API LVL : public GenericChunk<"ucfb"_m>
 	{
 	private:
-		List<FNVHash> m_SubLVLsToLoad;
+		std::vector<FNVHash> m_SubLVLsToLoad;
 		bool m_Lazy = false;
 
 	public:
@@ -29,7 +31,7 @@ namespace LibSWBF2::Chunks::LVL
 
 
 		// All sub LVLs not specified in here won't be loaded!
-		bool ReadFromFile(String Path, const List<String>* subLVLsToLoad = nullptr);
+		bool ReadFromFile(std::string Path, const std::vector<std::string>* subLVLsToLoad = nullptr);
 
 
 	protected:

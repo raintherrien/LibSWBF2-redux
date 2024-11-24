@@ -1,13 +1,11 @@
 #pragma once
 #include "req.h"
-
-#include "Types/LibString.h"
-#include "Types/List.h"
 #include "Types/Vector3.h"
 #include "Types/Vector4.h"
 #include "Types/Enums.h"
 #include "Types/WorldAnimationKey.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -28,8 +26,6 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
-	using Types::String;
 	using Types::Vector3;
 	using Types::Vector4;
 	using Types::WorldAnimationKey;
@@ -46,7 +42,6 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::Hint Hint;
 
 		friend World;
-		friend List<HintNode>;
 
 		Hint * p_HintNode;
 		HintNode() = default;
@@ -54,12 +49,12 @@ namespace LibSWBF2::Wrappers
 		static bool FromChunk(Hint* chunk, HintNode& hintOut);
 
 	public:
-		const String& GetName() const;
+		const std::string& GetName() const;
 		const Vector3& GetPosition() const;
 		Vector4 GetRotation() const;
 		const uint16_t& GetType() const;
 
-		const void GetProperties(List<FNVHash>& outHashes, List<String>& outValues) const;
+		const void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 
 
@@ -68,7 +63,6 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::BARR BARR;
 
 		friend World;
-		friend List<Barrier>;
 
 		BARR * p_Barrier;
 		Barrier() = default;
@@ -76,7 +70,7 @@ namespace LibSWBF2::Wrappers
 		static bool FromChunk(BARR* chunk, Barrier& barrOut);
 
 	public:
-		const String& GetName() const;
+		const std::string& GetName() const;
 		const Vector3& GetPosition() const;
 		Vector4 GetRotation() const;
 		const uint32_t& GetFlag() const;
@@ -89,20 +83,19 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::regn regn;
 
 		friend World;
-		friend List<Region>;
 
 		regn* p_Region;
 		Region() = default;
 		static bool FromChunk(regn* chunk, Region& regOut);
 
 	public:
-		const String& GetName() const;
+		const std::string& GetName() const;
 		const Vector3& GetPosition() const;
 		Vector4 GetRotation() const;
-		const String& GetType() const;
+		const std::string& GetType() const;
 		const Vector3& GetSize() const;
 
-		const void GetProperties(List<FNVHash>& outHashes, List<String>& outValues) const;
+		const void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 
 	
@@ -111,19 +104,18 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::anim anim;
 
 		friend World;
-		friend List<WorldAnimation>;
 
 		anim* p_WorldAnimation;
 		WorldAnimation() = default;
 		static bool FromChunk(anim* chunk, WorldAnimation& animOut);		
 
 	public:
-		const String& GetName() const;
+		const std::string& GetName() const;
 		const float GetRunTime() const;
 		const bool IsLooping() const;
 		const bool IsTranslationLocal() const;
-		List<WorldAnimationKey> GetRotationKeys() const;
-		List<WorldAnimationKey> GetPositionKeys() const;
+		std::vector<WorldAnimationKey> GetRotationKeys() const;
+		std::vector<WorldAnimationKey> GetPositionKeys() const;
 	};
 
 
@@ -132,18 +124,17 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::anmg anmg;
 
 		friend World;
-		friend List<WorldAnimationGroup>;
 
 		anmg* p_WorldAnimationGroup;
 		WorldAnimationGroup() = default;
 		static bool FromChunk(anmg* chunk, WorldAnimationGroup& groupOut);		
 
 	public:
-		const String& GetName() const;
+		const std::string& GetName() const;
 		const bool IsPlayingAtStart() const;
 		const bool IsStoppedOnControl() const;
 		const bool DisablesHierarchies() const;
-		const void GetAnimationInstancePairs(List<String>& animNamesOut, List<String>& instanceNamesOut) const;
+		const void GetAnimationInstancePairs(std::vector<std::string>& animNamesOut, std::vector<std::string>& instanceNamesOut) const;
 	};
 
 
@@ -152,15 +143,14 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::wrld::anmh anmh;
 
 		friend World;
-		friend List<WorldAnimationHierarchy>;
 
 		anmh* p_WorldAnimationHierarchy;
 		WorldAnimationHierarchy() = default;
 		static bool FromChunk(anmh* chunk, WorldAnimationHierarchy& heirOut);		
 
 	public:
-		const String& GetRootName() const;
-		const List<String>& GetChildNames() const;
+		const std::string& GetRootName() const;
+		const std::vector<std::string>& GetChildNames() const;
 	};
 
 
@@ -170,38 +160,37 @@ namespace LibSWBF2::Wrappers
 
 	private:
 		friend Level;
-		friend List<World>;
-
-		World() = default;
-		~World() = default;
 
 		Container* m_MainContainer = nullptr;
 
-		List<Instance> m_Instances;
-		List<Region> m_Regions;
-		List<Barrier> m_Barriers;
-		List<HintNode> m_HintNodes;
-		List<WorldAnimation> m_Animations;
-		List<WorldAnimationGroup> m_AnimationGroups;
-		List<WorldAnimationHierarchy> m_AnimationHierarchies;
+		std::vector<Instance> m_Instances;
+		std::vector<Region> m_Regions;
+		std::vector<Barrier> m_Barriers;
+		std::vector<HintNode> m_HintNodes;
+		std::vector<WorldAnimation> m_Animations;
+		std::vector<WorldAnimationGroup> m_AnimationGroups;
+		std::vector<WorldAnimationHierarchy> m_AnimationHierarchies;
 
 		wrld* p_World;
 
 
 	public:
+		World() = default;
+		~World() = default;
+
 		static bool FromChunk(Container* mainContainer, wrld* worldChunk, World& out);
 
-		const String& GetName() const;
-		const List<Instance>& GetInstances() const;
-		const List<Region>& GetRegions() const;
-		const List<Barrier>& GetBarriers() const;
-		const List<HintNode>& GetHintNodes() const;
-		Types::String GetTerrainName() const;
+		const std::string& GetName() const;
+		const std::vector<Instance>& GetInstances() const;
+		const std::vector<Region>& GetRegions() const;
+		const std::vector<Barrier>& GetBarriers() const;
+		const std::vector<HintNode>& GetHintNodes() const;
+		std::string GetTerrainName() const;
 		const Terrain* GetTerrain() const;
-		Types::String GetSkyName() const;
+		std::string GetSkyName() const;
 
-		const List<WorldAnimation>& GetAnimations() const;
-		const List<WorldAnimationGroup>& GetAnimationGroups() const;
-		const List<WorldAnimationHierarchy>& GetAnimationHierarchies() const;
+		const std::vector<WorldAnimation>& GetAnimations() const;
+		const std::vector<WorldAnimationGroup>& GetAnimationGroups() const;
+		const std::vector<WorldAnimationHierarchy>& GetAnimationHierarchies() const;
 	};
 }

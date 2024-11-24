@@ -32,7 +32,7 @@ namespace LibSWBF2::Types
         uint8_t chars[NAME_LENGTH];
 
         stream.ReadBytes(chars, NAME_LENGTH);
-        m_Name = LibSWBF2::Types::String(reinterpret_cast<char*>(chars));
+        m_Name = std::string(reinterpret_cast<char*>(chars));
 
         m_Position.ReadFromStream(stream);
         m_Radius = stream.ReadFloat();
@@ -47,20 +47,20 @@ namespace LibSWBF2::Types
         }
 
         size_t quantizedDataBufferSize = sum * count;
-        m_QuantizedDataBuffer = List<uint8_t>(quantizedDataBufferSize);
+        m_QuantizedDataBuffer = std::vector<uint8_t>(quantizedDataBufferSize);
         for (int i = 0; i < quantizedDataBufferSize; i++)
         {
-        	m_QuantizedDataBuffer.Add(stream.ReadByte());
+        	m_QuantizedDataBuffer.push_back(stream.ReadByte());
         }
 	}
 
 
-	String Hub::ToString() const
+	std::string Hub::ToString() const
 	{
 		return fmt::format(
 			"Name: {0}, Position: {1}, Radius: {2}", 
-			m_Name.Buffer(), m_Position.ToString().Buffer(), m_Radius
-		).c_str();
+			m_Name, m_Position.ToString(), m_Radius
+		);
 	}
 
 
@@ -75,7 +75,7 @@ namespace LibSWBF2::Types
         uint8_t chars[NAME_LENGTH];
 
         stream.ReadBytes(chars, NAME_LENGTH);
-        m_Name = LibSWBF2::Types::String(reinterpret_cast<char*>(chars));
+        m_Name = std::string(reinterpret_cast<char*>(chars));
 
         m_Start = stream.ReadByte();
         m_End = stream.ReadByte();
@@ -84,11 +84,11 @@ namespace LibSWBF2::Types
 	}
 
 
-	String Connection::ToString() const
+	std::string Connection::ToString() const
 	{
 		return fmt::format(
 			"Name: {0}, Start: {1}, End: {2}, Filters: {3}, Attributes: {4}", 
-			m_Name.Buffer(), m_Start, m_End, ArcFilterToString(m_FilterFlags).Buffer(), ArcAttributesToString(m_AttributeFlags).Buffer()
-		).c_str();
+			m_Name, m_Start, m_End, ArcFilterToString(m_FilterFlags), ArcAttributesToString(m_AttributeFlags)
+		);
 	}
 }

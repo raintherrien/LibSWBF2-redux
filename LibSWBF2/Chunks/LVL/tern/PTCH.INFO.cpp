@@ -24,17 +24,17 @@ namespace LibSWBF2::Chunks::LVL::terrain
 
         for (uint32_t i = 0; i < numTextureSlotsUsed; i++)
         {
-            m_TextureSlotsUsed.Add((uint32_t) stream.ReadByte());
+            m_TextureSlotsUsed.push_back((uint32_t) stream.ReadByte());
         } 
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String PTCH_INFO::ToString() const
+    std::string PTCH_INFO::ToString() const
     {
         std::string str_TextureSlotsUsed = "";
 
-        for (uint32_t i = 0; i < m_TextureSlotsUsed.Size(); i++)
+        for (uint32_t i = 0; i < m_TextureSlotsUsed.size(); i++)
         {
             str_TextureSlotsUsed += std::to_string(m_TextureSlotsUsed[i]);
             str_TextureSlotsUsed += ", ";
@@ -42,10 +42,10 @@ namespace LibSWBF2::Chunks::LVL::terrain
 
         std::string result = fmt::format(
             "Element Size: {}\nTexture slots used: {}\n", 
-            m_TextureSlotsUsed.Size(), 
+            m_TextureSlotsUsed.size(), 
             str_TextureSlotsUsed
         );
 
-        return result.c_str();
+        return result;
     }
 }

@@ -28,12 +28,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::EnsureEnd(stream);
     }
 
-    String anmg_INFO::ToString() const
+    std::string anmg_INFO::ToString() const
     {
-        String rep = fmt::format("Name: {}, Is Played At Start? {}, Disabled When Controlled? {}", 
+	    std::string rep = fmt::format("Name: {}, Is Played At Start? {}, Disabled When Controlled? {}", 
                         m_Name, 
                         m_PlayAtStart == 1,
-                        m_StopOnControl == 1).c_str();
+                        m_StopOnControl == 1);
         return rep;
     }
 }

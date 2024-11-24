@@ -40,7 +40,7 @@ namespace LibSWBF2::Chunks
 {
 	GenericBaseChunk::~GenericBaseChunk()
 	{
-		for (size_t i = 0; i < m_Children.Size(); ++i)
+		for (size_t i = 0; i < m_Children.size(); ++i)
 		{
 			delete m_Children[i];
 		}
@@ -355,7 +355,7 @@ namespace LibSWBF2::Chunks
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String GenericBaseChunk::GetHeaderName() const
+	std::string GenericBaseChunk::GetHeaderName() const
 	{
 		return m_Header.ToString();
 	}
@@ -365,12 +365,12 @@ namespace LibSWBF2::Chunks
 		return m_Parent;
 	}
 
-	const List<GenericBaseChunk*>& GenericBaseChunk::GetChildren() const
+	const std::vector<GenericBaseChunk*>& GenericBaseChunk::GetChildren() const
 	{
 		return m_Children;
 	}
 
-	String GenericBaseChunk::ToString() const
+	std::string GenericBaseChunk::ToString() const
 	{
 		return "No Info";
 	}

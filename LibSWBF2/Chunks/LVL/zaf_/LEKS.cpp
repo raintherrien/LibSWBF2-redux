@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 			if (next == "TNOJ"_h)
 			{
-				READ_CHILD(stream, m_Joints.Emplace());
+				READ_CHILD(stream, m_Joints.emplace_back());
 			}
 			else 
 			{
@@ -39,11 +39,11 @@ namespace LibSWBF2::Chunks::LVL::animation
 	}
 
 
-	String LEKS::ToString() const
+	std::string LEKS::ToString() const
 	{
 		return fmt::format(
 			"Animation skeleton with {} joints\n",
-			m_Joints.Size()
-		).c_str();
+			m_Joints.size()
+			);
 	}
 }

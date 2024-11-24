@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Types/LibString.h"
 #include "SoundBankHeader.h"
 #include "FileReader.h"
 #include "InternalHelpers.h"
@@ -26,12 +25,12 @@ namespace LibSWBF2::Types
 		size_t headersSize = 0;
 		for (uint32_t i = 0; i < m_NumClips; ++i)
 		{
-			headersSize += m_Clips.Emplace().ReadHeaderFromStream(stream);
+			headersSize += m_Clips.emplace_back().ReadHeaderFromStream(stream);
 		}
 
-		if (m_Clips.Size() != m_NumClips)
+		if (m_Clips.size() != m_NumClips)
 		{
-			LOG_WARN("Expected {} sound clip headers, but read {}!", m_NumClips, m_Clips.Size());
+			LOG_WARN("Expected {} sound clip headers, but read {}!", m_NumClips, m_Clips.size());
 		}
 
 		// sample data stream starts at a multiple of 2048, depending on
@@ -40,14 +39,14 @@ namespace LibSWBF2::Types
 		stream.SetPosition(sampleDataOffset);
 	}
 
-	bool SoundBankHeader::TryLookupName(String& result)
+	bool SoundBankHeader::TryLookupName(std::string& result)
 	{
 		return FNV::Lookup(m_NameHash, result);
 	}
 
-	String SoundBankHeader::ToString() const
+	std::string SoundBankHeader::ToString() const
 	{
-		String bankName;
+		std::string bankName;
 		if (!FNV::Lookup(m_NameHash, bankName))
 			bankName = std::to_string(m_NameHash).c_str();
 
@@ -59,15 +58,15 @@ namespace LibSWBF2::Types
 			bankName,
 			m_DataSize,
 			m_NumClips,
-			m_Clips.Size()
+			m_Clips.size()
 		);
 
 		result += "\n";
-		for (size_t i = 0; i < m_Clips.Size(); ++i)
+		for (size_t i = 0; i < m_Clips.size(); ++i)
 		{
 			result += fmt::format("Clip {}:\n{}\n", i, m_Clips[i].ToString());
 		}
 
-		return result.c_str();
+		return result;
 	}
 }

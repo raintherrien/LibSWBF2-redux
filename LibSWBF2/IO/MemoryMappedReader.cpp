@@ -42,7 +42,7 @@ namespace LibSWBF2
 		try { Close(); } catch (...) {/*Do nothing if no mapping is set...*/}
 	}
 
-	bool MemoryMappedReader::Open(const Types::String& File)
+	bool MemoryMappedReader::Open(const std::string& File)
 	{
 		if (p_MappingBase != nullptr)
 		{
@@ -50,7 +50,7 @@ namespace LibSWBF2
 			return false;
 		}
 
-		fs::path path = File.Buffer();
+		fs::path path = File;
 		if (!fs::exists(path) || fs::is_directory(path))
 		{
 			LOG_ERROR("File '{}' could not be found!", File);
@@ -61,7 +61,7 @@ namespace LibSWBF2
 		m_FileName = path.string().c_str();
 
 #ifndef WIN32
-		int fd = open(m_FileName.Buffer(), O_RDONLY);
+		int fd = open(m_FileName.c_str(), O_RDONLY);
 		if (fd < 0)
 		{
 			LOG_ERROR("Failed to open file: {}!", m_FileName);
@@ -80,7 +80,7 @@ namespace LibSWBF2
 		HANDLE fileHandle = INVALID_HANDLE_VALUE, fileMappingHandle = NULL;
 
 		try {
-			fileHandle = CreateFileA(m_FileName.Buffer(), GENERIC_READ, FILE_SHARE_READ,
+			fileHandle = CreateFileA(m_FileName.c_str(), GENERIC_READ, FILE_SHARE_READ,
 				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (fileHandle == INVALID_HANDLE_VALUE)
 			{
@@ -228,9 +228,9 @@ namespace LibSWBF2
 		return value;
 	}
 
-	Types::String MemoryMappedReader::ReadString(size_t length)
+	std::string MemoryMappedReader::ReadString(size_t length)
 	{
-		Types::String value;
+		std::string value;
 		if (CheckGood(length))
 		{
 			char* str = new char[length+1];
@@ -244,7 +244,7 @@ namespace LibSWBF2
 		return value;
 	}
 
-	Types::String MemoryMappedReader::ReadString()
+	std::string MemoryMappedReader::ReadString()
 	{
 		char str[1024]; // should be enough
 		uint8_t current = 1;

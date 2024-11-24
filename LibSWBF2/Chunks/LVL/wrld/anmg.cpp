@@ -32,7 +32,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
             }
             else if (next == "ANIM"_h)
             {
-                READ_CHILD(stream, m_AnimObjectPairs.Emplace());
+                READ_CHILD(stream, m_AnimObjectPairs.emplace_back());
             }
             else if (next == "NOHI"_h)
             {

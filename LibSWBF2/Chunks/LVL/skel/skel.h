@@ -4,6 +4,7 @@
 #include "Chunks/STRMULT.h"
 #include "skel.INFO.h"
 #include "skel.XFRM.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::skel
 {
@@ -20,6 +21,6 @@ namespace LibSWBF2::Chunks::LVL::skel
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

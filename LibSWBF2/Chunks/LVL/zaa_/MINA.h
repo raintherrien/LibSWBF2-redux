@@ -1,5 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
@@ -7,16 +9,16 @@ namespace LibSWBF2::Chunks::LVL::animation
 	{
 	public:
 
-		List<uint32_t> m_TransBitFlags;
-		List<uint32_t> m_AnimNameHashes;
-		List<uint16_t> m_AnimFrameCounts;
-		List<uint16_t> m_AnimBoneCounts;
+		std::vector<uint32_t> m_TransBitFlags;
+		std::vector<uint32_t> m_AnimNameHashes;
+		std::vector<uint16_t> m_AnimFrameCounts;
+		std::vector<uint16_t> m_AnimBoneCounts;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

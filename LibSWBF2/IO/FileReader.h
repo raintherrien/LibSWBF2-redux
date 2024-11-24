@@ -1,9 +1,7 @@
 #pragma once
 #include "Chunks/HeaderNames.h"
-#include "Types/LibString.h"
 #include <atomic>
-
-
+#include <string>
 
 namespace LibSWBF2
 {
@@ -12,7 +10,7 @@ namespace LibSWBF2
 	public:
 		virtual ~FileReader() = default;
 
-		virtual bool Open(const Types::String& File) = 0;
+		virtual bool Open(const std::string& File) = 0;
 		virtual ChunkHeader ReadChunkHeader(bool peek) = 0;
 		virtual ChunkSize ReadChunkSize() = 0;
 		virtual uint8_t ReadByte() = 0;
@@ -22,8 +20,8 @@ namespace LibSWBF2
 		virtual uint32_t ReadUInt32() = 0;
 		virtual uint16_t ReadUInt16() = 0;
 		virtual float_t ReadFloat() = 0;
-		virtual Types::String ReadString(size_t length) = 0;
-		virtual Types::String ReadString() = 0;// will read until the first null terminator
+		virtual std::string ReadString(size_t length) = 0;
+		virtual std::string ReadString() = 0;// will read until the first null terminator
 		virtual size_t GetPosition() = 0;
 		virtual void SetPosition(size_t NewPosition) = 0;
 		virtual size_t GetFileSize() = 0;
@@ -34,12 +32,12 @@ namespace LibSWBF2
 
 		size_t GetLatestChunkPosition() { return m_LatestChunkPos; }
 
-		const Types::String& GetFileName() { return m_FileName; }
+		const std::string& GetFileName() { return m_FileName; }
 
 	protected:
 
 		size_t m_FileSize = 0;
-		Types::String m_FileName;
+		std::string m_FileName;
 		
 		std::atomic_size_t m_LatestChunkPos;
 	};

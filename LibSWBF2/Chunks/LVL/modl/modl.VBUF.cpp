@@ -60,11 +60,11 @@ namespace LibSWBF2::Chunks::LVL::modl
                     constexpr float i16min = std::numeric_limits<int16_t>::min();
                     constexpr float i16max = std::numeric_limits<int16_t>::max();
 
-                    m_Positions.Add(ToLib(low + (c - i16min) * mul / (i16max - i16min)));
+                    m_Positions.push_back(ToLib(low + (c - i16min) * mul / (i16max - i16min)));
                 }
                 else
                 {
-                    m_Positions.Emplace().ReadFromStream(stream);
+                    m_Positions.emplace_back().ReadFromStream(stream);
                 }
             }
 
@@ -80,13 +80,13 @@ namespace LibSWBF2::Chunks::LVL::modl
 
                     float_t one = (float) data[1];
                     float_t two = (float) data[2];
-                    m_Weights.Add({ two, one, 1.0f - two - one});
+                    m_Weights.push_back({ two, one, 1.0f - two - one});
                 }
                 else
                 {
                     float_t x = stream.ReadFloat();
                     float_t y = stream.ReadFloat();
-                    m_Weights.Add({ x, y, 1.0f - x - y});
+                    m_Weights.push_back({ x, y, 1.0f - x - y});
                 }
             }
 
@@ -100,7 +100,7 @@ namespace LibSWBF2::Chunks::LVL::modl
                 uint8_t z = (uint8_t) ((inds >> 16u) & 0xffu);
 
 
-                m_BoneIndicies.Add({x, y, z});
+                m_BoneIndicies.push_back({x, y, z});
 
 
                 /*
@@ -112,7 +112,7 @@ namespace LibSWBF2::Chunks::LVL::modl
 
                 if ((m_Flags & EVBUFFlags::PositionCompressed) != 0)
                 {
-                    m_Bones.Emplace().ReadFromStream(stream);
+                    m_Bones.emplace_back().ReadFromStream(stream);
                     LOG_WARN("Weight?: {}", stream.ReadFloat());
 
                     uint16_t data2[2];
@@ -138,11 +138,11 @@ namespace LibSWBF2::Chunks::LVL::modl
                     data[3] = stream.ReadByte();
                     glm::vec3 normal((float_t)data[0], (float_t)data[1], (float_t)data[2]);
                     normal = (normal * 2.0f) - 1.0f;
-                    m_Normals.Add(ToLib(normal));
+                    m_Normals.push_back(ToLib(normal));
                 }
                 else
                 {
-                    m_Normals.Emplace().ReadFromStream(stream);
+                    m_Normals.emplace_back().ReadFromStream(stream);
                 }
             }
 
@@ -157,7 +157,7 @@ namespace LibSWBF2::Chunks::LVL::modl
                     data[3] = stream.ReadByte();
                     glm::vec3 tangent((float_t)data[0], (float_t)data[1], (float_t)data[2]);
                     tangent = (tangent * 2.0f) - 1.0f;
-                    m_Tangents.Add(ToLib(tangent));
+                    m_Tangents.push_back(ToLib(tangent));
 
                     data[0] = stream.ReadByte();
                     data[1] = stream.ReadByte();
@@ -165,23 +165,23 @@ namespace LibSWBF2::Chunks::LVL::modl
                     data[3] = stream.ReadByte();
                     glm::vec3 biTangent((float_t)data[0], (float_t)data[1], (float_t)data[2]);
                     biTangent = (biTangent * 2.0f) - 1.0f;
-                    m_BiTangents.Add(ToLib(biTangent));
+                    m_BiTangents.push_back(ToLib(biTangent));
                 }
                 else
                 {
-                    m_Tangents.Emplace().ReadFromStream(stream);
-                    m_BiTangents.Emplace().ReadFromStream(stream);
+                    m_Tangents.emplace_back().ReadFromStream(stream);
+                    m_BiTangents.emplace_back().ReadFromStream(stream);
                 }
             }
 
             if ((m_Flags & EVBUFFlags::Color) != 0)
             {
-                m_Colors.Emplace().ReadFromStream(stream);
+                m_Colors.emplace_back().ReadFromStream(stream);
             }
 
             if ((m_Flags & EVBUFFlags::StaticLighting) != 0)
             {
-                m_Colors.Emplace().ReadFromStream(stream);
+                m_Colors.emplace_back().ReadFromStream(stream);
             }
 
             if ((m_Flags & EVBUFFlags::TexCoord) != 0)
@@ -193,11 +193,11 @@ namespace LibSWBF2::Chunks::LVL::modl
                     data[1] = stream.ReadByte();
                     glm::vec2 uv((float_t)data[0], (float_t)data[1]);
                     uv = uv / 2048.0f;
-                    m_TexCoords.Add(ToLib(uv));
+                    m_TexCoords.push_back(ToLib(uv));
                 }
                 else
                 {
-                    m_TexCoords.Emplace().ReadFromStream(stream);
+                    m_TexCoords.emplace_back().ReadFromStream(stream);
                 }
             }
         }
@@ -205,23 +205,23 @@ namespace LibSWBF2::Chunks::LVL::modl
         BaseChunk::EnsureEnd(stream);
     }
 
-    String VBUF::ToString() const
+    std::string VBUF::ToString() const
     {
         std::string result = "Count = " + std::to_string(m_Count) + "\n";
         result += "Stride = " + std::to_string(m_Stride) + "\n";
-        result += "Flags = " + std::string(VBUFFlagsToString(m_Flags).Buffer()) + "\n";
-        result += "Positions[" + std::to_string(m_Positions.Size()) + "]\n";
-        result += "Normals[" + std::to_string(m_Normals.Size()) + "]\n";
-        result += "Tangents[" + std::to_string(m_Tangents.Size()) + "]\n";
-        result += "BiTangents[" + std::to_string(m_BiTangents.Size()) + "]\n";
-        result += "Colors[" + std::to_string(m_Colors.Size()) + "]\n";
-        result += "Tex Coords[" + std::to_string(m_TexCoords.Size()) + "]\n";
+        result += "Flags = " + std::string(VBUFFlagsToString(m_Flags)) + "\n";
+        result += "Positions[" + std::to_string(m_Positions.size()) + "]\n";
+        result += "Normals[" + std::to_string(m_Normals.size()) + "]\n";
+        result += "Tangents[" + std::to_string(m_Tangents.size()) + "]\n";
+        result += "BiTangents[" + std::to_string(m_BiTangents.size()) + "]\n";
+        result += "Colors[" + std::to_string(m_Colors.size()) + "]\n";
+        result += "Tex Coords[" + std::to_string(m_TexCoords.size()) + "]\n";
         result += "\n";
 
-        //result += "Positions["+std::to_string(m_Positions.Size())+"] = [";
-        //for (uint32_t i = 0; i < m_Positions.Size(); ++i)
+        //result += "Positions["+std::to_string(m_Positions.size())+"] = [";
+        //for (uint32_t i = 0; i < m_Positions.size(); ++i)
         //{
-        //    result += m_Positions[i].ToString().Buffer() + std::string(", ");
+        //    result += m_Positions[i].ToString() + std::string(", ");
         //    if ((i + 1) % 3 == 0)
         //    {
         //        result += "\n";
@@ -230,6 +230,6 @@ namespace LibSWBF2::Chunks::LVL::modl
         //result.resize(result.size() - 2);
         //result += "]";
 
-        return result.c_str();
+        return result;
     }
 }

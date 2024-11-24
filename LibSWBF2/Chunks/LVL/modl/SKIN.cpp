@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::LVL::modl
         {
             for (uint32_t i = 0; i < m_VertexCount; ++i)
             {
-                m_BoneIndices.Add(stream.ReadByte());
+                m_BoneIndices.push_back(stream.ReadByte());
             }
         }
         else
@@ -38,16 +38,16 @@ namespace LibSWBF2::Chunks::LVL::modl
         BaseChunk::EnsureEnd(stream);
     }
 
-    String SKIN::ToString() const
+    std::string SKIN::ToString() const
     {
         std::string result = fmt::format("Number of Vertices / Bone Indices = {}\nBone Indices = [", m_VertexCount);
-        for (uint32_t i = 0; i < m_VertexCount && i < m_BoneIndices.Size(); ++i)
+        for (uint32_t i = 0; i < m_VertexCount && i < m_BoneIndices.size(); ++i)
         {
             result += fmt::format("{}, ", m_BoneIndices[i]);
         }
 
         result.resize(result.size() - 2);
         result += "]";
-        return result.c_str();
+        return result;
     }
 }

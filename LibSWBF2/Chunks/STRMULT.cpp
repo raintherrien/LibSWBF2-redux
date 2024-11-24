@@ -23,13 +23,13 @@ namespace LibSWBF2::Chunks
         BaseChunk::ReadFromStream(stream);
         GenericChunk<Header>::Check(stream);
 
-        m_Texts.Clear();
+        m_Texts.clear();
         while (BaseChunk::PositionInChunk(stream.GetPosition()))
         {
-            String next = stream.ReadString();
-            if (!next.IsEmpty())
+		std::string next = stream.ReadString();
+            if (!next.empty())
             {
-                m_Texts.Add(next);
+                m_Texts.push_back(next);
             }
         }
 
@@ -37,12 +37,12 @@ namespace LibSWBF2::Chunks
     }
 
     template<uint32_t Header>
-    String STRMULT<Header>::ToString() const
+    std::string STRMULT<Header>::ToString() const
     {
         std::string result;
-        for (size_t i = 0; i < m_Texts.Size(); ++i)
+        for (size_t i = 0; i < m_Texts.size(); ++i)
         {
-            result += m_Texts[i].Buffer() + std::string("\n");
+            result += m_Texts[i] + std::string("\n");
         }
         return result.c_str();
     }

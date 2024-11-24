@@ -1,9 +1,9 @@
 #pragma once
 #include "Chunks/LVL/coll/coll.h"
 #include "Chunks/STR.h"
-
 #include "Types/Vector3.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Wrappers
 {
@@ -14,7 +14,6 @@ namespace LibSWBF2::Wrappers
 	class LIBSWBF2_API CollisionMesh
 	{
 		friend class Level;
-		friend class List<CollisionMesh>;
 		friend class Model;
 		
 	private:
@@ -25,20 +24,20 @@ namespace LibSWBF2::Wrappers
 		CollisionMesh(); 
 
 		coll *p_CollisionChunk = nullptr;
-		mutable List<uint16_t> m_Indicies;
+		mutable std::vector<uint16_t> m_Indicies;
 
 
 	public:
 		
-		String GetName() const;
+		std::string GetName() const;
 
 		void GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint16_t*& indexBuffer) const;
 		void GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const;
 
 		ECollisionMaskFlags GetMaskFlags() const;
 
-		String ToString() const;
+		std::string ToString() const;
 
-		String GetNodeName() const;
+		std::string GetNodeName() const;
 	};
 }

@@ -1,10 +1,19 @@
 #pragma once
 #include "req.h"
-#include "API.h"
+#include "AnimationBank.h"
+#include "AnimationSkeleton.h"
+#include "Config.h"
+#include "EntityClass.h"
+#include "Localization.h"
+#include "Model.h"
+#include "PlanSet.h"
+#include "Script.h"
+#include "Sound.h"
+#include "Texture.h"
+#include "World.h"
 
-#include "Types/LibString.h"
-#include "Types/List.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -31,8 +40,6 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
-
 	/*
 	 * This and the other wrapper classes just serve as abstraction Layers
 	 * to wrap around the chunk data. You can of course just use the chunk data
@@ -57,23 +64,23 @@ namespace LibSWBF2::Wrappers
 	private:
 		LVL* p_lvl;
 		Container* p_MainContainer;	// can be NULL
-		String m_FullPath;
+		std::string m_FullPath;
 
-		List<Model> m_Models;
-		List<Texture> m_Textures;
-		List<World> m_Worlds;
-		List<Terrain> m_Terrains;	// multiple terrains are possible, in theory. never saw it though
-		List<Script> m_Scripts;
-		List<Localization> m_Localizations;
-		List<EntityClass> m_EntityClasses;
-		List<AnimationBank> m_AnimationBanks;
-		List<AnimationSkeleton> m_AnimationSkeletons;
-		List<Sound> m_Sounds;
-		List<Config> m_Configs;
-		List<SoundStream> m_SoundStreams;
-		List<SoundBank> m_SoundBanks;
+		std::vector<Model> m_Models;
+		std::vector<Texture> m_Textures;
+		std::vector<World> m_Worlds;
+		std::vector<Terrain> m_Terrains;	// multiple terrains are possible, in theory. never saw it though
+		std::vector<Script> m_Scripts;
+		std::vector<Localization> m_Localizations;
+		std::vector<EntityClass> m_EntityClasses;
+		std::vector<AnimationBank> m_AnimationBanks;
+		std::vector<AnimationSkeleton> m_AnimationSkeletons;
+		std::vector<Sound> m_Sounds;
+		std::vector<Config> m_Configs;
+		std::vector<SoundStream> m_SoundStreams;
+		std::vector<SoundBank> m_SoundBanks;
 
-		List<PlanSet> m_PlanSets;
+		std::vector<PlanSet> m_PlanSets;
 
 		// fast pimpl to avoid inclusion of std::unordered_map
 		class MapsWrapper* m_NameToIndexMaps;
@@ -86,44 +93,44 @@ namespace LibSWBF2::Wrappers
 
 		// subLVLsToLoad doesn't need to be persistent, can be a stack value.
 		// contents will be copied and hashed.
-		static Level* FromFile(const String& path, const List<String>* subLVLsToLoad = nullptr);
+		static Level* FromFile(const std::string& path, const std::vector<std::string>* subLVLsToLoad = nullptr);
 		static Level* FromChunk(LVL* lvl, Container* mainContainer);
 		static Level* FromStream(FileReader& Stream);
 
 		static void Destroy(Level* level);
 
-		const String& GetLevelPath() const;
-		String GetLevelName() const;
+		const std::string& GetLevelPath() const;
+		std::string GetLevelName() const;
 		bool IsWorldLevel() const;
 
-		const List<Model>& GetModels() const;
-		const List<Texture>& GetTextures() const;
-		const List<World>& GetWorlds() const;
-		const List<Terrain>& GetTerrains() const;
-		const List<Script>& GetScripts() const;
-		const List<Localization>& GetLocalizations() const;
-		const List<EntityClass>& GetEntityClasses() const;
-		const List<AnimationBank>& GetAnimationBanks() const;
-		const List<AnimationSkeleton>& GetAnimationSkeletons() const;
-		const List<Sound>& GetSounds() const;
-		const List<const Config *> GetConfigs(EConfigType cfgType = EConfigType::All) const;
-		const List<SoundStream>& GetSoundStreams() const;
-		const List<SoundBank>& GetSoundBanks() const;
-		const List<PlanSet>& GetPlanSets() const;
+		const std::vector<Model>& GetModels() const;
+		const std::vector<Texture>& GetTextures() const;
+		const std::vector<World>& GetWorlds() const;
+		const std::vector<Terrain>& GetTerrains() const;
+		const std::vector<Script>& GetScripts() const;
+		const std::vector<Localization>& GetLocalizations() const;
+		const std::vector<EntityClass>& GetEntityClasses() const;
+		const std::vector<AnimationBank>& GetAnimationBanks() const;
+		const std::vector<AnimationSkeleton>& GetAnimationSkeletons() const;
+		const std::vector<Sound>& GetSounds() const;
+		const std::vector<const Config *> GetConfigs(EConfigType cfgType = EConfigType::All) const;
+		const std::vector<SoundStream>& GetSoundStreams() const;
+		const std::vector<SoundBank>& GetSoundBanks() const;
+		const std::vector<PlanSet>& GetPlanSets() const;
 
-		const Model* GetModel(const String& modelName) const;
-		const Texture* GetTexture(const String& textureName) const;
-		const World* GetWorld(const String& worldName) const;
-		const Terrain* GetTerrain(const String& terrainName) const;
-		const Script* GetScript(const String& scriptName) const;
-		const Localization* GetLocalization(const String& loclName) const;
-		const EntityClass* GetEntityClass(const String& typeName) const;
-		const AnimationBank* GetAnimationBank(const String& setName) const;
-		const AnimationSkeleton* GetAnimationSkeleton(const String& skelName) const;
-		const Sound* GetSound(const String& soundHashName) const;
-		const Config* GetConfig(EConfigType cfgType, const String& cfgName) const;
-		const SoundStream* GetSoundStream(const String& streamName) const;
-		const SoundBank* GetSoundBank(const String& bankName) const;
+		const Model* GetModel(const std::string& modelName) const;
+		const Texture* GetTexture(const std::string& textureName) const;
+		const World* GetWorld(const std::string& worldName) const;
+		const Terrain* GetTerrain(const std::string& terrainName) const;
+		const Script* GetScript(const std::string& scriptName) const;
+		const Localization* GetLocalization(const std::string& loclName) const;
+		const EntityClass* GetEntityClass(const std::string& typeName) const;
+		const AnimationBank* GetAnimationBank(const std::string& setName) const;
+		const AnimationSkeleton* GetAnimationSkeleton(const std::string& skelName) const;
+		const Sound* GetSound(const std::string& soundHashName) const;
+		const Config* GetConfig(EConfigType cfgType, const std::string& cfgName) const;
+		const SoundStream* GetSoundStream(const std::string& streamName) const;
+		const SoundBank* GetSoundBank(const std::string& bankName) const;
 
 		const Model* GetModel(FNVHash modelName) const;
 		const Texture* GetTexture(FNVHash textureName) const;
@@ -147,7 +154,7 @@ namespace LibSWBF2::Wrappers
 
 	private:
 		void ExploreChildrenRecursive(GenericBaseChunk* root);
-		skel* FindSkeleton(const String& skeletonName) const;
+		skel* FindSkeleton(const std::string& skeletonName) const;
 		skel* FindSkeleton(FNVHash skeletonName) const;
 	};
 }

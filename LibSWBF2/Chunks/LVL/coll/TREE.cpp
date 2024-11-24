@@ -38,13 +38,13 @@ namespace LibSWBF2::Chunks::LVL::coll
         	{
         		READ_CHILD(stream,tempNode);
         		tempNode -> m_FlattenedTreeIndex = index++;
-        		m_Nodes.Add(tempNode);
+        		m_Nodes.push_back(tempNode);
         	}
         	else if (nextHeader == "LEAF"_h)
         	{
         		READ_CHILD(stream, tempLeaf)
         		tempLeaf -> m_FlattenedTreeIndex = index++;
-        		m_Leaves.Add(tempLeaf);
+        		m_Leaves.push_back(tempLeaf);
         	}
         	else
         	{
@@ -56,10 +56,10 @@ namespace LibSWBF2::Chunks::LVL::coll
 		BaseChunk::EnsureEnd(stream);
 	}
 
-    Types::String TREE::ToString() const 
+	std::string TREE::ToString() const 
     {
         return fmt::format("{} internal nodes, {} leaf nodes",
-        				    m_Nodes.Size(),
-        				    m_Leaves.Size()).c_str();
+        				    m_Nodes.size(),
+        				    m_Leaves.size());
     }
 }

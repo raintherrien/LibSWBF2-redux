@@ -3,6 +3,7 @@
 #include "BBOX.h"
 #include "SEGM.h"
 #include "ENVL.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -14,7 +15,7 @@ namespace LibSWBF2::Chunks::MSH
 		~GEOM() = default;
 
 		BBOX m_BoundingBox;
-		List<SEGM> m_Segments;
+		std::vector<SEGM> m_Segments;
 		ENVL m_Envelope;
 
 	protected:

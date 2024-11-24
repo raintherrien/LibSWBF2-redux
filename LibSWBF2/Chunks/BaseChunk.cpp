@@ -56,7 +56,7 @@ namespace LibSWBF2::Chunks
 		}
 	}
 
-	bool BaseChunk::WriteToFile(const char *Path)
+	bool BaseChunk::WriteToFile(const std::string &Path)
 	{
 		FileWriter writer;
 		if (writer.Open(Path))
@@ -79,7 +79,7 @@ namespace LibSWBF2::Chunks
 		return false;
 	}
 
-	bool BaseChunk::ReadFromFile(const char *Path)
+	bool BaseChunk::ReadFromFile(const std::string &Path)
 	{
 		MemoryMappedReader reader;
 		{

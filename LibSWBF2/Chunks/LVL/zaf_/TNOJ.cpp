@@ -34,7 +34,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String TNOJ::ToString() const
+	std::string TNOJ::ToString() const
 	{
 		return fmt::format(
 			"Bone CRC: 0x{0:x}\n"
@@ -45,6 +45,6 @@ namespace LibSWBF2::Chunks::LVL::animation
 			m_BaseRotation.ToString(),
 			m_BasePosition.ToString(),
 			m_ParentBoneCRC
-		).c_str();
+		);
 	}
 }

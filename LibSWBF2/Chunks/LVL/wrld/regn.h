@@ -1,8 +1,8 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-#include "Types/List.h"
 #include "Chunks/LVL/common/PROP.h"
 #include "wrld.INFO.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -13,13 +13,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	{
 	public:
 		INFO* p_Info;
-		List<PROP*> m_Props;
+		std::vector<PROP*> m_Props;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

@@ -45,7 +45,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String SampleBank::ToString() const
+	std::string SampleBank::ToString() const
 	{
 		return p_Info == nullptr ? "No info chunk found" : p_Info -> HeaderToString();
 	}

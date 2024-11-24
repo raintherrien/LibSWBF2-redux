@@ -29,13 +29,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::EnsureEnd(stream);
     }
 
-    String anim_INFO::ToString() const
+    std::string anim_INFO::ToString() const
     {
-        String rep = fmt::format("Name: {}, Run Time: {}, Is Looping: {}, Transition Is Local: {}", 
+	    std::string rep = fmt::format("Name: {}, Run Time: {}, Is Looping: {}, Transition Is Local: {}", 
                         m_Name, 
                         m_RunTime,
                         m_Looping == 1,
-                        m_LocalTranslation == 1).c_str();
+                        m_LocalTranslation == 1);
         return rep;
     }
 }

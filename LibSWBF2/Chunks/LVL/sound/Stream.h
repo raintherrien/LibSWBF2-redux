@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/RawData.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::sound
 {
@@ -18,6 +19,6 @@ namespace LibSWBF2::Chunks::LVL::sound
 
 		static FNVHash PeekStreamName(FileReader& stream);
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

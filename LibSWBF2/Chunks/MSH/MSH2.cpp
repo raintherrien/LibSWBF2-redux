@@ -43,7 +43,7 @@ namespace LibSWBF2::Chunks::MSH
 			}
 			else if (head == "MODL"_h)
 			{
-				MODL& model = m_Models.Emplace();
+				MODL& model = m_Models.emplace_back();
 				model.ReadFromStream(stream);
 			}
 			else

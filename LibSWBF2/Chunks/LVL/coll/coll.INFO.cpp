@@ -36,11 +36,11 @@ namespace LibSWBF2::Chunks::LVL::coll
 		BaseChunk::EnsureEnd(stream);
 	}
 
-    Types::String INFO_coll::ToString() const 
+	std::string INFO_coll::ToString() const 
     {
     	return fmt::format("BBox lower: {}\nBBox upper: {}\nNum vertices in POSI: {}\nNum internal nodes {}\nNum leaf nodes: {}\nTotal num indicies in leaves: {}",
-    		   m_BBoxMin.ToString().Buffer(), m_BBoxMax.ToString().Buffer(),
+    		   m_BBoxMin.ToString(), m_BBoxMax.ToString(),
     		   m_NumVerts, m_NumInternalNodes, m_NumLeafNodes, 
-    		   m_NumIndiciesInTree).c_str();
+    		   m_NumIndiciesInTree);
     }
 }

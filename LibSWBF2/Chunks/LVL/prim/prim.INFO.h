@@ -1,19 +1,19 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
-    struct LIBSWBF2_API INFO_prim : public GenericChunk<"INFO"_m>
-    {
-    public:
-	    void RefreshSize() override;
-	    void WriteToStream(FileWriter& stream) override;
-	    void ReadFromStream(FileReader& stream) override;
+	struct LIBSWBF2_API INFO_prim : public GenericChunk<"INFO"_m>
+	{
+	public:
+		void RefreshSize() override;
+		void WriteToStream(FileWriter& stream) override;
+		void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
+		std::string ToString() const override;
 
-        Types::String m_ModelName;
-        uint16_t m_NumPrimitives;
-    };
+		std::string m_ModelName;
+		uint16_t m_NumPrimitives;
+	};
 }

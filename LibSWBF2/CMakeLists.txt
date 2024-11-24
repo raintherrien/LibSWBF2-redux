@@ -111,8 +111,6 @@ target_sources(LibSWBF2 PRIVATE
   "${PROJECT_SOURCE_DIR}/Types/Color4.cpp"
   "${PROJECT_SOURCE_DIR}/Types/Color4u8.cpp"
   "${PROJECT_SOURCE_DIR}/Types/Enums.cpp"
-  "${PROJECT_SOURCE_DIR}/Types/LibString.cpp"
-  "${PROJECT_SOURCE_DIR}/Types/List.cpp"
   "${PROJECT_SOURCE_DIR}/Types/LocalizeEntry.cpp"
   "${PROJECT_SOURCE_DIR}/Types/Matrix3x3.cpp"
   "${PROJECT_SOURCE_DIR}/Types/RotationFrame.cpp"

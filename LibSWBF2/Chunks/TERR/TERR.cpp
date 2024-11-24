@@ -287,14 +287,14 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		// .....
 	}
 
-	bool TERR::WriteToFile(const String& Path)
+	bool TERR::WriteToFile(const std::string& Path)
 	{
 		// TODO: implement
 		LOG_WARN("Writing TERR files not implemented yet!");
 		return false;
 	}
 
-	bool TERR::ReadFromFile(const String& Path)
+	bool TERR::ReadFromFile(const std::string& Path)
 	{
 		StreamReader reader;
 		if (reader.Open(Path))

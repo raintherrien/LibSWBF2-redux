@@ -21,7 +21,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-        m_OverrideProperties.Clear();
+        m_OverrideProperties.clear();
 		while (ThereIsAnother(stream))
 		{
             ChunkHeader next = stream.ReadChunkHeader(true);
@@ -33,7 +33,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
             {
                 PROP* prop;
                 READ_CHILD(stream, prop);
-                m_OverrideProperties.Add(prop);
+                m_OverrideProperties.push_back(prop);
             }
             else
             {
@@ -45,12 +45,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String inst::ToString() const
+    std::string inst::ToString() const
     {
-        String rep = fmt::format("Name: {}\nType: {}\nOverrides {} properties",
-                                p_Info -> p_Name -> m_Text.Buffer(),
-                                p_Info -> p_Type -> m_Text.Buffer(),
-                                m_OverrideProperties.Size()).c_str();
+	    std::string rep = fmt::format("Name: {}\nType: {}\nOverrides {} properties",
+                                p_Info -> p_Name -> m_Text,
+                                p_Info -> p_Type -> m_Text,
+                                m_OverrideProperties.size());
         return rep;
     }
 }

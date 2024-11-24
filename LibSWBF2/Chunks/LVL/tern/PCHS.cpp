@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             {
                 PTCH* patch;
                 READ_CHILD(stream, patch);
-                m_Patches.Add(patch);
+                m_Patches.push_back(patch);
             }
             else
             {
@@ -38,8 +38,8 @@ namespace LibSWBF2::Chunks::LVL::terrain
         BaseChunk::EnsureEnd(stream);
     }
 
-    String PCHS::ToString() const
+    std::string PCHS::ToString() const
     {
-        return fmt::format("Num Patches: {}", m_Patches.Size()).c_str();
+        return fmt::format("Num Patches: {}", m_Patches.size()).c_str();
     }
 }

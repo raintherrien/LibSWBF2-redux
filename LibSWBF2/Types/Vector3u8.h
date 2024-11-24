@@ -1,5 +1,5 @@
 #pragma once
-#include "Types/LibString.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -24,6 +24,6 @@ namespace LibSWBF2::Types
 		uint8_t m_Y = 0;
 		uint8_t m_Z = 0;
 
-		String ToString() const;
+		std::string ToString() const;
 	};
 }

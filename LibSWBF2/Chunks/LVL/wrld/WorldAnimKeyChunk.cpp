@@ -30,7 +30,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	}
 
 	template<uint32_t Header>
-	String WorldAnimKeyChunk<Header>::ToString() const
+	std::string WorldAnimKeyChunk<Header>::ToString() const
 	{
 		return m_Key.ToString();
 	}

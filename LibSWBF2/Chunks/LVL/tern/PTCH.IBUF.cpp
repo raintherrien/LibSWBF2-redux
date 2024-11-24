@@ -23,13 +23,13 @@ namespace LibSWBF2::Chunks::LVL::terrain
         m_ElementCount = stream.ReadUInt32();
         for (uint32_t i = 0; i < m_ElementCount; ++i)
         {
-            m_IndexBuffer.Add(stream.ReadUInt16());
+            m_IndexBuffer.push_back(stream.ReadUInt16());
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String IBUF::ToString() const
+    std::string IBUF::ToString() const
     {
         std::string result = fmt::format(
             "Element Count: {}\n"
@@ -38,13 +38,13 @@ namespace LibSWBF2::Chunks::LVL::terrain
             m_ElementCount
         );
 
-        for (uint32_t i = 0; i < m_IndexBuffer.Size(); ++i)
+        for (uint32_t i = 0; i < m_IndexBuffer.size(); ++i)
         {
             result += std::to_string(m_IndexBuffer[i]) + ", ";
         }
         result.resize(result.size() - 2);
         result += "]";
 
-        return result.c_str();
+        return result;
     }
 }

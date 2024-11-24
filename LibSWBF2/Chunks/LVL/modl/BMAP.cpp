@@ -23,13 +23,13 @@ namespace LibSWBF2::Chunks::LVL::modl
         m_IndexCount = stream.ReadUInt32();
         for (uint32_t i = 0; i < m_IndexCount; ++i)
         {
-            m_IndexMap.Add(stream.ReadByte());
+            m_IndexMap.push_back(stream.ReadByte());
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String BMAP::ToString() const
+    std::string BMAP::ToString() const
     {
         std::string result = fmt::format("Index Map Count = [", m_IndexCount);
         for (uint32_t i = 0; i < m_IndexCount; ++i)
@@ -39,6 +39,6 @@ namespace LibSWBF2::Chunks::LVL::modl
 
         result.resize(result.size() - 2);
         result += "]";
-        return result.c_str();
+        return result;
     }
 }

@@ -2,6 +2,7 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "Locl.BODY.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::Localization
 {
@@ -16,6 +17,6 @@ namespace LibSWBF2::Chunks::LVL::Localization
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

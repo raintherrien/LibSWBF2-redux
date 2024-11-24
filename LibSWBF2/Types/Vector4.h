@@ -23,7 +23,7 @@ namespace LibSWBF2::Types
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		String ToString() const;
+		std::string ToString() const;
 #endif
 	};
 

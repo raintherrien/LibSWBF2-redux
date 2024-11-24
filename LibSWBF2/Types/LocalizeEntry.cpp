@@ -33,7 +33,7 @@ namespace LibSWBF2::Types
 		m_WideString.resize(numWideChars);
 		for (int i = 0; i < numWideChars; ++i)
 		{
-			m_WideString.append(stream.ReadUInt16());
+			m_WideString.push_back(stream.ReadUInt16());
 		}
 
 		int i = numWideChars - 1;

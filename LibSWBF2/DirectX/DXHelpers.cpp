@@ -85,7 +85,7 @@ namespace LibSWBF2
         }
     }
 
-    Types::String D3DToString(D3DFORMAT d3dFormat)
+    std::string D3DToString(D3DFORMAT d3dFormat)
     {
         switch (d3dFormat)
         {

@@ -20,9 +20,8 @@ namespace LibSWBF2::Wrappers
 	using LibSWBF2::Chunks::LVL::common::expc;
 
 
-	class PropertyMap
+	struct PropertyMap
 	{
-	public:
 		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
 	};
 
@@ -37,6 +36,13 @@ namespace LibSWBF2::Wrappers
 	{
 		delete m_PropertyMapping;
 		m_PropertyMapping = nullptr;
+	}
+
+	EntityClass::EntityClass(const EntityClass &other)
+	{
+		m_PropertyMapping = new PropertyMap();
+		p_MainContainer = other.p_MainContainer;
+		*m_PropertyMapping = *other.m_PropertyMapping;
 	}
 
 	EntityClass& EntityClass::operator=(const EntityClass& other)
@@ -96,7 +102,7 @@ namespace LibSWBF2::Wrappers
 		}
 
 		out.m_PropertyMapping->m_HashToIndices.clear();
-		for (size_t i = 0; i < classChunk->m_Properties.Size(); ++i)
+		for (size_t i = 0; i < classChunk->m_Properties.size(); ++i)
 		{
 			FNVHash hashedName = classChunk->m_Properties[i]->m_PropertyName;
 
@@ -119,12 +125,12 @@ namespace LibSWBF2::Wrappers
 		return m_EntityClassType;
 	}
 
-	const String& EntityClass::GetTypeName() const
+	const std::string& EntityClass::GetTypeName() const
 	{
 		return p_classChunk->p_Type->m_Text;
 	}
 
-	const String& EntityClass::GetBaseName() const
+	const std::string& EntityClass::GetBaseName() const
 	{
 		return p_classChunk->p_Base->m_Text;
 	}
@@ -138,7 +144,7 @@ namespace LibSWBF2::Wrappers
 		return p_MainContainer->FindEntityClass(GetBaseName());
 	}
 
-	bool EntityClass::GetProperty(FNVHash hashedPropertyName, String& outValue) const
+	bool EntityClass::GetProperty(FNVHash hashedPropertyName, std::string& outValue) const
 	{
 		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
 		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
@@ -154,32 +160,32 @@ namespace LibSWBF2::Wrappers
 		return false;
 	}
 
-	bool EntityClass::GetProperty(const String& propertyName, String& outValue) const
+	bool EntityClass::GetProperty(const std::string& propertyName, std::string& outValue) const
 	{
-		if (propertyName.IsEmpty())
+		if (propertyName.empty())
 		{
 			return false;
 		}
 		return GetProperty(FNV::Hash(propertyName), outValue);
 	}
 
-	bool EntityClass::GetProperty(const String& propertyName, List<String>& outValues) const
+	bool EntityClass::GetProperty(const std::string& propertyName, std::vector<std::string>& outValues) const
 	{
-		if (propertyName.IsEmpty())
+		if (propertyName.empty())
 		{
 			return false;
 		}
 		return GetProperty(FNV::Hash(propertyName), outValues);
 	}
 
-	bool EntityClass::GetProperty(FNVHash hashedPropertyName, List<String>& outValues) const
+	bool EntityClass::GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const
 	{
 		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
 		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
 		{
 			for (size_t i = 0; i < it->second.size(); ++i)
 			{
-				outValues.Add(p_classChunk->m_Properties[it->second[i]]->m_Value);
+				outValues.push_back(p_classChunk->m_Properties[it->second[i]]->m_Value);
 			}
 
 			// For multi properties (e.g. ControlSpeed) also crawl down
@@ -192,26 +198,26 @@ namespace LibSWBF2::Wrappers
 		{
 			base->GetProperty(hashedPropertyName, outValues);
 		}
-		return outValues.Size() > 0;
+		return outValues.size() > 0;
 	}
 
-	void EntityClass::GetOverriddenProperties(List<FNVHash>& outHashes, List<String>& outValues) const
+	void EntityClass::GetOverriddenProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
-		outHashes.Clear();
-		outValues.Clear();
+		outHashes.clear();
+		outValues.clear();
 
-		List<PROP*>& properties = p_classChunk -> m_Properties;
-		for (int i = 0; i < properties.Size(); i++)
+		std::vector<PROP*>& properties = p_classChunk -> m_Properties;
+		for (int i = 0; i < properties.size(); i++)
 		{
-			outHashes.Add(properties[i] -> m_PropertyName);
-			outValues.Add(properties[i] -> m_Value);
+			outHashes.push_back(properties[i] -> m_PropertyName);
+			outValues.push_back(properties[i] -> m_Value);
 		}
 	}
 
-	void EntityClass::GetAllProperties(List<FNVHash>& outHashes, List<String>& outValues) const
+	void EntityClass::GetAllProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
-		outHashes.Clear();
-		outValues.Clear();
+		outHashes.clear();
+		outValues.clear();
 
 		const EntityClass* base = GetBase();
 		if (base != nullptr)
@@ -219,11 +225,11 @@ namespace LibSWBF2::Wrappers
 			base->GetAllProperties(outHashes, outValues);
 		}
 
-		List<PROP*>& properties = p_classChunk->m_Properties;
-		for (int i = 0; i < properties.Size(); i++)
+		std::vector<PROP*>& properties = p_classChunk->m_Properties;
+		for (int i = 0; i < properties.size(); i++)
 		{
-			outHashes.Add(properties[i]->m_PropertyName);
-			outValues.Add(properties[i]->m_Value);
+			outHashes.push_back(properties[i]->m_PropertyName);
+			outValues.push_back(properties[i]->m_Value);
 		}
 	}
 	

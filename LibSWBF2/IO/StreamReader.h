@@ -1,11 +1,9 @@
 #pragma once
+#include "FileReader.h"
 #include "Chunks/HeaderNames.h"
-#include "Types/LibString.h"
 #include <fstream>
 #include <atomic>
-
-
-#include "FileReader.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -15,7 +13,7 @@ namespace LibSWBF2
 		StreamReader();
 		~StreamReader();
 
-		bool Open(const Types::String& File);
+		bool Open(const std::string &File);
 		ChunkHeader ReadChunkHeader(bool peek);
 		ChunkSize ReadChunkSize();
 		uint8_t ReadByte();
@@ -25,8 +23,8 @@ namespace LibSWBF2
 		uint32_t ReadUInt32();
 		uint16_t ReadUInt16();
 		float_t ReadFloat();
-		Types::String ReadString(size_t length);
-		Types::String ReadString(); // will read until the first null terminator
+		std::string ReadString(size_t length);
+		std::string ReadString(); // will read until the first null terminator
 		size_t GetPosition();
 		void SetPosition(size_t NewPosition);
 		size_t GetFileSize();

@@ -47,17 +47,17 @@ namespace LibSWBF2::Chunks::LVL::skel
 
         // NOTE: There is always exactly one less parent entry, since the
         // first Bone Name serves as root and therefore doesn't have a parent
-        if (p_Info->m_BoneCount != p_BoneNames->m_Texts.Size() || 
-            p_Info->m_BoneCount != (p_BoneParents->m_Texts.Size() + 1) || 
-            p_Info->m_BoneCount != p_BoneTransforms->m_BoneRotations.Size() || 
-            p_Info->m_BoneCount != p_BoneTransforms->m_BonePositions.Size())
+        if (p_Info->m_BoneCount != p_BoneNames->m_Texts.size() || 
+            p_Info->m_BoneCount != (p_BoneParents->m_Texts.size() + 1) || 
+            p_Info->m_BoneCount != p_BoneTransforms->m_BoneRotations.size() || 
+            p_Info->m_BoneCount != p_BoneTransforms->m_BonePositions.size())
         {
             LOG_WARN("Skeleton buffer sizes don't match up! Info Bone Count: {}, Bone Names: {}, Bone Parents (-1): {}, Bone Rotations: {}, Bone Positions: {} - Chunk Position: {}",
                 p_Info->m_BoneCount,
-                p_BoneNames->m_Texts.Size(),
-                p_BoneParents->m_Texts.Size(),
-                p_BoneTransforms->m_BoneRotations.Size(),
-                p_BoneTransforms->m_BonePositions.Size(),
+                p_BoneNames->m_Texts.size(),
+                p_BoneParents->m_Texts.size(),
+                p_BoneTransforms->m_BoneRotations.size(),
+                p_BoneTransforms->m_BonePositions.size(),
                 GetPosition()
             );
         }
@@ -65,7 +65,7 @@ namespace LibSWBF2::Chunks::LVL::skel
         BaseChunk::EnsureEnd(stream);
     }
 
-    String skel::ToString() const
+    std::string skel::ToString() const
     {
         return p_Info != nullptr ? p_Info->ToString() : "INFO chunk missing!";
     }

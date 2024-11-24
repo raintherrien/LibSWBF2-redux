@@ -27,13 +27,13 @@ namespace LibSWBF2::Chunks::LVL::texture
 		{
 			FMT_* fmt;
 			READ_CHILD(stream, fmt);
-			m_FMTs.Add(fmt);
+			m_FMTs.push_back(fmt);
 		}
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String tex_::ToString() const
+	std::string tex_::ToString() const
 	{
 		return fmt::format(
 			"Name: {}\n\n"
@@ -41,7 +41,7 @@ namespace LibSWBF2::Chunks::LVL::texture
 			"Number of FMTs: {}",
 			p_Name->m_Text,
 			p_Info->ToString(),
-			m_FMTs.Size()
-		).c_str();
+			m_FMTs.size()
+		);
 	}
 }

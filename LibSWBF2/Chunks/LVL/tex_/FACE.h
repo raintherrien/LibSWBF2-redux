@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "tex_.LVL_.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::texture
 {
@@ -9,7 +10,7 @@ namespace LibSWBF2::Chunks::LVL::texture
 	struct LIBSWBF2_API FACE : public GenericChunk<"FACE"_m>
 	{
 	public:
-		List<LVL_*> m_LVLs;
+		std::vector<LVL_*> m_LVLs;
 
 	public:
 		void RefreshSize() override;

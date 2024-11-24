@@ -1,5 +1,5 @@
 #pragma once
-#include "Types/LibString.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -32,8 +32,8 @@ namespace LibSWBF2::Types
 		uint8_t ReadHeaderFromStream(FileReader& stream);
 		void ReadDataFromStream(FileReader& stream);
 
-		bool TryLookupName(String& result);
-		String ToString() const;
+		bool TryLookupName(std::string &result);
+		std::string ToString() const;
 
 	private:
 		uint8_t* m_Data = nullptr;

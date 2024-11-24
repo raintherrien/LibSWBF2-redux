@@ -1,10 +1,7 @@
 #pragma once
 #include "req.h"
-
-#include "Types/LibString.h"
-#include "Types/List.h"
 #include "Types/Planning.h"
-
+#include <vector>
 
 namespace LibSWBF2::Chunks::plan
 {
@@ -14,8 +11,6 @@ namespace LibSWBF2::Chunks::plan
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
-	using Types::String;
 	using Types::Hub;
 	using Types::Connection;
 
@@ -27,18 +22,17 @@ namespace LibSWBF2::Wrappers
 
 	private:
 		friend Level;
-		friend List<PlanSet>;
-
-		PlanSet() = default;
-		~PlanSet() = default;
 
 		plan* p_Plan;
 
 
 	public:
+		PlanSet() = default;
+		~PlanSet() = default;
+
 		static bool FromChunk(plan* planChunk, PlanSet& out);
 
-		const List<Hub>& GetHubs() const;
-		const List<Connection>& GetConnections() const;
+		const std::vector<Hub>& GetHubs() const;
+		const std::vector<Connection>& GetConnections() const;
 	};
 }

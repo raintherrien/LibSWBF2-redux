@@ -1,5 +1,4 @@
 #pragma once
-#include "Types/LibString.h"
 #include <unordered_map>
 #include <string_view>
 
@@ -18,8 +17,8 @@ namespace LibSWBF2
 	class FNV
 	{
 	public:
-		static FNVHash Hash(const Types::String& str);
-		static bool Lookup(FNVHash hash, Types::String& result);
+		static FNVHash Hash(const std::string &str);
+		static bool Lookup(FNVHash hash, std::string &result);
 
 		static constexpr FNVHash HashConstexpr(const std::string_view str);
 

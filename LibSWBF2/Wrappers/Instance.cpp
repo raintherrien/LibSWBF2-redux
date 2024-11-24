@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Instance.h"
-#include "Types/LibString.h"
 #include "InternalHelpers.h"
 #include "Hashing.h"
 #include "Level.h"
@@ -8,9 +7,8 @@
 
 namespace LibSWBF2::Wrappers
 {
-	class PropertyMap
+	struct PropertyMap
 	{
-	public:
 		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
 	};
 
@@ -23,6 +21,12 @@ namespace LibSWBF2::Wrappers
 	Instance::~Instance()
 	{
 		delete m_PropertyMapping;
+	}
+
+	Instance::Instance(const Instance &other)
+	{
+		m_PropertyMapping = new PropertyMap();
+		*m_PropertyMapping = *other.m_PropertyMapping;
 	}
 
 	Instance& Instance::operator=(const Instance& other)
@@ -53,7 +57,7 @@ namespace LibSWBF2::Wrappers
 		out.p_Instance = instanceChunk;
 
 		out.m_PropertyMapping->m_HashToIndices.clear();
-		for (size_t i = 0; i < instanceChunk->m_OverrideProperties.Size(); ++i)
+		for (size_t i = 0; i < instanceChunk->m_OverrideProperties.size(); ++i)
 		{
 			FNVHash hashedName = instanceChunk->m_OverrideProperties[i]->m_PropertyName;
 
@@ -71,12 +75,12 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& Instance::GetEntityClassName() const
+	const std::string& Instance::GetEntityClassName() const
 	{
 		return p_Instance->p_Info->p_Type->m_Text;
 	}
 
-	const String& Instance::GetName() const
+	const std::string& Instance::GetName() const
 	{
 		return p_Instance->p_Info->p_Name->m_Text;
 	}
@@ -100,7 +104,7 @@ namespace LibSWBF2::Wrappers
 		return p_MainContainer->FindEntityClass(GetEntityClassName());
 	}
 
-	bool Instance::GetProperty(FNVHash hashedPropertyName, String& outValue) const
+	bool Instance::GetProperty(FNVHash hashedPropertyName, std::string& outValue) const
 	{
 		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
 		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
@@ -120,33 +124,33 @@ namespace LibSWBF2::Wrappers
 		return entityClass->GetProperty(hashedPropertyName, outValue);
 	}
 
-	bool Instance::GetProperty(const String& propertyName, String& outValue) const
+	bool Instance::GetProperty(const std::string& propertyName, std::string& outValue) const
 	{
-		if (propertyName.IsEmpty())
+		if (propertyName.empty())
 		{
 			return false;
 		}
 		return GetProperty(FNV::Hash(propertyName), outValue);
 	}
 
-	bool Instance::GetProperty(const String& propertyName, List<String>& outValues) const
+	bool Instance::GetProperty(const std::string& propertyName, std::vector<std::string>& outValues) const
 	{
-		if (propertyName.IsEmpty())
+		if (propertyName.empty())
 		{
 			return false;
 		}
 		return GetProperty(FNV::Hash(propertyName), outValues);
 	}
 
-	bool Instance::GetProperty(FNVHash hashedPropertyName, List<String>& outValues) const
+	bool Instance::GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const
 	{
-		outValues.Clear();
+		outValues.clear();
 		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
 		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
 		{
 			for (size_t i = 0; i < it->second.size(); ++i)
 			{
-				outValues.Add(p_Instance->m_OverrideProperties[it->second[i]]->m_Value);
+				outValues.push_back(p_Instance->m_OverrideProperties[it->second[i]]->m_Value);
 			}
 			return true;
 		}
@@ -158,16 +162,16 @@ namespace LibSWBF2::Wrappers
 		return false;
 	}
 
-	void Instance::GetOverriddenProperties(List<FNVHash>& hashesOut, List<String>& valuesOut) const
+	void Instance::GetOverriddenProperties(std::vector<FNVHash>& hashesOut, std::vector<std::string>& valuesOut) const
 	{
-		hashesOut.Clear();
-		valuesOut.Clear();
+		hashesOut.clear();
+		valuesOut.clear();
 
-		List<PROP*>& properties = p_Instance -> m_OverrideProperties;
-		for (int i = 0; i < properties.Size(); i++)
+		std::vector<PROP*>& properties = p_Instance -> m_OverrideProperties;
+		for (int i = 0; i < properties.size(); i++)
 		{
-			hashesOut.Add(properties[i] -> m_PropertyName);
-			valuesOut.Add(properties[i] -> m_Value);
+			hashesOut.push_back(properties[i] -> m_PropertyName);
+			valuesOut.push_back(properties[i] -> m_Value);
 		}
 	}
 }

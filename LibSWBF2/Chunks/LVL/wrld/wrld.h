@@ -9,7 +9,8 @@
 #include "anmh.h"
 #include "BARR.h"
 #include "Hint.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -21,22 +22,22 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		STR<"SNAM"_m>* p_SkyName;		// optional chunk, can be nullptr
 
 		// a.k.a. objects placed into the world
-		List<inst*> m_Instances;
+		std::vector<inst*> m_Instances;
 
-		List<regn*> m_Regions;
+		std::vector<regn*> m_Regions;
 
-		List<anim*> m_Animations;
-		List<anmg*> m_AnimationGroups;
-		List<anmh*> m_AnimationHierarchies;
+		std::vector<anim*> m_Animations;
+		std::vector<anmg*> m_AnimationGroups;
+		std::vector<anmh*> m_AnimationHierarchies;
 
-		List<BARR*> m_Barriers;
-		List<Hint*> m_HintNodes;
+		std::vector<BARR*> m_Barriers;
+		std::vector<Hint*> m_HintNodes;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

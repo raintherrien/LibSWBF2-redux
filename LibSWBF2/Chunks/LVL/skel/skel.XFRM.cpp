@@ -27,31 +27,31 @@ namespace LibSWBF2::Chunks::LVL::skel
             THROW("Parent is NOT a skel chunk!");
         }
 
-        m_BoneRotations.Clear();
-        m_BonePositions.Clear();
+        m_BoneRotations.clear();
+        m_BonePositions.clear();
         for (uint32_t i = 0; i < parent->p_Info->m_BoneCount; ++i)
         {
-            m_BoneRotations.Emplace().ReadFromStream(stream);
-            m_BonePositions.Emplace().ReadFromStream(stream);
+            m_BoneRotations.emplace_back().ReadFromStream(stream);
+            m_BonePositions.emplace_back().ReadFromStream(stream);
         }
 
-        if (m_BoneRotations.Size() != m_BonePositions.Size())
+        if (m_BoneRotations.size() != m_BonePositions.size())
         {
-            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.Size(), m_BonePositions.Size());
+            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String XFRM::ToString() const
+    std::string XFRM::ToString() const
     {
-        if (m_BoneRotations.Size() != m_BonePositions.Size())
+        if (m_BoneRotations.size() != m_BonePositions.size())
         {
-            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.Size(), m_BonePositions.Size());
+            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
         }
 
         std::string result;
-        for (size_t i = 0; i < m_BoneRotations.Size(); ++i)
+        for (size_t i = 0; i < m_BoneRotations.size(); ++i)
         {
             result += fmt::format(
                 "Rotation: \n{}\n"
@@ -60,6 +60,6 @@ namespace LibSWBF2::Chunks::LVL::skel
                 m_BonePositions[i].ToString()
             );
         }
-        return result.c_str();
+        return result;
     }
 }

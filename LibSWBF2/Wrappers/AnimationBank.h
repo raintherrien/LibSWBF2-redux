@@ -1,5 +1,7 @@
 #pragma once
 #include "Types/Enums.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
@@ -8,32 +10,25 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
-	using Types::String;
-
 
 	class LIBSWBF2_API AnimationBank
 	{
-	typedef LibSWBF2::Chunks::LVL::animation::zaa_ zaa_ ;
-
-
-		friend List<AnimationBank>;
-
+		typedef LibSWBF2::Chunks::LVL::animation::zaa_ zaa_ ;
 	public:
 
 		static bool FromChunk(zaa_ *chunk, AnimationBank &setOut);
 
 		bool GetCurve(CRCChecksum anim, CRCChecksum bone, uint16_t component,
-					List<uint16_t> &frame_indices, List<float_t> &frame_values) const;
+					std::vector<uint16_t> &frame_indices, std::vector<float_t> &frame_values) const;
 	
 		bool ContainsAnimation(CRCChecksum anim) const;
 
-		List<CRCChecksum> GetAnimations() const;
-		List<CRCChecksum> GetBones(CRCChecksum anim) const;
+		std::vector<CRCChecksum> GetAnimations() const;
+		std::vector<CRCChecksum> GetBones(CRCChecksum anim) const;
 		
 		bool GetAnimationMetadata(CRCChecksum anim, uint32_t &numFrames, uint32_t &numBones) const;
 
-		const String& GetName() const;
+		std::string GetName() const;
 
 		~AnimationBank();
 

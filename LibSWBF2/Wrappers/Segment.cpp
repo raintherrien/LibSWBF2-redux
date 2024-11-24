@@ -12,7 +12,6 @@
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
 	using LibSWBF2::Chunks::LVL::modl::SKIN;
 	using LibSWBF2::Chunks::LVL::modl::BMAP;
 	using LibSWBF2::Chunks::LVL::modl::modl;
@@ -27,8 +26,8 @@ namespace LibSWBF2::Wrappers
 			return false;
 		}
 
-		List<VBUF*>& vBuffs = segmentChunk->m_VertexBuffers;
-		if (vBuffs.Size() == 0)
+		std::vector<VBUF*>& vBuffs = segmentChunk->m_VertexBuffers;
+		if (vBuffs.size() == 0)
 		{
 			LOG_WARN("Segment Chunk does not contain any data!");
 			return false;
@@ -38,7 +37,7 @@ namespace LibSWBF2::Wrappers
 
 		// find the VBUF we want to use, preferably one without compression
 		out.p_VertexBuffer = nullptr;
-		for (size_t i = 0; i < vBuffs.Size(); ++i)
+		for (size_t i = 0; i < vBuffs.size(); ++i)
 		{
 			// TODO: better selection / sorting?
 			if ((vBuffs[i]->m_Flags & EVBUFFlags::Position) != 0 &&
@@ -74,7 +73,7 @@ namespace LibSWBF2::Wrappers
 			auto& boneIndicies = out.p_VertexBuffer -> m_BoneIndicies;
 			auto& boneWeights  = out.p_VertexBuffer -> m_Weights;
 
-			if (boneIndicies.Size() > 0)
+			if (boneIndicies.size() > 0)
 			{
 				if (boneMap == nullptr)
 				{
@@ -82,9 +81,9 @@ namespace LibSWBF2::Wrappers
 					return true;			
 				}
 
-				if (boneWeights.Size() != 0)
+				if (boneWeights.size() != 0)
 				{
-					for (int i = 0; i < boneIndicies.Size(); i++)
+					for (int i = 0; i < boneIndicies.size(); i++)
 					{
 						uint8_t index =  boneIndicies[i].m_X;
 						uint8_t index1 = boneIndicies[i].m_Y;
@@ -103,14 +102,14 @@ namespace LibSWBF2::Wrappers
 							index2 = (uint8_t) boneMap->m_IndexMap[index2];
 						}
 
-						out.m_VertexWeights.Add({ boneWeights[i].m_X, index });
-						out.m_VertexWeights.Add({ boneWeights[i].m_Y, index1 });
-						out.m_VertexWeights.Add({ boneWeights[i].m_Z, index2 });
+						out.m_VertexWeights.push_back({ boneWeights[i].m_X, index });
+						out.m_VertexWeights.push_back({ boneWeights[i].m_Y, index1 });
+						out.m_VertexWeights.push_back({ boneWeights[i].m_Z, index2 });
 					}
 				}
 				else 
 				{
-					for (int i = 0; i < boneIndicies.Size(); i++)
+					for (int i = 0; i < boneIndicies.size(); i++)
 					{
 						uint8_t index = boneIndicies[i].m_X;
 
@@ -123,7 +122,7 @@ namespace LibSWBF2::Wrappers
 							index = (uint8_t) boneMap->m_IndexMap[index];
 						}
 
-						out.m_VertexWeights.Add({ 1.0f, index });
+						out.m_VertexWeights.push_back({ 1.0f, index });
 					}
 				}
 			}
@@ -145,25 +144,25 @@ namespace LibSWBF2::Wrappers
 	void Segment::GetIndexBuffer(uint32_t& count, uint16_t*& indexBuffer) const
 	{
 		count = p_Segment->p_IndexBuffer->m_IndicesCount;
-		indexBuffer = p_Segment->p_IndexBuffer->m_Indices.GetArrayPtr();
+		indexBuffer = p_Segment->p_IndexBuffer->m_Indices.data();
 	}
 
 	void Segment::GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const
 	{
-		count = (uint32_t)p_VertexBuffer->m_Positions.Size();
-		vertexBuffer = p_VertexBuffer->m_Positions.GetArrayPtr();
+		count = (uint32_t)p_VertexBuffer->m_Positions.size();
+		vertexBuffer = p_VertexBuffer->m_Positions.data();
 	}
 
 	void Segment::GetNormalBuffer(uint32_t& count, Vector3*& normalBuffer) const
 	{
-		count = (uint32_t)p_VertexBuffer->m_Normals.Size();
-		normalBuffer = p_VertexBuffer->m_Normals.GetArrayPtr();
+		count = (uint32_t)p_VertexBuffer->m_Normals.size();
+		normalBuffer = p_VertexBuffer->m_Normals.data();
 	}
 
 	void Segment::GetUVBuffer(uint32_t& count, Vector2*& uvBuffer) const
 	{
-		count = (uint32_t)p_VertexBuffer->m_TexCoords.Size();
-		uvBuffer = p_VertexBuffer->m_TexCoords.GetArrayPtr();
+		count = (uint32_t)p_VertexBuffer->m_TexCoords.size();
+		uvBuffer = p_VertexBuffer->m_TexCoords.data();
 	}
 
 	bool Segment::ContainsWeights() const
@@ -171,7 +170,7 @@ namespace LibSWBF2::Wrappers
 		return p_Segment->p_Skin != nullptr;
 	}
 
-	bool Segment::GetVertexWeights(uint32_t& count, VertexWeight*& weightBuffer) const
+	bool Segment::GetVertexWeights(uint32_t& count, const VertexWeight*& weightBuffer) const
 	{
 		count = 0;
 		weightBuffer = nullptr;
@@ -179,13 +178,13 @@ namespace LibSWBF2::Wrappers
 		if (!ContainsWeights())
 			return false;
 
-		count = (uint32_t)m_VertexWeights.Size();
-		weightBuffer = m_VertexWeights.GetArrayPtr();
+		count = (uint32_t)m_VertexWeights.size();
+		weightBuffer = m_VertexWeights.data();
 		return count > 0;
 	}
 
 
-	String Segment::GetBone() const
+	std::string Segment::GetBone() const
 	{
 		if (p_Segment -> p_Parent != nullptr)
 		{
@@ -196,7 +195,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	String Segment::GetTag() const
+	std::string Segment::GetTag() const
 	{
 		if (p_Segment -> p_Tag != nullptr)
 		{

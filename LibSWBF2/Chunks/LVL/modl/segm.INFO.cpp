@@ -33,11 +33,11 @@ namespace LibSWBF2::Chunks::LVL::modl::segment
         BaseChunk::EnsureEnd(stream);
     }
 
-    String INFO::ToString() const
+    std::string INFO::ToString() const
     {
         return
             "Topology = " + TopologyToString(m_Topology) + "\n" +
-            "Vertex Count = " + std::to_string(m_VertexCount).c_str() + "\n" +
-            "Primitive Count = " + std::to_string(m_PrimitiveCount).c_str();
+            "Vertex Count = " + std::to_string(m_VertexCount) + "\n" +
+            "Primitive Count = " + std::to_string(m_PrimitiveCount);
     }
 }

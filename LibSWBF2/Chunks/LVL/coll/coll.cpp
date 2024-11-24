@@ -41,10 +41,10 @@ namespace LibSWBF2::Chunks::LVL::coll
 		BaseChunk::EnsureEnd(stream);
 	}
 
-    Types::String coll::ToString() const
+	std::string coll::ToString() const
     {
         return p_Tree -> ToString()  +
                " Name: " + p_ChunkName -> ToString() +
-        		fmt::format(" Num verts: {}", p_Verts -> m_Verts.Size()).c_str();
+        		fmt::format(" Num verts: {}", p_Verts -> m_Verts.size());
     }
 }

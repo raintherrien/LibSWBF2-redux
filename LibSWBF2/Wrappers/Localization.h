@@ -1,5 +1,5 @@
 #pragma once
-#include "Types/List.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::Localization
 {
@@ -9,17 +9,11 @@ namespace LibSWBF2::Chunks::LVL::Localization
 namespace LibSWBF2::Wrappers
 {
 	using LibSWBF2::Chunks::LVL::Localization::Locl;
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
 
 	class LIBSWBF2_API Localization
 	{
 	private:
 		friend class Level;
-		friend class List<Localization>;
-
-		Localization();
-		~Localization();
 
 		Localization& operator=(const Localization& other);
 		Localization& operator=(Localization&& other);
@@ -29,11 +23,15 @@ namespace LibSWBF2::Wrappers
 		class LocalizationMaps* m_LocalizationMaps;
 
 	public:
+		Localization();
+		~Localization();
+		Localization(const Localization &);
+
 		static bool FromChunk(Locl* loclChunk, Localization& out);
 
-		const String& GetName() const;
+		const std::string& GetName() const;
 
 		// count is number of wide chars, NOT number of bytes!
-		bool GetLocalizedWideString(const String& path, uint16_t*& chars, uint32_t& count) const;
+		bool GetLocalizedWideString(const std::string& path, const wchar_t*& chars, uint32_t& count) const;
 	};
 }

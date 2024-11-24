@@ -1,8 +1,7 @@
 #pragma once
 #include "Material.h"
-#include "Types/LibString.h"
-#include "Types/List.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -10,11 +9,8 @@ namespace LibSWBF2::Chunks::LVL::modl
 	struct VBUF;
 }
 
-
-
 namespace LibSWBF2::Wrappers
 {
-	using Types::String;
 	using Types::Vector2;
 	using Types::Vector3;
 	using Chunks::LVL::modl::segm;
@@ -36,19 +32,18 @@ namespace LibSWBF2::Wrappers
 	{
 	private:
 		friend Model;
-		friend List<Segment>;
-
-		Segment() = default;
-		~Segment() = default;
 
 	private:
 		segm* p_Segment;
 		VBUF* p_VertexBuffer;
 
 		Material m_Material;
-		List<VertexWeight> m_VertexWeights;
+		std::vector<VertexWeight> m_VertexWeights;
 
 	public:
+		Segment() = default;
+		~Segment() = default;
+
 		static bool FromChunk(Level* mainContainer, segm* segmentChunk, Segment& out);
 
 		ETopology GetTopology() const;
@@ -70,15 +65,15 @@ namespace LibSWBF2::Wrappers
 
 		// count corresponmds to number of vertices, NOT number of bytes!
 		// returns false if there are no vertex weights present
-		bool GetVertexWeights(uint32_t& count, VertexWeight*& weightBuffer) const;
+		bool GetVertexWeights(uint32_t& count, const VertexWeight*& weightBuffer) const;
 
 		// returns the skeleton bone this segment belongs to
-		String GetBone() const;
+		std::string GetBone() const;
 
 		// Used to indicate special meaning. Two known uses are for 
 		// indicating override_texture capability and scrolling
 		// wheel textures a la snailtank
-		String GetTag() const;
+		std::string GetTag() const;
 
 		// Some weighted VBUF data is pre-transformed to zeroed bone transforms
 		bool IsPretransformed() const;

@@ -34,7 +34,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
         BaseChunk::EnsureEnd(stream);
     }
 
-    String INFO::ToString() const
+    std::string INFO::ToString() const
     {
         return fmt::format(
             "Grid Unit Size: {}\n"
@@ -57,6 +57,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
             m_TextureCount,
             m_MaxTextureLayers,
             m_Unknown
-        ).c_str();
+        );
     }
 }

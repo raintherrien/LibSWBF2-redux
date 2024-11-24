@@ -31,13 +31,13 @@ namespace LibSWBF2::Chunks::LVL::modl
         BaseChunk::EnsureEnd(stream);
     }
 
-    String MTRL::ToString() const
+    std::string MTRL::ToString() const
     {
         return
             "Flags = " + MaterialFlagsToString(m_Flags) + "\n" +
             "Diffuse Color = " + m_DiffuseColor.ToString() + "\n" +
             "Specular Color = " + m_SpecularColor.ToString() + "\n" +
-            "Specular Exponent = " + std::to_string(m_SpecularExponent).c_str() + "\n" +
+            "Specular Exponent = " + std::to_string(m_SpecularExponent) + "\n" +
             "Attached Light = " + m_AttachedLight;
     }
 }

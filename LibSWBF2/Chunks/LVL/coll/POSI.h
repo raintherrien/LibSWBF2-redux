@@ -1,9 +1,8 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
-#include "Types/List.h"
-#include "Types/LibString.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
@@ -14,8 +13,8 @@ namespace LibSWBF2::Chunks::LVL::coll
 	    void WriteToStream(FileWriter& stream) override;
 	    void ReadFromStream(FileReader& stream) override;
 
-	    Types::String ToString() const override;
+	    std::string ToString() const override;
 
-        List<Vector3> m_Verts;
+	    std::vector<Vector3> m_Verts;
     };
 }

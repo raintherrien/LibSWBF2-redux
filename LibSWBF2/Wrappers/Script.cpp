@@ -20,7 +20,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	String Script::GetName() const
+	std::string Script::GetName() const
 	{
 		return p_Script->p_Name->m_Text;
 	}

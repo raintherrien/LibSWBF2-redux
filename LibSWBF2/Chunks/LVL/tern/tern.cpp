@@ -57,8 +57,8 @@ namespace LibSWBF2::Chunks::LVL::terrain
         BaseChunk::EnsureEnd(stream);
     }
 
-    String tern::ToString() const
+    std::string tern::ToString() const
     {
-        return fmt::format("Name: {}", p_Name->m_Text).c_str();
+        return fmt::format("Name: {}", p_Name->m_Text);
     }
 }

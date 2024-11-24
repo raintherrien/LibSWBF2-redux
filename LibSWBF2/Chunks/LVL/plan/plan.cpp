@@ -4,7 +4,6 @@
 #include "InternalHelpers.h"
 #include "Types/Enums.h"
 #include "Logging/Logger.h"
-#include "Types/List.h"
 
 #define NAME_LENGTH 16
 
@@ -21,10 +20,10 @@ void LibSWBF2::Chunks::plan::PLAN_INFO::ReadFromStream(FileReader& stream)
 }
 
 
-String LibSWBF2::Chunks::plan::PLAN_INFO::ToString() const
+std::string LibSWBF2::Chunks::plan::PLAN_INFO::ToString() const
 {
     return fmt::format("Hub count: {0}, Connection count: {1}", 
-                    m_iHubCount, m_iConnectionCount).c_str();
+                    m_iHubCount, m_iConnectionCount);
 }
 
 
@@ -70,7 +69,7 @@ void LibSWBF2::Chunks::plan::NODE::ReadFromStream(FileReader& stream)
 
     for (int i = 0; i < m_iCount; i++)
     {
-        m_aHubs.Emplace().ReadFromStream(stream, m_iCount);
+        m_aHubs.emplace_back().ReadFromStream(stream, m_iCount);
     }
 
     BaseChunk::EnsureEnd(stream);
@@ -82,12 +81,12 @@ LibSWBF2::Chunks::plan::NODE::NODE(uint16_t count)
 }
 
 
-String LibSWBF2::Chunks::plan::NODE::ToString() const
+std::string LibSWBF2::Chunks::plan::NODE::ToString() const
 {
-    String rep = fmt::format("{0} hubs:\n", m_iCount).c_str();
-    for (int i = 0; i < m_aHubs.Size(); i++)
+	std::string rep = fmt::format("{0} hubs:\n", m_iCount);
+    for (int i = 0; i < m_aHubs.size(); i++)
     {
-        rep = "  " + rep + m_aHubs[i].ToString().Buffer() + "\n";
+        rep = "  " + rep + m_aHubs[i].ToString() + "\n";
     }
     return rep;
 }
@@ -101,7 +100,7 @@ void LibSWBF2::Chunks::plan::ARCS::ReadFromStream(FileReader& stream)
 
     for (int i = 0; i < m_iCount; i++)
     {
-        m_aConnections.Emplace().ReadFromStream(stream);
+        m_aConnections.emplace_back().ReadFromStream(stream);
     }
 
     BaseChunk::EnsureEnd(stream);
@@ -113,12 +112,12 @@ LibSWBF2::Chunks::plan::ARCS::ARCS(uint16_t count)
 }
 
 
-String LibSWBF2::Chunks::plan::ARCS::ToString() const
+std::string LibSWBF2::Chunks::plan::ARCS::ToString() const
 {
-    String rep = fmt::format("{0} connections:\n", m_iCount).c_str();
-    for (int i = 0; i < m_aConnections.Size(); i++)
+	std::string rep = fmt::format("{0} connections:\n", m_iCount);
+    for (int i = 0; i < m_aConnections.size(); i++)
     {
-        rep = "  " + rep + m_aConnections[i].ToString().Buffer() + "\n";
+        rep = "  " + rep + m_aConnections[i].ToString() + "\n";
     }
     return rep;
 }

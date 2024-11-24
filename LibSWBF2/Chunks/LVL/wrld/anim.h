@@ -2,7 +2,7 @@
 #include "Chunks/GenericChunk.h"
 #include "anim.INFO.h"
 #include "WorldAnimKeyChunk.h"
-
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -10,8 +10,8 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	{
 		anim_INFO* p_Info;
 
-		List<POSK *> m_PositionKeys;
-		List<ROTK *> m_RotationKeys;
+		std::vector<POSK *> m_PositionKeys;
+		std::vector<ROTK *> m_RotationKeys;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;

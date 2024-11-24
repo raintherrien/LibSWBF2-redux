@@ -21,16 +21,16 @@ namespace LibSWBF2::Chunks::LVL::modl
         Check(stream);
 
         m_IndicesCount = stream.ReadUInt32();
-        m_Indices.Resize(m_IndicesCount);
+        m_Indices.resize(m_IndicesCount);
         for (uint32_t i = 0; i < m_IndicesCount; ++i)
         {
-            m_Indices.Add(stream.ReadUInt16());
+            m_Indices.push_back(stream.ReadUInt16());
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String IBUF::ToString() const
+    std::string IBUF::ToString() const
     {
         std::string result = fmt::format("Number of Inidces = {}\nIndices = [", m_IndicesCount);
         for (uint32_t i = 0; i < m_IndicesCount; ++i)
@@ -40,6 +40,6 @@ namespace LibSWBF2::Chunks::LVL::modl
 
         result.resize(result.size() - 2);
         result += "]";
-        return result.c_str();
+        return result;
     }
 }

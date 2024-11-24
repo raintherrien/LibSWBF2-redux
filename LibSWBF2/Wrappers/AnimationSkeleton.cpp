@@ -38,9 +38,9 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const String& AnimationSkeleton::GetName() const
+	const std::string& AnimationSkeleton::GetName() const
 	{
-		static String Missing;
+		static std::string Missing;
 		if (p_AnimSkeleton -> p_Name != nullptr)
 		{
 			return p_AnimSkeleton -> p_Name -> m_Text;	
@@ -53,17 +53,17 @@ namespace LibSWBF2::Wrappers
 	}
 	
 
-	bool AnimationSkeleton::GetJoints(List<Joint>& jointsOut) const
+	bool AnimationSkeleton::GetJoints(std::vector<Joint>& jointsOut) const
 	{
 		if ((p_AnimSkeleton -> p_Bin != nullptr) && (p_AnimSkeleton -> p_Bin -> p_Skeleton != nullptr))
 		{
-			jointsOut.Clear();
+			jointsOut.clear();
 
-			List<TNOJ *>& jointChunks = p_AnimSkeleton -> p_Bin -> p_Skeleton -> m_Joints;
-			for (int i = 0; i < jointChunks.Size(); i++)
+			std::vector<TNOJ *>& jointChunks = p_AnimSkeleton -> p_Bin -> p_Skeleton -> m_Joints;
+			for (int i = 0; i < jointChunks.size(); i++)
 			{
 				TNOJ *jC = jointChunks[i];
-				jointsOut.Add({jC -> m_BoneCRC, jC -> m_BaseRotation, jC -> m_BasePosition, jC -> m_ParentBoneCRC});
+				jointsOut.push_back({jC -> m_BoneCRC, jC -> m_BaseRotation, jC -> m_BasePosition, jC -> m_ParentBoneCRC});
 			}
 
 			return true;

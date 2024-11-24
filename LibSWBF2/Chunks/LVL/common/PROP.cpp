@@ -23,17 +23,17 @@ namespace LibSWBF2::Chunks::LVL::common
 
         m_PropertyName = stream.ReadUInt32();
         m_Value = stream.ReadString();
-        m_Value.Replace((char)'\xa0', '0x20');
+	std::replace(std::begin(m_Value), std::end(m_Value), '\xa0', '\x20');
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String PROP::ToString() const
+    std::string PROP::ToString() const
     {
-        String name;
+	    std::string name;
         if (!FNV::Lookup(m_PropertyName, name))
         {
-            name = std::to_string(m_PropertyName).c_str();
+            name = std::to_string(m_PropertyName);
         }
 
         return fmt::format(
@@ -41,6 +41,6 @@ namespace LibSWBF2::Chunks::LVL::common
             "Value: {}",
             name,
             m_Value
-        ).c_str();
+        );
     }
 }

@@ -1,7 +1,8 @@
 #pragma once
 #include "BaseChunk.h"
 #include "HeaderNames.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks
 {
@@ -10,11 +11,11 @@ namespace LibSWBF2::Chunks
 		GenericBaseChunk() = default;
 		virtual ~GenericBaseChunk() override;
 
-		String GetHeaderName() const;
+		std::string GetHeaderName() const;
 		GenericBaseChunk* GetParent() const;
-		const List<GenericBaseChunk*>& GetChildren() const;
+		const std::vector<GenericBaseChunk*>& GetChildren() const;
 
-		virtual String ToString() const;
+		virtual std::string ToString() const;
 
 	public:
 		template<class ChildType>
@@ -22,7 +23,7 @@ namespace LibSWBF2::Chunks
 		{
 			ChildType* chunk = new ChildType();
 			memberPtr = chunk;
-			parent->m_Children.Add(chunk);
+			parent->m_Children.push_back(chunk);
 			chunk->m_Parent = parent;
 
 			// Important: start reading AFTER parent and child have been set!
@@ -31,7 +32,7 @@ namespace LibSWBF2::Chunks
 
 		void ReadExplicitNoCtor(GenericBaseChunk* parent, FileReader& stream, GenericBaseChunk* chunkPtr)
 		{
-			parent->m_Children.Add(chunkPtr);
+			parent->m_Children.push_back(chunkPtr);
 			chunkPtr->m_Parent = parent;
 
 			// Important: start reading AFTER parent and child have been set!
@@ -42,7 +43,7 @@ namespace LibSWBF2::Chunks
 
 	private:
 		GenericBaseChunk* m_Parent = nullptr;
-		List<GenericBaseChunk*> m_Children;
+		std::vector<GenericBaseChunk*> m_Children;
 	};
 
 	template<uint32_t Header>

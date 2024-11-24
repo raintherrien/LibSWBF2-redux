@@ -65,7 +65,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 					next = (FNVHash) stream.ReadUInt32();
 					while (next == "Sample"_fnv)
 					{
-						m_SoundHeaders.Emplace().ReadHeaderFromStream(stream);
+						m_SoundHeaders.emplace_back().ReadHeaderFromStream(stream);
 						next = (FNVHash) stream.ReadUInt32(); 
 					}
 					stream.SetPosition(stream.GetPosition() - 4);
@@ -84,7 +84,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String StreamInfo::HeaderToString() const
+	std::string StreamInfo::HeaderToString() const
 	{
 		return fmt::format(
 			"Name: 0x{0:x}\n"
@@ -105,21 +105,21 @@ namespace LibSWBF2::Chunks::LVL::sound
 			m_SubstreamInterleave,
 			m_CombinedSoundSize,
 			m_Padding
-		).c_str();
+		);
 	}
 
-	String StreamInfo::SegmentInfoToString() const
+	std::string StreamInfo::SegmentInfoToString() const
 	{
-		String soundsStr;
-		for (int i = 0; i < m_SoundHeaders.Size(); i++)
+		std::string soundsStr;
+		for (int i = 0; i < m_SoundHeaders.size(); i++)
 		{
-			soundsStr = soundsStr + fmt::format("\n{}:\n", i).c_str();
+			soundsStr = soundsStr + fmt::format("\n{}:\n", i);
 			soundsStr = soundsStr + m_SoundHeaders[i].ToString();
 		}
 		return soundsStr;
 	}
 
-	String StreamInfo::ToString() const
+	std::string StreamInfo::ToString() const
 	{
 		return HeaderToString() + "\nSegment headers: \n" + SegmentInfoToString();
 	}

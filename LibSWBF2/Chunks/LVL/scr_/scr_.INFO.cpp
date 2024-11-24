@@ -25,11 +25,11 @@ namespace LibSWBF2::Chunks::LVL::script
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String INFO::ToString() const
+	std::string INFO::ToString() const
 	{
 		return fmt::format(
 			"Num Bodies: {}",
 			m_NumBodies
-		).c_str();
+		);
 	}
 }

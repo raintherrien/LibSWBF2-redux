@@ -37,7 +37,7 @@ namespace LibSWBF2::Chunks::LVL::prim
         for (int i = 0; i < p_InfoChunk -> m_NumPrimitives; i++)
         {
             READ_CHILD(stream, tempNAME);
-            m_PrimitiveNAMEs.Add(tempNAME);
+            m_PrimitiveNAMEs.push_back(tempNAME);
 
             tempMASK = nullptr;
             if (stream.ReadChunkHeader(true) == "MASK"_h)
@@ -45,23 +45,23 @@ namespace LibSWBF2::Chunks::LVL::prim
                 READ_CHILD(stream, tempMASK);
             }
 
-            m_PrimitiveMASKs.Add(tempMASK);
+            m_PrimitiveMASKs.push_back(tempMASK);
 
             READ_CHILD(stream, tempPRNT);
-            m_PrimitivePRNTs.Add(tempPRNT);
+            m_PrimitivePRNTs.push_back(tempPRNT);
 
             READ_CHILD(stream, tempXFRM);
-            m_PrimitiveXFRMs.Add(tempXFRM);
+            m_PrimitiveXFRMs.push_back(tempXFRM);
 
             READ_CHILD(stream, tempDATA);
-            m_PrimitiveDATAs.Add(tempDATA);     	
+            m_PrimitiveDATAs.push_back(tempDATA);     	
         }
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
 
-	Types::String prim::ToString() const
+	std::string prim::ToString() const
 	{
 		return p_InfoChunk -> ToString();
 	}

@@ -34,26 +34,26 @@ namespace LibSWBF2::Chunks::LVL::prim
         BaseChunk::EnsureEnd(stream);
 	}
 
-	Types::String DATA_PRIM::ToString() const
+	std::string DATA_PRIM::ToString() const
 	{
 		switch (m_PrimitiveType)
 		{
 			case ECollisionPrimitiveType::Sphere:
 				return fmt::format("Type: Sphere, Radius: {}", 
-									m_Field1).c_str();
+									m_Field1);
 			case ECollisionPrimitiveType::Cylinder:
 				return fmt::format("Type: Cylinder, Radius: {}, Height: {}",
-									m_Field1, m_Field2).c_str();
+									m_Field1, m_Field2);
 			case ECollisionPrimitiveType::Cube:
 				return fmt::format("Type: Cube, x: {}, y: {}, z: {}",
-									m_Field1, m_Field2, m_Field3).c_str();
+									m_Field1, m_Field2, m_Field3);
 			case ECollisionPrimitiveType::Empty:
 				return "Empty";
 				
 			default:
-				String unknown = CollisionPrimitiveTypeToString(m_PrimitiveType);
+				std::string unknown = CollisionPrimitiveTypeToString(m_PrimitiveType);
 				return fmt::format("{}, field1: {}, field2: {}, field3: {}",
-									unknown.Buffer(), m_Field1, m_Field2, m_Field3).c_str();
+									unknown, m_Field1, m_Field2, m_Field3);
 		}
 	}
 }

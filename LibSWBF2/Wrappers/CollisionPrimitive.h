@@ -9,6 +9,7 @@
 #include "Types/Vector3.h"
 #include "Types/Matrix3x3.h"
 
+#include <string>
 
 namespace LibSWBF2::Wrappers
 {
@@ -20,7 +21,6 @@ namespace LibSWBF2::Wrappers
 	class LIBSWBF2_API CollisionPrimitive
 	{
 		friend class Level;
-		friend class List<CollisionPrimitive>;
 
 	private:
 		
@@ -42,8 +42,8 @@ namespace LibSWBF2::Wrappers
                            DATA_PRIM *fields, CollisionPrimitive& out);
 	public:
 		
-		String GetName() const;
-		String GetParentName() const;
+		std::string GetName() const;
+		std::string GetParentName() const;
 
 		Vector4 GetRotation() const;
 		Vector3 GetPosition() const;
@@ -55,6 +55,6 @@ namespace LibSWBF2::Wrappers
 		bool GetCylinderDims(float_t& radiusOut, float_t& heightOut) const;
 		bool GetSphereRadius(float_t &radiusOut) const;
 		
-		String ToString() const;
+		std::string ToString() const;
 	};
 }

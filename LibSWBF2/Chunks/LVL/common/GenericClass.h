@@ -2,6 +2,8 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "PROP.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::common
 {
@@ -12,14 +14,14 @@ namespace LibSWBF2::Chunks::LVL::common
 		STR<"BASE"_m>* p_Base;
 		STR<"TYPE"_m>* p_Type;
 
-		List<PROP*> m_Properties;
+		std::vector<PROP*> m_Properties;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 
 	struct LIBSWBF2_API GenericClassNC : public GenericClass<0> {};

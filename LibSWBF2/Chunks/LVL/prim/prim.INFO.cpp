@@ -29,9 +29,9 @@ namespace LibSWBF2::Chunks::LVL::prim
 		BaseChunk::EnsureEnd(stream);
 	}
 
-    Types::String INFO_prim::ToString() const 
+	std::string INFO_prim::ToString() const 
     {
     	return fmt::format("String member: {}\nNum primitives {}",
-    		   m_ModelName.Buffer(), m_NumPrimitives).c_str();
+    		   m_ModelName, m_NumPrimitives);
     }
 }

@@ -1,8 +1,7 @@
 #pragma once
 #include "Chunks/HeaderNames.h"
-#include "Types/List.h"
-#include "Types/LibString.h"
 #include "Types/Vector2.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -12,15 +11,13 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	using LibSWBF2::Types::List;
 	using LibSWBF2::Types::Vector2;
-	using LibSWBF2::Types::String;
 
 	// TODO: Move to Types into a dedicated header file
 	struct LIBSWBF2_API TextureLayer
 	{
-		String DiffuseName;
-		String DetailName;
+		std::string DiffuseName;
+		std::string DetailName;
 	};
 
 	// TODO: Move to Types into a dedicated header file
@@ -30,7 +27,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		Vector2 UVAnimationVelocity;
 		Vector2 UVAnimationRepeat;
 		uint8_t RGBA[4]; // TODO: Introduce new Color32 type and use here
-		String TextureName;
+		std::string TextureName;
 	};
 
 	struct LIBSWBF2_API TERR
@@ -45,8 +42,8 @@ namespace LibSWBF2::Chunks::LVL::terrain
 	public:
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
-		bool WriteToFile(const String& Path);
-		bool ReadFromFile(const String& Path);
+		bool WriteToFile(const std::string& Path);
+		bool ReadFromFile(const std::string& Path);
 
 #pragma region Header
 		uint32_t FileVersion;
@@ -59,17 +56,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		uint32_t TerrainOptions;
 		TextureLayer TextureLayers[16];
 		WaterLayer WaterLayers[16];
-		String RoadDecalTextureNames[16];
+		std::string RoadDecalTextureNames[16];
 #pragma endregion Header
-
-#pragma region Blocks
-		//List<List<uint16_t>> Heights;
-		//List<List<uint8_t[4]>> Color4u8;
-		//List<List<uint8_t[4]>> Color2;
-		//List<List<uint8_t[16]>> Texture;
-
-		//List<List<uint8_t[2]>> BlendHeights1;
-		//List<List<uint8_t[2]>> BlendHeights2;
-#pragma endregion Blocks
 	};
 }

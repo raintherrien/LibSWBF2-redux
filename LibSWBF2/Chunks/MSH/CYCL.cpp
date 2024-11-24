@@ -7,15 +7,15 @@ namespace LibSWBF2::Chunks::MSH
 {
 	void CYCL::RefreshSize()
 	{
-		m_Size = (uint32_t)(sizeof(uint32_t) + (Animation::SIZE * m_Animations.Size()));
+		m_Size = (uint32_t)(sizeof(uint32_t) + (Animation::SIZE * m_Animations.size()));
 	}
 
 	void CYCL::WriteToStream(FileWriter& stream)
 	{
 		BaseChunk::WriteToStream(stream);
-		stream.WriteUInt32((uint32_t)m_Animations.Size());
+		stream.WriteUInt32((uint32_t)m_Animations.size());
 
-		for (size_t i = 0; i < m_Animations.Size(); ++i)
+		for (size_t i = 0; i < m_Animations.size(); ++i)
 		{
 			m_Animations[i].WriteToStream(stream);
 		}
@@ -26,12 +26,12 @@ namespace LibSWBF2::Chunks::MSH
 		BaseChunk::ReadFromStream(stream);
 		uint32_t numOfAnims = stream.ReadUInt32();
 		
-		m_Animations.Clear();
-		m_Animations.Resize(numOfAnims);
+		m_Animations.clear();
+		m_Animations.resize(numOfAnims);
 
 		for (size_t i = 0; i < numOfAnims; ++i)
 		{
-			Animation& anim = m_Animations.Emplace();
+			Animation& anim = m_Animations.emplace_back();
 			anim.ReadFromStream(stream);
 		}
 

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "LoggerEntry.h"
-#include <string>
 
 namespace LibSWBF2::Logging
 {
@@ -12,7 +11,7 @@ namespace LibSWBF2::Logging
 		this->m_File = file;
 	}
 
-	String LoggerEntry::ToString() const
+	std::string LoggerEntry::ToString() const
 	{
 		if (m_Level == ELogType::Info)
 		{

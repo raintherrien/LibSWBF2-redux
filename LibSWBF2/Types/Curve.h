@@ -1,13 +1,9 @@
 #pragma once
 #include "req.h"
-#include "Types/List.h"
-
+#include <vector>
 
 namespace LibSWBF2::Types
 {
-	using Types::List;
-
-
 	#pragma pack(push,1)
 	template<typename T>
 	struct LIBSWBF2_API Key 
@@ -21,24 +17,24 @@ namespace LibSWBF2::Types
 	template<typename T>
 	struct LIBSWBF2_API Curve
 	{
-		const List<T>& GetIndices() const
+		const std::vector<T>& GetIndices() const
 		{
 			return m_Indices;
 		}
 
-		const List<float_t>& GetValues() const
+		const std::vector<float_t>& GetValues() const
 		{
 			return m_Values;
 		}
 
-		const List<Key<T>> GetKeys() const
+		const std::vector<Key<T>> GetKeys() const
 		{
 			const size_t& iSize = m_Indices.Size();
 			const size_t& vSize = m_Values.Size();
 
 			uint32_t size = iSize < vSize ? iSize : vSize;
 
-			List<Key<T>> keys;
+			std::vector<Key<T>> keys;
 			keys.Resize(size);
 
 			for (uint16_t i = 0; i < size; i++)
@@ -49,7 +45,7 @@ namespace LibSWBF2::Types
 			return keys;
 		}
 
-		Curve(List<T>&& inds, List<float_t>&& vals)
+		Curve(std::vector<T>&& inds, std::vector<float_t>&& vals)
 		{
 			m_Indices = inds;
 			m_Values = vals;
@@ -59,7 +55,7 @@ namespace LibSWBF2::Types
 
 
 	private:
-		List<T> m_Indices;
-		List<float_t> m_Values; 
+		std::vector<T> m_Indices;
+		std::vector<float_t> m_Values; 
 	};
 }

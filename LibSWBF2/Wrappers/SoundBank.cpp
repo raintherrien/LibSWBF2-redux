@@ -24,15 +24,16 @@ namespace LibSWBF2::Wrappers
 		out.p_soundBank = bankChunk;
 		out.m_NameToIndexMaps = new SoundMapsWrapper();
 
-		List<SoundClip>& clips = bankChunk -> p_Info -> m_SoundHeaders;
-		for (size_t i = 0; i < clips.Size(); ++i)
+		std::vector<SoundClip>& clips = bankChunk -> p_Info -> m_SoundHeaders;
+		for (size_t i = 0; i < clips.size(); ++i)
 		{
 			Sound sound;
 			if (Sound::FromSoundClip(&clips[i], sound))
 			{
 				sound.m_Format = out.p_soundBank -> p_Info -> m_Format;
 				sound.m_NumChannels = 1;
-				size_t index = out.m_Sounds.Add(sound);
+				size_t index = out.m_Sounds.size();
+				out.m_Sounds.push_back(sound);
 				out.m_NameToIndexMaps->SoundHashToIndex.emplace(clips[i].m_NameHash, index);
 			}
 		}
@@ -57,14 +58,14 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const List<Sound>& SoundBank::GetSounds() const
+	const std::vector<Sound>& SoundBank::GetSounds() const
 	{
 		return m_Sounds;
 	}
 
-	const Sound* SoundBank::GetSound(const String& soundName) const
+	const Sound* SoundBank::GetSound(const std::string& soundName) const
 	{
-		if (soundName.IsEmpty())
+		if (soundName.empty())
 		{
 			return nullptr;
 		}

@@ -1,10 +1,10 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
-
 #include "TREE.NODE.h"
 #include "TREE.LEAF.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
@@ -15,9 +15,9 @@ namespace LibSWBF2::Chunks::LVL::coll
 	    void WriteToStream(FileWriter& stream) override;
 	    void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
+	    std::string ToString() const override;
 
-        List<TREE_NODE *> m_Nodes;
-        List<TREE_LEAF *> m_Leaves;
+	std::vector<TREE_NODE *> m_Nodes;
+	std::vector<TREE_LEAF *> m_Leaves;
     };
 }

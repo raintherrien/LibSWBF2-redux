@@ -26,7 +26,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::EnsureEnd(stream);
     }
 
-    String SIZE::ToString() const
+    std::string SIZE::ToString() const
     {
         return m_Dimensions.ToString();
     }

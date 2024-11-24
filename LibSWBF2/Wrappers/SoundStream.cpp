@@ -235,15 +235,16 @@ namespace LibSWBF2::Wrappers
 		}
 
 
-		List<SoundClip>& clips = streamChunk -> p_Info -> m_SoundHeaders;
-		for (size_t i = 0; i < clips.Size(); ++i)
+		std::vector<SoundClip>& clips = streamChunk -> p_Info -> m_SoundHeaders;
+		for (size_t i = 0; i < clips.size(); ++i)
 		{
 			Sound sound;
 			if (Sound::FromSoundClip(&clips[i], sound))
 			{
 				sound.m_Format = streamChunk -> p_Info -> m_Format;
 				sound.m_NumChannels = streamChunk -> p_Info -> m_NumChannels;
-				size_t index = out.m_Sounds.Add(sound);
+				size_t index = out.m_Sounds.size();
+				out.m_Sounds.push_back(sound);
 				out.p_NameToIndexMaps->SoundHashToIndex.emplace(clips[i].m_NameHash, index);
 			}
 		}
@@ -299,14 +300,14 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const List<Sound>& SoundStream::GetSounds() const
+	const std::vector<Sound>& SoundStream::GetSounds() const
 	{
 		return m_Sounds;
 	}
 
-	const Sound* SoundStream::GetSound(const String& soundName) const
+	const Sound* SoundStream::GetSound(const std::string& soundName) const
 	{
-		if (soundName.IsEmpty())
+		if (soundName.empty())
 		{
 			return nullptr;
 		}

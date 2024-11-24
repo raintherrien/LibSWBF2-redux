@@ -1,8 +1,7 @@
 #pragma once
 #include "req.h"
-#include "Types/List.h"
 #include "Types/Color4u8.h"
-#include "Types/LibString.h"
+#include <string>
 
 namespace LibSWBF2
 {
@@ -17,9 +16,7 @@ namespace LibSWBF2
 namespace LibSWBF2::Wrappers
 {
 	using Chunks::LVL::modl::MTRL;
-	using Types::List;
 	using Types::Color4u8;
-	using Types::String;
 
 	class Level;
 	class Segment;
@@ -30,7 +27,6 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 		friend Segment;
-		friend List<Material>;
 
 		Material() = default;
 		~Material() = default;
@@ -46,8 +42,8 @@ namespace LibSWBF2::Wrappers
 		const Color4u8& GetDiffuseColor() const;
 		const Color4u8& GetSpecularColor() const;
 		uint32_t GetSpecularExponent() const;
-		const String& GetAttachedLight() const;
-		bool GetTextureName(uint8_t index, String& outName) const;
+		std::string GetAttachedLight() const;
+		bool GetTextureName(uint8_t index, std::string& outName) const;
 
 		// will try to resolve within this Level
 		const Texture* GetTexture(uint8_t index) const;

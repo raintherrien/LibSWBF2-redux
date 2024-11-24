@@ -17,14 +17,14 @@ namespace LibSWBF2
 	{
 	}
 
-	bool FileWriter::Open(const Types::String& File)
+	bool FileWriter::Open(const std::string& File)
 	{
 		return Open(File, false);
 	}
 
-	bool FileWriter::Open(const Types::String& File, const bool& LogFile)
+	bool FileWriter::Open(const std::string& File, const bool& LogFile)
 	{
-		m_Writer.open(File.Buffer(), std::ofstream::out | (LogFile ? std::ofstream::app : std::ofstream::binary | std::ofstream::trunc));
+		m_Writer.open(File, std::ofstream::out | (LogFile ? std::ofstream::app : std::ofstream::binary | std::ofstream::trunc));
 		bool success = m_Writer.good() && m_Writer.is_open();
 
 		if (!success)
@@ -111,7 +111,7 @@ namespace LibSWBF2
 		}
 	}
 
-	void FileWriter::WriteString(const Types::String& value)
+	void FileWriter::WriteString(const std::string& value)
 	{
 		// string in chunk needs to be a zero terminated c-string
 		// size must be a multiple of 4
@@ -119,8 +119,8 @@ namespace LibSWBF2
 
 		if (CheckGood())
 		{
-			size_t length = value.Length();
-			m_Writer.write(value.Buffer(), length);
+			size_t length = value.size();
+			m_Writer.write(value.c_str(), length);
 
 			int remaining = 4 - (length % 4);
 			char* empty = new char[remaining];
@@ -133,24 +133,24 @@ namespace LibSWBF2
 		}
 	}
 
-	void FileWriter::WriteString(const Types::String& value, uint16_t fixedSize)
+	void FileWriter::WriteString(const std::string& value, uint16_t fixedSize)
 	{
 		if (CheckGood())
 		{
-			if (value.Length() > fixedSize)
+			if (value.size() > fixedSize)
 			{
-				LOG_WARN("Actual string size ({}) is greater than fixed size ({}) !", value.Length(), fixedSize);
+				LOG_WARN("Actual string size ({}) is greater than fixed size ({}) !", value.size(), fixedSize);
 			}
 
-			m_Writer.write(value.Buffer(), fixedSize);
+			m_Writer.write(value.c_str(), fixedSize);
 		}
 	}
 
-	void FileWriter::WriteLine(const Types::String& line)
+	void FileWriter::WriteLine(const std::string& line)
 	{
 		if (CheckGood())
 		{
-			std::string tmp = line.Buffer() + std::string("\n");
+			std::string tmp = line + std::string("\n");
 			m_Writer.write(tmp.c_str(), tmp.size());
 			m_Writer.flush();
 		}

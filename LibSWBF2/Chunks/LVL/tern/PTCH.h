@@ -3,6 +3,7 @@
 #include "PTCH.VBUF.h"
 #include "PTCH.IBUF.h"
 #include "PTCH.INFO.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
@@ -23,6 +24,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

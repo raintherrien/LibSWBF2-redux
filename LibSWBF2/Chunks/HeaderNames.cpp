@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "HeaderNames.h"
-#include "Types/LibString.h"
 #include "Hashing.h"
 #include <set>
 #include <array>
@@ -65,7 +64,7 @@ namespace LibSWBF2
 		return m_Magic > other.m_Magic;
 	}
 
-	Types::String ChunkHeader::ToString() const
+	std::string ChunkHeader::ToString() const
 	{
 		auto soundLookup = KNOWN_SOUND_HEADERS.find(*this);
 		if (soundLookup != KNOWN_SOUND_HEADERS.end())

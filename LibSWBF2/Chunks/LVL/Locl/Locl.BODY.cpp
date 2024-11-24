@@ -32,13 +32,13 @@ namespace LibSWBF2::Chunks::LVL::Localization
                 break;
             }
 
-            m_LocalizeEntries.Add(entry);
+            m_LocalizeEntries.push_back(entry);
         }
 
         BaseChunk::EnsureEnd(stream);       
     }
 
-    String BODY::ToString() const
+    std::string BODY::ToString() const
     {
         //std::string result;
         //for (size_t i = 0; i < m_LocalizeEntries.Size(); ++i)
@@ -47,6 +47,6 @@ namespace LibSWBF2::Chunks::LVL::Localization
         //    result += "\n\n";
         //}
         //return result.c_str();
-        return fmt::format("Number of entries: {}", (uint32_t)m_LocalizeEntries.Size()).c_str();
+        return fmt::format("Number of entries: {}", (uint32_t)m_LocalizeEntries.size());
     }
 }

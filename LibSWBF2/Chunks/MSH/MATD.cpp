@@ -17,22 +17,22 @@ namespace LibSWBF2::Chunks::MSH
 
 		m_Size = m_Name.GetDataSize() + m_Data.GetDataSize() + m_Attribute.GetDataSize();
 
-		if (m_Texture0.m_Text.Length() > 0)
+		if (m_Texture0.m_Text.size() > 0)
 		{
 			m_Size += m_Texture0.GetDataSize();
 		}
 
-		if (m_Texture1.m_Text.Length() > 0)
+		if (m_Texture1.m_Text.size() > 0)
 		{
 			m_Size += m_Texture1.GetDataSize();
 		}
 
-		if (m_Texture2.m_Text.Length() > 0)
+		if (m_Texture2.m_Text.size() > 0)
 		{
 			m_Size += m_Texture2.GetDataSize();
 		}
 
-		if (m_Texture3.m_Text.Length() > 0)
+		if (m_Texture3.m_Text.size() > 0)
 		{
 			m_Size += m_Texture3.GetDataSize();
 		}
@@ -45,22 +45,22 @@ namespace LibSWBF2::Chunks::MSH
 		m_Data.WriteToStream(stream);
 		m_Attribute.WriteToStream(stream);
 
-		if (m_Texture0.m_Text.Length() > 0)
+		if (m_Texture0.m_Text.size() > 0)
 		{
 			m_Texture0.WriteToStream(stream);
 		}
 
-		if (m_Texture1.m_Text.Length() > 0)
+		if (m_Texture1.m_Text.size() > 0)
 		{
 			m_Texture1.WriteToStream(stream);
 		}
 
-		if (m_Texture2.m_Text.Length() > 0)
+		if (m_Texture2.m_Text.size() > 0)
 		{
 			m_Texture2.WriteToStream(stream);
 		}
 
-		if (m_Texture3.m_Text.Length() > 0)
+		if (m_Texture3.m_Text.size() > 0)
 		{
 			m_Texture3.WriteToStream(stream);
 		}

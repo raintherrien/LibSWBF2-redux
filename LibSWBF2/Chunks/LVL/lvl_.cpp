@@ -44,7 +44,7 @@ namespace LibSWBF2::Chunks::LVL
         else
         {
             // also load when no specific sub LVLs have been specified at all
-            if (root->m_SubLVLsToLoad.Size() == 0 || root->m_SubLVLsToLoad.Contains(m_NameHash))
+            if (root->m_SubLVLsToLoad.size() == 0 || std::find(std::begin(root->m_SubLVLsToLoad), std::end(root->m_SubLVLsToLoad), m_NameHash) != std::end(root->m_SubLVLsToLoad))
             {
                 ReadGenerics(stream);
             }
@@ -58,21 +58,21 @@ namespace LibSWBF2::Chunks::LVL
         BaseChunk::EnsureEnd(stream);
     }
 
-    String lvl_::ToString() const
+    std::string lvl_::ToString() const
     {
-        String name;
+	    std::string name;
         if (!FNV::Lookup(m_NameHash, name))
-            name = std::to_string(m_NameHash).c_str();
+            name = std::to_string(m_NameHash);
 
         std::string result = fmt::format(
             "Name: {}\n",
             name
         );
 
-        return result.c_str();
+        return result;
     }
 
-    bool lvl_::TryLookupName(String& result)
+    bool lvl_::TryLookupName(std::string& result)
     {
         return FNV::Lookup(m_NameHash, result);
     }

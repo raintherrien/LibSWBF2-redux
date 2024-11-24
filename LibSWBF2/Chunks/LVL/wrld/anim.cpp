@@ -33,11 +33,11 @@ namespace LibSWBF2::Chunks::LVL::wrld
             }
             else if (next == "POSK"_h)
             {
-                READ_CHILD(stream, m_PositionKeys.Emplace());
+                READ_CHILD(stream, m_PositionKeys.emplace_back());
             }
             else if (next == "ROTK"_h)
             {
-                READ_CHILD(stream, m_RotationKeys.Emplace());
+                READ_CHILD(stream, m_RotationKeys.emplace_back());
             }
             else
             {

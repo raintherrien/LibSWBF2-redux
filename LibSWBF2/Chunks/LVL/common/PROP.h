@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::common
 {
@@ -7,13 +8,13 @@ namespace LibSWBF2::Chunks::LVL::common
 	{
 	public:
 		FNVHash m_PropertyName;
-		String m_Value;
+		std::string m_Value;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

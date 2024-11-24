@@ -38,7 +38,7 @@ namespace LibSWBF2::Chunks::LVL::common
 			{
 				PROP* prop;
 				GenericChunk<Header>::READ_CHILD(stream, prop);
-				m_Properties.Add(prop);
+				m_Properties.push_back(prop);
 			}
         }
 
@@ -46,14 +46,14 @@ namespace LibSWBF2::Chunks::LVL::common
 	}
 
 	template<uint32_t Header>
-	String GenericClass<Header>::ToString() const
+	std::string GenericClass<Header>::ToString() const
 	{
 		return fmt::format(
 			"Base: {}\n\n"
 			"Type: {}\n",
 			p_Base->m_Text,
 			p_Type->m_Text
-		).c_str();
+		);
 	}
 
 

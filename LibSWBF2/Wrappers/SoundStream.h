@@ -3,12 +3,8 @@
 #include "InternalHelpers.h"
 #include "Wrappers/Sound.h"
 #include "Audio/SoundDecoder.h"
-//#include "Audio/AudioStreamer.h"
-#include "Types/LibString.h"
-#include "Types/List.h"
-
-
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -24,8 +20,6 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Wrappers
 {
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
 	using LibSWBF2::Chunks::LVL::sound::Stream;
 
 	class Level;
@@ -34,15 +28,10 @@ namespace LibSWBF2::Wrappers
 	{
 	private:
 		friend Level;
-		friend List<SoundStream>;
-
-		SoundStream() = default;
-		~SoundStream();
-
 
 		Stream* p_StreamChunk;
 
-		List<Sound> m_Sounds;
+		std::vector<Sound> m_Sounds;
 
 		/*
 		File stream reader and buffer fields
@@ -74,6 +63,8 @@ namespace LibSWBF2::Wrappers
 
 
 	public:
+		SoundStream() = default;
+		~SoundStream();
 
 		// Caller must provide stream (any subclass of FileReader) and pre-allocate/provide...
 		bool SetFileReader(FileReader * reader);
@@ -126,8 +117,8 @@ namespace LibSWBF2::Wrappers
 
 		bool HasSegment(FNVHash segmentName) const;
 
-		const List<Sound>& GetSounds() const;
-		const Sound* GetSound(const String& soundName) const;
+		const std::vector<Sound>& GetSounds() const;
+		const Sound* GetSound(const std::string& soundName) const;
 		const Sound* GetSound(FNVHash soundHash) const;
 	};
 }

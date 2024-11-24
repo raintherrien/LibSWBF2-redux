@@ -56,16 +56,16 @@ namespace LibSWBF2::Chunks::LVL::config
 	}
 
 	template<uint32_t Header>
-	String ConfigChunk<Header>::ToString() const
+	std::string ConfigChunk<Header>::ToString() const
 	{
 		if (p_Hash != nullptr)
 		{
-			String name;
+			std::string name;
 			return fmt::format(
 				"Hash: 0x{0:x}\n"
 				"Lookup Name: {1}",
 				p_Hash -> m_Name,
-				FNV::Lookup(p_Hash->m_Name, name) ? name.Buffer() : ""
+				FNV::Lookup(p_Hash->m_Name, name) ? name : ""
 			).c_str();
 		}
 		return "No Name";

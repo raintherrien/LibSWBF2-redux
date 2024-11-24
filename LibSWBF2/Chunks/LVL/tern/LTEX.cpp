@@ -35,22 +35,22 @@ namespace LibSWBF2::Chunks::LVL::terrain
             return;
         }
 
-        m_LayerTextures.Clear();
+        m_LayerTextures.clear();
         for (uint16_t i = 0; i < info->m_TextureCount; ++i)
         {
-            m_LayerTextures.Add(stream.ReadString());
+            m_LayerTextures.push_back(stream.ReadString());
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String LTEX::ToString() const
+    std::string LTEX::ToString() const
     {
         std::string result;
-        for (size_t i = 0; i < m_LayerTextures.Size(); ++i)
+        for (size_t i = 0; i < m_LayerTextures.size(); ++i)
         {
             result += fmt::format("Layer {}: {}\n", i, m_LayerTextures[i]);
         }
-        return result.c_str();
+        return result;
     }
 }

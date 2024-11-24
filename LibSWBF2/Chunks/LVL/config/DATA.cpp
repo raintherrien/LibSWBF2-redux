@@ -122,7 +122,7 @@ namespace LibSWBF2::Chunks::LVL::config
 		return false;
 	}
 
-	bool DATA_CONFIG::GetString(String &stringOut, uint8_t index) const
+	bool DATA_CONFIG::GetString(std::string &stringOut, uint8_t index) const
 	{
 		stringOut = "";
 		if (index >= m_NumValues)
@@ -157,20 +157,20 @@ namespace LibSWBF2::Chunks::LVL::config
 		return false;
 	}
 
-	String DATA_CONFIG::ToString() const
+	std::string DATA_CONFIG::ToString() const
 	{
 		std::string rep = fmt::format("Name hash: 0x{0:x}\n", m_NameHash);
 
-		String name;
+		std::string name;
 		if (FNV::Lookup(m_NameHash, name))
 		{
-			rep += fmt::format("Lookup Name: {0}\n", name.Buffer());
+			rep += fmt::format("Lookup Name: {0}\n", name);
 		}
 		rep += fmt::format("Num elements: {0}\n", m_NumValues);
 
 		for (uint8_t i = 0; i < m_NumValues; ++i)
 		{
-			String str;
+			std::string str;
 			GetString(str, i);
 
 			float f;
@@ -179,9 +179,9 @@ namespace LibSWBF2::Chunks::LVL::config
 			uint32_t uint;
 			GetUInt32(uint, i);
 
-			rep += fmt::format("\t[{0}]\t\t{1}\t{2}\t\"{3}\"\n", i, f, uint, str.Buffer());
+			rep += fmt::format("\t[{0}]\t\t{1}\t{2}\t\"{3}\"\n", i, f, uint, str);
 		}
 
-		return rep.c_str();
+		return rep;
 	}
 }

@@ -1,9 +1,7 @@
 #pragma once
 #include "LoggerEntry.h"
-#include "Types/LibString.h"
 #include "Chunks/HeaderNames.h"
 #include "Chunks/BaseChunk.h"
-
 
 namespace LibSWBF2
 {

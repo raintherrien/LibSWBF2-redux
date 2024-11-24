@@ -28,13 +28,13 @@ namespace LibSWBF2::Chunks::LVL::Localization
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String Locl::ToString() const
+	std::string Locl::ToString() const
 	{
 		return fmt::format(
 			"Language: {}\n"
 			"Number of entries: {}",
 			p_Name->m_Text,
-			(uint32_t)p_Body->m_LocalizeEntries.Size()
-		).c_str();
+			(uint32_t)p_Body->m_LocalizeEntries.size()
+		);
 	}
 }

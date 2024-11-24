@@ -12,7 +12,6 @@ namespace LibSWBF2
 namespace LibSWBF2::Types
 {
 	struct Vector3;
-	struct String;
 
 	#pragma pack(push,1)
 	struct LIBSWBF2_API WorldAnimationKey
@@ -26,7 +25,7 @@ namespace LibSWBF2::Types
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		String ToString() const;
+		std::string ToString() const;
 
 	};
 	#pragma pack(pop)

@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Types/LibString.h"
 #include "Vector3.h"
 #include "FileReader.h"
 #include "FileWriter.h"
@@ -40,8 +39,8 @@ namespace LibSWBF2::Types
 		m_Z = stream.ReadFloat();
 	}
 
-	String Vector3::ToString() const
+	std::string Vector3::ToString() const
 	{
-		return fmt::format("[{}, {}, {}]", (float_t) m_X, (float_t) m_Y, (float_t) m_Z).c_str();
+		return fmt::format("[{}, {}, {}]", (float_t) m_X, (float_t) m_Y, (float_t) m_Z);
 	}
 }

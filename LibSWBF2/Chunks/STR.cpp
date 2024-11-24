@@ -9,7 +9,7 @@ namespace LibSWBF2::Chunks
 	template<uint32_t Header>
 	void STR<Header>::RefreshSize()
 	{
-		GenericChunk<Header>::m_Size = (ChunkSize)m_Text.Length();
+		GenericChunk<Header>::m_Size = (ChunkSize)m_Text.size();
 	}
 
 	template<uint32_t Header>
@@ -26,18 +26,18 @@ namespace LibSWBF2::Chunks
 		GenericChunk<Header>::Check(stream);
 
 		m_Text = stream.ReadString(GenericChunk<Header>::m_Size);
-		const char* buffer = m_Text.Buffer();
+		const char* buffer = m_Text.c_str();
 
 		// if all these conditions apply, we're probably
 		// not dealing with a string, but with a hash
-		if (m_Text.Length() == 4 &&
+		if (m_Text.size() == 4 &&
 				(!IsValidStringChar(buffer[0]) ||
 				 !IsValidStringChar(buffer[1]) ||
 				 !IsValidStringChar(buffer[2]) ||
 				 !IsValidStringChar(buffer[3]))
 			)
 		{
-			String output;
+			std::string output;
 			FNVHash hash = *((FNVHash*)buffer);
 			if (LibSWBF2::FNV::Lookup(hash, output))
 			{
@@ -49,7 +49,7 @@ namespace LibSWBF2::Chunks
 	}
 
 	template<uint32_t Header>
-	String STR<Header>::ToString() const
+	std::string STR<Header>::ToString() const
 	{
 		return m_Text;
 	}

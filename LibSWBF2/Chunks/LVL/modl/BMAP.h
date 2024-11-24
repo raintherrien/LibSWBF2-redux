@@ -1,5 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -17,13 +19,13 @@ namespace LibSWBF2::Chunks::LVL::modl
 
 		// maps local bone indices from SKIN to bones
 		// indices in the skeleton (skel) chunk
-		List<uint8_t> m_IndexMap;
+		std::vector<uint8_t> m_IndexMap;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

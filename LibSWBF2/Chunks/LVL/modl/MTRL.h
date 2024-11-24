@@ -2,6 +2,7 @@
 #include "Chunks/GenericChunk.h"
 #include "Types/Color4u8.h"
 #include "Types/Enums.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -13,13 +14,13 @@ namespace LibSWBF2::Chunks::LVL::modl
 		Color4u8 m_SpecularColor;
 		uint32_t m_SpecularExponent;
 		uint32_t m_Parameters[2];
-		String m_AttachedLight;
+		std::string m_AttachedLight;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

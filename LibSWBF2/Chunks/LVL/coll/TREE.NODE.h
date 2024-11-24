@@ -1,7 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
@@ -15,7 +15,7 @@ namespace LibSWBF2::Chunks::LVL::coll
 	    void WriteToStream(FileWriter& stream) override;
 	    void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
+	    std::string ToString() const override;
 
         Vector3u8 m_VecLower, m_VecUpper;
 

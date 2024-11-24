@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "Texture.h"
 #include "InternalHelpers.h"
-
 #include "Chunks/LVL/tex_/tex_.h"
 #include "Chunks/LVL/tex_/tex_.LVL_.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Wrappers
 {
@@ -19,8 +20,8 @@ namespace LibSWBF2::Wrappers
 
 		out.p_Texture = textureChunk;
 
-		List<FMT_*>& fmts = out.p_Texture->m_FMTs;
-		if (fmts.Size() == 0)
+		std::vector<FMT_*>& fmts = out.p_Texture->m_FMTs;
+		if (fmts.size() == 0)
 		{
 			LOG_WARN("Texture '{}' does not contain any data!", textureChunk->GetHeader());
 			return false;
@@ -29,7 +30,7 @@ namespace LibSWBF2::Wrappers
 		// Grab FMT chunk with the least amount of compression
 		// TODO: proper format sorting for choosing the right FMT chunk
 		out.p_FMT = nullptr;
-		for (size_t i = 0; i < fmts.Size(); ++i)
+		for (size_t i = 0; i < fmts.size(); ++i)
 		{
 			if (fmts[i]->p_Info->m_Format == D3DFMT_DXT3)
 			{
@@ -51,7 +52,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	String Texture::GetName() const
+	std::string Texture::GetName() const
 	{
 		return p_Texture->p_Name->m_Text;
 	}
@@ -63,8 +64,8 @@ namespace LibSWBF2::Wrappers
 
 	bool Texture::GetImageData(ETextureFormat format, uint8_t mipLevel, uint16_t& width, uint16_t& height, const uint8_t*& data) const
 	{
-		List<LVL_*>& mipChunks = p_FMT->p_Face->m_LVLs;
-		for (size_t i = 0; i < mipChunks.Size(); ++i)
+		std::vector<LVL_*>& mipChunks = p_FMT->p_Face->m_LVLs;
+		for (size_t i = 0; i < mipChunks.size(); ++i)
 		{
 			if (mipChunks[i]->p_Info->m_MipLevel == mipLevel)
 			{

@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -9,13 +10,13 @@ namespace LibSWBF2::Chunks::LVL::modl
 	{
 	public:
 		uint32_t m_Index;
-		String m_Name;
+		std::string m_Name;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

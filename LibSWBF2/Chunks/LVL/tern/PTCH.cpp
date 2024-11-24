@@ -86,7 +86,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
         BaseChunk::EnsureEnd(stream);
     }
 
-    String PTCH::ToString() const
+    std::string PTCH::ToString() const
     {
         return fmt::format(
             "Has Texture Vertex Buffer: {}\n"
@@ -100,6 +100,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
             m_TextureExtraBuffer != nullptr ? "yes" : "no",
             m_GeometryIndexBuffer != nullptr ? "yes" : "no",
             m_TextureExtraIndexBuffer != nullptr ? "yes" : "no"
-        ).c_str();
+        );
     }
 }

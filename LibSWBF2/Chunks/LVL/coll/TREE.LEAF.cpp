@@ -31,23 +31,23 @@ namespace LibSWBF2::Chunks::LVL::coll
 
         for (uint32_t i = 0; i < numIndicies; i++)
         {
-        	m_Indicies.Add(stream.ReadUInt16());
+        	m_Indicies.push_back(stream.ReadUInt16());
         }
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
 	
-    Types::String TREE_LEAF::ToString() const 
+	std::string TREE_LEAF::ToString() const 
     {
         std::string stringRep = "{";
 
-        for (int i = 0; i < m_Indicies.Size(); i++)
+        for (int i = 0; i < m_Indicies.size(); i++)
         {
-        	stringRep += fmt::format(" {}", m_Indicies[i]).c_str();
+        	stringRep += fmt::format(" {}", m_Indicies[i]);
         }
 
         stringRep += " }";
-        return stringRep.c_str();
+        return stringRep;
     }
 }

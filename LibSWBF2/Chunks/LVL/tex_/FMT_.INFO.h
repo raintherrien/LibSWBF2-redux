@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "DirectX/D3D9FORMAT.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::FMT
 {
@@ -17,6 +18,6 @@ namespace LibSWBF2::Chunks::LVL::FMT
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -10,7 +11,7 @@ namespace LibSWBF2::Chunks::MSH
 		NRML() = default;
 		~NRML() = default;
 
-		List<Vector3> m_Normals;
+		std::vector<Vector3> m_Normals;
 
 	protected:
 		friend SEGM;

@@ -10,7 +10,7 @@ namespace LibSWBF2::Chunks::MSH
 	EModelPurpose MODL::GetPurpose()
 	{
 		// TODO: Implement own find/starts with methods
-		std::string stdStr = m_Name.m_Text.Buffer();
+		std::string stdStr = m_Name.m_Text;
 		
 		if (stdStr.find("lowrez") != std::string::npos)
 		{
@@ -98,7 +98,7 @@ namespace LibSWBF2::Chunks::MSH
 			m_Transition.GetDataSize() +
 			m_CollisionPrimitive.GetDataSize();
 
-		if (m_Parent.m_Text.Length() > 0)
+		if (m_Parent.m_Text.size() > 0)
 		{
 			m_Size += m_Parent.GetDataSize();
 		}
@@ -116,7 +116,7 @@ namespace LibSWBF2::Chunks::MSH
 		m_ModelType.WriteToStream(stream);
 		m_ModelIndex.WriteToStream(stream);
 
-		if (m_Parent.m_Text.Length() > 0)
+		if (m_Parent.m_Text.size() > 0)
 		{
 			m_Parent.WriteToStream(stream);
 		}

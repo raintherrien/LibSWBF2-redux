@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
 #include "Types/BoneWeight.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -14,7 +15,7 @@ namespace LibSWBF2::Chunks::MSH
 		WGHT() = default;
 		~WGHT() = default;
 
-		List<VertexWeights> m_Weights;
+		std::vector<VertexWeights> m_Weights;
 
 	protected:
 		friend SEGM;

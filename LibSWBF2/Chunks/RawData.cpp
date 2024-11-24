@@ -58,9 +58,9 @@ namespace LibSWBF2::Chunks
 	}
 
 	template<uint32_t Header>
-	String RawData<Header>::ToString() const
+	std::string RawData<Header>::ToString() const
 	{
-		return fmt::format("Raw data chunk with {} bytes of data.\nData successfully read: {}", BaseChunk::GetDataSize(), p_Data != nullptr).c_str();
+		return fmt::format("Raw data chunk with {} bytes of data.\nData successfully read: {}", BaseChunk::GetDataSize(), p_Data != nullptr);
 	}
 
 }

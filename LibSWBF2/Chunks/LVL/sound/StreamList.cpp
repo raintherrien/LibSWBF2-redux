@@ -26,7 +26,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 			ChunkHeader next = stream.ReadChunkHeader(true);
 			if (next == "Stream"_fnvh)
 			{
-				READ_CHILD(stream, m_Streams.Emplace())
+				READ_CHILD(stream, m_Streams.emplace_back())
 			}
 			else 
 			{
@@ -37,13 +37,13 @@ namespace LibSWBF2::Chunks::LVL::sound
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String StreamList::ToString() const
+	std::string StreamList::ToString() const
 	{
 		std::string result = fmt::format(
 			"Num streams: {0}",
-			m_Streams.Size()
+			m_Streams.size()
 		);
 
-		return result.c_str();
+		return result;
 	}
 }

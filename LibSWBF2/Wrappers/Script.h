@@ -1,6 +1,6 @@
 #pragma once
 #include "Types/Enums.h"
-#include "Types/List.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::script
 {
@@ -11,8 +11,6 @@ namespace LibSWBF2::Chunks::LVL::script
 namespace LibSWBF2::Wrappers
 {
 	using Chunks::LVL::script::scr_;
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
 
 	class Level;
 
@@ -20,18 +18,17 @@ namespace LibSWBF2::Wrappers
 	{
 	private:
 		friend Level;
-		friend List<Script>;
-
-		Script() = default;
-		~Script() = default;
 
 	private:
 		scr_* p_Script;
 
 	public:
+		Script() = default;
+		~Script() = default;
+
 		static bool FromChunk(scr_* scriptChunk, Script& out);
 
-		String GetName() const;
+		std::string GetName() const;
 		bool GetData(const uint8_t*& data, size_t& size) const;
 	};
 }

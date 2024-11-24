@@ -4,10 +4,6 @@
 #include "InternalHelpers.h"
 #include "Types/Enums.h"
 #include "Logging/Logger.h"
-#include "Types/List.h"
-
-
-
 
 void LibSWBF2::Chunks::plnp::plnp::ReadFromStream(FileReader& stream)
 {
@@ -20,14 +16,14 @@ void LibSWBF2::Chunks::plnp::plnp::ReadFromStream(FileReader& stream)
 
     for (int i = 0; i < NumDynamicGroups; i++)
     {
-        m_NumConnectionsInEachGroup.Add(stream.ReadByte());
+        m_NumConnectionsInEachGroup.push_back(stream.ReadByte());
     }
 
     uint8_t NumHashes = stream.ReadByte();
 
     for (int i = 0; i < NumHashes; i++)
     {
-        m_ConnectionHashes.Add(stream.ReadByte());
+        m_ConnectionHashes.push_back(stream.ReadByte());
     }
 
     /*
@@ -39,12 +35,12 @@ void LibSWBF2::Chunks::plnp::plnp::ReadFromStream(FileReader& stream)
 }
 
 
-String LibSWBF2::Chunks::plnp::plnp::ToString() const
+std::string LibSWBF2::Chunks::plnp::plnp::ToString() const
 {
-    String rep = fmt::format("Previous planning dataset has {0} dynamic groups:\n", m_NumConnectionsInEachGroup.Size()).c_str();
-    for (int i = 0; i < m_NumConnectionsInEachGroup.Size(); i++)
+	std::string rep = fmt::format("Previous planning dataset has {0} dynamic groups:\n", m_NumConnectionsInEachGroup.size());
+    for (int i = 0; i < m_NumConnectionsInEachGroup.size(); i++)
     {
-        rep = rep + fmt::format("  Group {0} has {1} connections,\n", i, m_NumConnectionsInEachGroup[i]).c_str();
+        rep = rep + fmt::format("  Group {0} has {1} connections,\n", i, m_NumConnectionsInEachGroup[i]);
     }
     return rep;
 }

@@ -49,7 +49,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String BIN_::ToString() const
+	std::string BIN_::ToString() const
 	{
 		return fmt::format(
 			"Chunk version: {}\n"
@@ -62,6 +62,6 @@ namespace LibSWBF2::Chunks::LVL::animation
 			m_DataBufferLength,
 			m_NumAnimations,
 			m_DebugLevel
-		).c_str();
+		);
 	}
 }

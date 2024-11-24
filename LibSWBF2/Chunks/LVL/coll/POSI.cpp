@@ -4,7 +4,7 @@
 #include "FileReader.h"
 #include "Types/Enums.h"
 #include "Logging/Logger.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
@@ -27,17 +27,17 @@ namespace LibSWBF2::Chunks::LVL::coll
         while (ThereIsAnother(stream))
         {
             tmp.ReadFromStream(stream);
-            m_Verts.Add(tmp);
+            m_Verts.push_back(tmp);
         }
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
-    Types::String POSI::ToString() const
+	std::string POSI::ToString() const
     {
-        String stringRep("");
+	    std::string stringRep("");
 
-        for (int i  = 0; i < m_Verts.Size(); i++)
+        for (int i  = 0; i < m_Verts.size(); i++)
         {
             stringRep = stringRep + m_Verts[i].ToString() + "\n";
         }

@@ -29,7 +29,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& HintNode::GetName() const
+	const std::string& HintNode::GetName() const
 	{
 		return p_HintNode -> p_Info -> p_Name -> m_Text;
 	}
@@ -49,16 +49,16 @@ namespace LibSWBF2::Wrappers
 		return p_HintNode -> p_Info -> p_Type -> m_Type;
 	}
 
-	const void HintNode::GetProperties(List<FNVHash>& outHashes, List<String>& outValues) const
+	const void HintNode::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
-		outHashes.Clear();
-		outValues.Clear();
+		outHashes.clear();
+		outValues.clear();
 
-		List<PROP*>& properties = p_HintNode->m_Properties;
-		for (int i = 0; i < properties.Size(); i++)
+		std::vector<PROP*>& properties = p_HintNode->m_Properties;
+		for (int i = 0; i < properties.size(); i++)
 		{
-			outHashes.Add(properties[i]->m_PropertyName);
-			outValues.Add(properties[i]->m_Value);
+			outHashes.push_back(properties[i]->m_PropertyName);
+			outValues.push_back(properties[i]->m_Value);
 		}
 	}
 
@@ -83,7 +83,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& Barrier::GetName() const
+	const std::string& Barrier::GetName() const
 	{
 		return p_Barrier -> p_Info -> p_Name -> m_Text;
 	}
@@ -127,7 +127,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& Region::GetName() const
+	const std::string& Region::GetName() const
 	{
 		return p_Region -> p_Info -> p_Name -> m_Text;
 	}
@@ -147,21 +147,21 @@ namespace LibSWBF2::Wrappers
 		return p_Region -> p_Info -> p_SIZE -> m_Dimensions;
 	}
 
-	const String& Region::GetType() const
+	const std::string& Region::GetType() const
 	{
 		return p_Region -> p_Info -> p_Type -> m_Text;
 	}
 
-	const void Region::GetProperties(List<FNVHash>& outHashes, List<String>& outValues) const
+	const void Region::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
-		outHashes.Clear();
-		outValues.Clear();
+		outHashes.clear();
+		outValues.clear();
 
-		List<PROP*>& properties = p_Region->m_Props;
-		for (int i = 0; i < properties.Size(); i++)
+		std::vector<PROP*>& properties = p_Region->m_Props;
+		for (int i = 0; i < properties.size(); i++)
 		{
-			outHashes.Add(properties[i]->m_PropertyName);
-			outValues.Add(properties[i]->m_Value);
+			outHashes.push_back(properties[i]->m_PropertyName);
+			outValues.push_back(properties[i]->m_Value);
 		}
 	}
 
@@ -180,7 +180,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& WorldAnimation::GetName() const
+	const std::string& WorldAnimation::GetName() const
 	{
 		return p_WorldAnimation -> p_Info -> m_Name;
 	}
@@ -201,24 +201,24 @@ namespace LibSWBF2::Wrappers
 		return p_WorldAnimation -> p_Info -> m_LocalTranslation == 1;
 	}
 
-	List<WorldAnimationKey> WorldAnimation::GetRotationKeys() const
+	std::vector<WorldAnimationKey> WorldAnimation::GetRotationKeys() const
 	{
-		List<WorldAnimationKey> AnimKeys;
-		for (int i = 0; i < p_WorldAnimation -> m_RotationKeys.Size(); i++)
+		std::vector<WorldAnimationKey> AnimKeys;
+		for (int i = 0; i < p_WorldAnimation -> m_RotationKeys.size(); i++)
 		{
 			ROTK *currKey = p_WorldAnimation -> m_RotationKeys[i];
-			AnimKeys.Add(currKey -> m_Key);
+			AnimKeys.push_back(currKey -> m_Key);
 		}	
 		return AnimKeys;	
 	}
 	
-	List<WorldAnimationKey> WorldAnimation::GetPositionKeys() const
+	std::vector<WorldAnimationKey> WorldAnimation::GetPositionKeys() const
 	{
-		List<WorldAnimationKey> AnimKeys;
-		for (int i = 0; i < p_WorldAnimation -> m_PositionKeys.Size(); i++)
+		std::vector<WorldAnimationKey> AnimKeys;
+		for (int i = 0; i < p_WorldAnimation -> m_PositionKeys.size(); i++)
 		{
 			POSK *currKey = p_WorldAnimation -> m_PositionKeys[i];
-			AnimKeys.Add(currKey -> m_Key);
+			AnimKeys.push_back(currKey -> m_Key);
 		}		
 		return AnimKeys;
 	}
@@ -238,7 +238,7 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& WorldAnimationGroup::GetName() const
+	const std::string& WorldAnimationGroup::GetName() const
 	{
 		return p_WorldAnimationGroup -> p_Info -> m_Name;	
 	}
@@ -259,22 +259,22 @@ namespace LibSWBF2::Wrappers
 	}
 
 	const void WorldAnimationGroup::GetAnimationInstancePairs(
-									List<String>& animNamesOut, 
-									List<String>& instanceNamesOut) const
+									std::vector<std::string>& animNamesOut, 
+									std::vector<std::string>& instanceNamesOut) const
 	{
-		animNamesOut.Clear();
-		instanceNamesOut.Clear();
+		animNamesOut.clear();
+		instanceNamesOut.clear();
 
-		for (uint16_t j = 0; j < p_WorldAnimationGroup -> m_AnimObjectPairs.Size(); j++)
+		for (uint16_t j = 0; j < p_WorldAnimationGroup -> m_AnimObjectPairs.size(); j++)
 		{
 			auto& pair = p_WorldAnimationGroup -> m_AnimObjectPairs[j] -> m_Texts;
-			if (pair.Size() != 2)
+			if (pair.size() != 2)
 			{
 				continue;
 			}
 
-			animNamesOut.Add(pair[0]);
-			instanceNamesOut.Add(pair[1]);
+			animNamesOut.push_back(pair[0]);
+			instanceNamesOut.push_back(pair[1]);
 		}
 	}
 
@@ -293,12 +293,12 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& WorldAnimationHierarchy::GetRootName() const
+	const std::string& WorldAnimationHierarchy::GetRootName() const
 	{
 		return p_WorldAnimationHierarchy -> p_Info -> m_RootName;
 	}
 
-	const List<String>& WorldAnimationHierarchy::GetChildNames() const
+	const std::vector<std::string>& WorldAnimationHierarchy::GetChildNames() const
 	{
 		return p_WorldAnimationHierarchy -> p_Info -> m_ChildNames;		
 	}
@@ -318,105 +318,105 @@ namespace LibSWBF2::Wrappers
 		out.p_World = worldChunk;
 		out.m_MainContainer = mainContainer;
 
-		List<inst*>& instances = worldChunk->m_Instances;
-		for (size_t i = 0; i < instances.Size(); ++i)
+		std::vector<inst*>& instances = worldChunk->m_Instances;
+		for (size_t i = 0; i < instances.size(); ++i)
 		{
 			Instance instance;
 			if (Instance::FromChunk(mainContainer, instances[i], instance))
 			{
-				out.m_Instances.Add(instance);
+				out.m_Instances.push_back(instance);
 			}
 		}
 
-		List<regn *>& regions = worldChunk -> m_Regions;
-		for (size_t i = 0; i < regions.Size(); ++i)
+		std::vector<regn *>& regions = worldChunk -> m_Regions;
+		for (size_t i = 0; i < regions.size(); ++i)
 		{
 			Region region;
 			if (Region::FromChunk(regions[i], region))
 			{
-				out.m_Regions.Add(region);
+				out.m_Regions.push_back(region);
 			}
 		}
 
-		List<BARR *>& barriers = worldChunk -> m_Barriers;
-		for (size_t i = 0; i < barriers.Size(); ++i)
+		std::vector<BARR *>& barriers = worldChunk -> m_Barriers;
+		for (size_t i = 0; i < barriers.size(); ++i)
 		{
 			Barrier barrier;
 			if (Barrier::FromChunk(barriers[i], barrier))
 			{
-				out.m_Barriers.Add(barrier);
+				out.m_Barriers.push_back(barrier);
 			}
 		}
 
-		List<Hint *>& hintNodes = worldChunk -> m_HintNodes;
-		for (size_t i = 0; i < hintNodes.Size(); ++i)
+		std::vector<Hint *>& hintNodes = worldChunk -> m_HintNodes;
+		for (size_t i = 0; i < hintNodes.size(); ++i)
 		{
 			HintNode hintNode;
 			if (HintNode::FromChunk(hintNodes[i], hintNode))
 			{
-				out.m_HintNodes.Add(hintNode);
+				out.m_HintNodes.push_back(hintNode);
 			}
 		}
 
-		List<anim *>& animations = worldChunk -> m_Animations;
-		for (size_t i = 0; i < animations.Size(); ++i)
+		std::vector<anim *>& animations = worldChunk -> m_Animations;
+		for (size_t i = 0; i < animations.size(); ++i)
 		{
 			WorldAnimation anim;
 			if (WorldAnimation::FromChunk(animations[i], anim))
 			{
-				out.m_Animations.Add(anim);
+				out.m_Animations.push_back(anim);
 			}
 		}
 
-		List<anmg *>& animationGroups = worldChunk -> m_AnimationGroups;
-		for (size_t i = 0; i < animationGroups.Size(); ++i)
+		std::vector<anmg *>& animationGroups = worldChunk -> m_AnimationGroups;
+		for (size_t i = 0; i < animationGroups.size(); ++i)
 		{
 			WorldAnimationGroup group;
 			if (WorldAnimationGroup::FromChunk(animationGroups[i], group))
 			{
-				out.m_AnimationGroups.Add(group);
+				out.m_AnimationGroups.push_back(group);
 			}
 		}		
 
-		List<anmh *>& animationHiers = worldChunk -> m_AnimationHierarchies;
-		for (size_t i = 0; i < animationHiers.Size(); ++i)
+		std::vector<anmh *>& animationHiers = worldChunk -> m_AnimationHierarchies;
+		for (size_t i = 0; i < animationHiers.size(); ++i)
 		{
 			WorldAnimationHierarchy hier;
 			if (WorldAnimationHierarchy::FromChunk(animationHiers[i], hier))
 			{
-				out.m_AnimationHierarchies.Add(hier);
+				out.m_AnimationHierarchies.push_back(hier);
 			}
 		}
 
 		return true;
 	}
 
-	const String& World::GetName() const
+	const std::string& World::GetName() const
 	{
 		return p_World->p_Name->m_Text;
 	}
 
-	const List<Instance>& World::GetInstances() const
+	const std::vector<Instance>& World::GetInstances() const
 	{
 		return m_Instances;
 	}
 
-	const List<Region>& World::GetRegions() const
+	const std::vector<Region>& World::GetRegions() const
 	{
 		return m_Regions;
 	}
 
-	const List<Barrier>& World::GetBarriers() const
+	const std::vector<Barrier>& World::GetBarriers() const
 	{
 		return m_Barriers;
 	}
 
-	const List<HintNode>& World::GetHintNodes() const
+	const std::vector<HintNode>& World::GetHintNodes() const
 	{
 		return m_HintNodes;
 	}
 
-	Types::String World::GetTerrainName() const
+	std::string World::GetTerrainName() const
 	{
 		return p_World->p_TerrainName != nullptr ? p_World->p_TerrainName->m_Text : "";
 	}
@@ -430,22 +430,22 @@ namespace LibSWBF2::Wrappers
 		return m_MainContainer->FindTerrain(p_World->p_TerrainName->m_Text);
 	}
 	
-	Types::String World::GetSkyName() const
+	std::string World::GetSkyName() const
 	{
 		return p_World->p_SkyName != nullptr ? p_World->p_SkyName->m_Text : "";
 	}
 	
-	const List<WorldAnimation>& World::GetAnimations() const
+	const std::vector<WorldAnimation>& World::GetAnimations() const
 	{
 		return m_Animations;
 	}
 
-	const List<WorldAnimationGroup>& World::GetAnimationGroups() const
+	const std::vector<WorldAnimationGroup>& World::GetAnimationGroups() const
 	{
 		return m_AnimationGroups;
 	}
 
-	const List<WorldAnimationHierarchy>& World::GetAnimationHierarchies() const
+	const std::vector<WorldAnimationHierarchy>& World::GetAnimationHierarchies() const
 	{
 		return m_AnimationHierarchies;
 	}

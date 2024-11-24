@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
 #include "Types/BoneFrames.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -13,7 +14,7 @@ namespace LibSWBF2::Chunks::MSH
 		KFR3() = default;
 		~KFR3() = default;
 
-		List<BoneFrames> m_BoneFrames;
+		std::vector<BoneFrames> m_BoneFrames;
 
 	protected:
 		friend ANM2;

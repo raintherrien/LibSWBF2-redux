@@ -38,12 +38,12 @@ namespace LibSWBF2::Wrappers
         return p_TransformChunk -> m_Position;
     }
 
-    String CollisionPrimitive::GetName() const
+    std::string CollisionPrimitive::GetName() const
     {
         return p_NameChunk -> ToString();
     }
 
-    String CollisionPrimitive::GetParentName() const
+    std::string CollisionPrimitive::GetParentName() const
     {
         return p_ParentChunk -> ToString();
     }
@@ -92,7 +92,7 @@ namespace LibSWBF2::Wrappers
         return status;
     }
 
-    String CollisionPrimitive::ToString() const
+    std::string CollisionPrimitive::ToString() const
     {
         return p_FieldsChunk -> ToString();
     }

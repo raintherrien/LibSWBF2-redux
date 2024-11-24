@@ -3,19 +3,19 @@
 #include "Chunks/STR.h"
 #include "../wrld/XFRM.h"
 #include "Types/Enums.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
-    struct LIBSWBF2_API MASK : public GenericChunk<"MASK"_m>
-    {
-    public:
-	    void RefreshSize() override;
-	    void WriteToStream(FileWriter& stream) override;
-	    void ReadFromStream(FileReader& stream) override;
+	struct LIBSWBF2_API MASK : public GenericChunk<"MASK"_m>
+	{
+	public:
+		void RefreshSize() override;
+		void WriteToStream(FileWriter& stream) override;
+		void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
-        
-        ECollisionMaskFlags m_MaskFlags; //solider, Ordnance, building, vehicle, etc...
-    };
+		std::string ToString() const override;
+
+		ECollisionMaskFlags m_MaskFlags; //solider, Ordnance, building, vehicle, etc...
+	};
 }

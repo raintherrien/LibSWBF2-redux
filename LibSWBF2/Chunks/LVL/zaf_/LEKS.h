@@ -1,6 +1,6 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-//#include "TNOJ.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
@@ -10,13 +10,13 @@ namespace LibSWBF2::Chunks::LVL::animation
 	{
 	public:
 
-		List<TNOJ *> m_Joints; 
+		std::vector<TNOJ *> m_Joints; 
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

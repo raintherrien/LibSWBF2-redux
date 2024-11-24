@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
@@ -17,6 +18,6 @@ namespace LibSWBF2::Chunks::LVL::animation
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

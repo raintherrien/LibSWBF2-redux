@@ -4,7 +4,6 @@
 #include "Chunks/BaseChunk.h"
 #include "Types/Vector4.h"
 #include "Types/Matrix3x3.h"
-#include "Types/List.h"
 #include "Logging/Logger.h"
 #include "Exceptions.h"
 #include <glm/glm.hpp>
@@ -14,7 +13,7 @@
 #include <fmt/format.h>
 
 #include <unordered_map>
-
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -22,8 +21,6 @@ namespace LibSWBF2
 	using Types::Vector3;
 	using Types::Vector4;
 	using Types::Matrix3x3;
-	using Types::List;
-	using Types::String;
 
 	Vector2 ToLib(const glm::vec2 vector);
 	glm::vec3 ToGLM(const Vector3& vector);
@@ -34,18 +31,18 @@ namespace LibSWBF2
 	// Convert an index buffer from Triangle Strip format to Triangle List format
 	// optional: offset is added to each individual index.
 	template <typename V, typename T>
-	List<V> TriangleStripToTriangleList(List<T>& indexBuffer, uint32_t offset=0);
+	std::vector<V> TriangleStripToTriangleList(std::vector<T> &indexBuffer, uint32_t offset=0);
 
 	// Convert an index buffer from Triangle Fan format to Triangle List format
 	// optional: offset is added to each individual index.
 	// (so far only used for collision mesh extraction)
 	template <typename V, typename T>
-	List<V> TriangleFanToTriangleList(List<T>& indexBuffer, uint32_t offset=0);
+	std::vector<V> TriangleFanToTriangleList(std::vector<T> &indexBuffer, uint32_t offset=0);
 
 
 	Vector4 MatrixToQuaternion(const Matrix3x3& matrix);
 
-	std::string ToLower(String name);
+	std::string ToLower(const std::string &name);
 
 
 	namespace Chunks::LVL::skel
@@ -85,20 +82,6 @@ namespace LibSWBF2
 // adding custom fmt formatters
 // see fmt documentation
 template <>
-struct fmt::formatter<LibSWBF2::Types::String> {
-	constexpr auto parse(format_parse_context& ctx)
-	{
-		return ctx.begin();
-	}
-
-	template <typename FormatContext>
-	auto format(const LibSWBF2::Types::String& str, FormatContext& ctx)
-	{
-		return fmt::format_to(ctx.out(), "{}", str.Buffer());
-	}
-};
-
-template <>
 struct fmt::formatter<LibSWBF2::ChunkHeader> {
 	constexpr auto parse(format_parse_context& ctx)
 	{
@@ -108,7 +91,7 @@ struct fmt::formatter<LibSWBF2::ChunkHeader> {
 	template <typename FormatContext>
 	auto format(const LibSWBF2::ChunkHeader& header, FormatContext& ctx)
 	{
-		return fmt::format_to(ctx.out(), "{}", header.ToString().Buffer());
+		return fmt::format_to(ctx.out(), "{}", header.ToString());
 	}
 };
 

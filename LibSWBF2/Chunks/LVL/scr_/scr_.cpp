@@ -27,13 +27,13 @@ namespace LibSWBF2::Chunks::LVL::script
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String scr_::ToString() const
+	std::string scr_::ToString() const
 	{
 		return fmt::format(
 			"Name: {}\n\n"
 			"Info: {}\n",
 			p_Name->m_Text,
 			p_Info->ToString()
-		).c_str();
+		);
 	}
 }

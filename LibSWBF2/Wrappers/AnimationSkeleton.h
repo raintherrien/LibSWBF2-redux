@@ -2,8 +2,7 @@
 #include "req.h"
 #include "Types/Vector3.h"
 #include "Types/Vector4.h"
-#include "Types/List.h"
-#include "Types/LibString.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
@@ -12,11 +11,8 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
 	using Types::Vector3;
 	using Types::Vector4;
-	using Types::String;
-
 
 	#pragma pack(push,1)
 	struct LIBSWBF2_API Joint
@@ -33,24 +29,19 @@ namespace LibSWBF2::Wrappers
 
 	class LIBSWBF2_API AnimationSkeleton
 	{
-	typedef LibSWBF2::Chunks::LVL::animation::zaf_ zaf_ ;
-
-
-		friend Types::List<AnimationSkeleton>;
-
-
+		typedef LibSWBF2::Chunks::LVL::animation::zaf_ zaf_ ;
 	private:
 		friend Level;
-
-		AnimationSkeleton() = default;
-		~AnimationSkeleton() = default;
 
 		zaf_* p_AnimSkeleton;
 
 	public:
+		AnimationSkeleton() = default;
+		~AnimationSkeleton() = default;
+
 		static bool FromChunk(zaf_* animSkelChunk, AnimationSkeleton& out);
 
-		const String& GetName() const;
-		bool GetJoints(Types::List<Joint>& joints) const;
+		const std::string& GetName() const;
+		bool GetJoints(std::vector<Joint>& joints) const;
 	};
 }

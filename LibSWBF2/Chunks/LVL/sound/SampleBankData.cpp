@@ -38,7 +38,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 			}
 			else 
 			{
-				for (int i = 0; i < info -> m_SoundHeaders.Size(); i++)
+				for (int i = 0; i < info -> m_SoundHeaders.size(); i++)
 				{
 					Types::SoundClip& currClip = info -> m_SoundHeaders[i];
 

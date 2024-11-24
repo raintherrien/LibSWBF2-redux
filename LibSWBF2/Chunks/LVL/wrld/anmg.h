@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STRMULT.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -12,7 +13,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
 		anmg_INFO *p_Info;
 
-		List<STRMULT<"ANIM"_m> *> m_AnimObjectPairs;
+		std::vector<STRMULT<"ANIM"_m> *> m_AnimObjectPairs;
 
 		GenericChunk<"NOHI"_m> * p_NoHierarchy; 
 

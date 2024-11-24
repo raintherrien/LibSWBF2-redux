@@ -39,12 +39,12 @@ namespace LibSWBF2
 	}
 
 	template <typename V, typename T>
-	List<V> TriangleStripToTriangleList(List<T>& indexBuffer, uint32_t offset)
+	std::vector<V> TriangleStripToTriangleList(std::vector<T>& indexBuffer, uint32_t offset)
 	{
-		List<V> result;
+		std::vector<V> result;
 		V a,b,c;
 
-		for (int i = 0; i < indexBuffer.Size() - 2; i++)
+		for (int i = 0; i < indexBuffer.size() - 2; i++)
 		{
 			a = indexBuffer[i]   + (V) offset;
 			b = indexBuffer[i+1] + (V) offset;
@@ -57,32 +57,32 @@ namespace LibSWBF2
 					std::swap(a,b);
 				}
 
-				result.Add(a);
-				result.Add(b);
-				result.Add(c);
+				result.push_back(a);
+				result.push_back(b);
+				result.push_back(c);
 			}
 		}
 
 		return result;
 	}
 
-	template List<uint32_t> TriangleStripToTriangleList<uint32_t,uint32_t>(List<uint32_t>& indexBuffer, uint32_t offset);
-	template List<uint32_t> TriangleStripToTriangleList<uint32_t,uint16_t>(List<uint16_t>& indexBuffer, uint32_t offset);
-	template List<uint16_t> TriangleStripToTriangleList<uint16_t,uint16_t>(List<uint16_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint32_t> TriangleStripToTriangleList<uint32_t,uint32_t>(std::vector<uint32_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint32_t> TriangleStripToTriangleList<uint32_t,uint16_t>(std::vector<uint16_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint16_t> TriangleStripToTriangleList<uint16_t,uint16_t>(std::vector<uint16_t>& indexBuffer, uint32_t offset);
 
 
 	template <typename V, typename T>
-	List<V> TriangleFanToTriangleList(List<T>& indexBuffer, uint32_t offset)
+	std::vector<V> TriangleFanToTriangleList(std::vector<T>& indexBuffer, uint32_t offset)
 	{
-		List<V> result;
+		std::vector<V> result;
 		V a,b,c;
 
-		if (indexBuffer.Size() < 3)
+		if (indexBuffer.size() < 3)
 		{
 			return result;
 		}
 
-		for (int i = 2; i < indexBuffer.Size(); i++)
+		for (int i = 2; i < indexBuffer.size(); i++)
 		{
 			a = indexBuffer[i-1] + (V) offset;
 			b = indexBuffer[i]   + (V) offset;
@@ -90,18 +90,18 @@ namespace LibSWBF2
 
 			if (a != b && b != c && a != c)	//Catch degenerate 
 			{
-				result.Add(a);
-				result.Add(b);
-				result.Add(c);
+				result.push_back(a);
+				result.push_back(b);
+				result.push_back(c);
 			}
 		}
 
 		return result;
 	}
 
-	template List<uint32_t> TriangleFanToTriangleList<uint32_t,uint32_t>(List<uint32_t>& indexBuffer, uint32_t offset);
-	template List<uint32_t> TriangleFanToTriangleList<uint32_t,uint16_t>(List<uint16_t>& indexBuffer, uint32_t offset);
-	template List<uint16_t> TriangleFanToTriangleList<uint16_t,uint16_t>(List<uint16_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint32_t> TriangleFanToTriangleList<uint32_t,uint32_t>(std::vector<uint32_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint32_t> TriangleFanToTriangleList<uint32_t,uint16_t>(std::vector<uint16_t>& indexBuffer, uint32_t offset);
+	template std::vector<uint16_t> TriangleFanToTriangleList<uint16_t,uint16_t>(std::vector<uint16_t>& indexBuffer, uint32_t offset);
 
 
 
@@ -112,9 +112,9 @@ namespace LibSWBF2
 		return ToLib(quat);
 	}
 
-	std::string ToLower(String name)
+	std::string ToLower(const std::string &name)
 	{
-		std::string result = name.Buffer();
+		std::string result = name;
 		std::transform(result.begin(), result.end(), result.begin(),
 			[](unsigned char c) { return std::tolower(c); });
 		return result;

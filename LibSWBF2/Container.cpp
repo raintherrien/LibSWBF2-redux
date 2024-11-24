@@ -18,7 +18,7 @@ namespace LibSWBF2
 
 	// const version
 	template<class T1, class T2>
-	void CopyMap(std::unordered_map<T2, size_t>& levelMap, const List<T1>& list, std::unordered_map<T2, const T1*>& containerMap)
+	void CopyMap(std::unordered_map<T2, size_t>& levelMap, const std::vector<T1>& list, std::unordered_map<T2, const T1*>& containerMap)
 	{
 		for (auto& it : levelMap)
 		{
@@ -28,7 +28,7 @@ namespace LibSWBF2
 
 	// non const version
 	template<class T1, class T2>
-	void CopyMap(std::unordered_map<T2, size_t>& levelMap, List<T1>& list, std::unordered_map<T2, T1*>& containerMap)
+	void CopyMap(std::unordered_map<T2, size_t>& levelMap, std::vector<T1>& list, std::unordered_map<T2, T1*>& containerMap)
 	{
 		for (auto& it : levelMap)
 		{
@@ -37,20 +37,15 @@ namespace LibSWBF2
 	}
 
 	template<class T>
-	void CopyList(const List<T>& srcList, List<const T*>& dstList)
+	void CopyList(const std::vector<T>& srcList, std::vector<const T*>& dstList)
 	{
-		for (size_t i = 0; i < srcList.Size(); ++i)
+		for (size_t i = 0; i < srcList.size(); ++i)
 		{
-			dstList.Add(&srcList[i]);
+			dstList.push_back(&srcList[i]);
 		}
 	}
 
-	struct LoadStatus // XXX No longer used
-	{
-		Level* m_Level = nullptr;
-	};
-
-	Level *Container::LoadLevel(const String& path, const List<String>* subLVLsToLoad, bool bRegisterContents)
+	Level *Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
 		using LibSWBF2::Chunks::LVL::LVL;
 
@@ -90,13 +85,13 @@ namespace LibSWBF2
 						auto find = m_LocalizationDB.find(it.first);
 						if (find == m_LocalizationDB.end())
 						{
-							List<const Localization*> list;
-							list.Add(&level->m_Localizations[it.second]);
+							std::vector<const Localization*> list;
+							list.push_back(&level->m_Localizations[it.second]);
 							m_LocalizationDB.emplace(it.first, list);
 						}
 						else
 						{
-							find->second.Add(&level->m_Localizations[it.second]);
+							find->second.push_back(&level->m_Localizations[it.second]);
 						}
 					}
 				}
@@ -123,18 +118,18 @@ namespace LibSWBF2
 		delete instance;
 	}
 
-	Level *Container::AddLevel(const String& path, const List<String>* subLVLsToLoad, bool bRegisterContents)
+	Level *Container::AddLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
 		Level *lvl = LoadLevel(path, subLVLsToLoad, bRegisterContents);
 		if (lvl) {
-			m_Levels.Add(lvl);
+			m_Levels.push_back(lvl);
 		}
 		return lvl;
 	}
 
 	Level* Container::GetLevel(size_t index) const
 	{
-		if (index >= m_Levels.Size())
+		if (index >= m_Levels.size())
 		{
 			LOG_WARN("Given Level index '{}' is illegal!", index);
 			return nullptr;
@@ -145,7 +140,7 @@ namespace LibSWBF2
 
 	Level* Container::TryGetWorldLevel() const
 	{
-		for (size_t i = 0; i < m_Levels.Size(); ++i) {
+		for (size_t i = 0; i < m_Levels.size(); ++i) {
 			if (m_Levels[i]->IsWorldLevel()) {
 				return m_Levels[i];
 			}
@@ -153,7 +148,7 @@ namespace LibSWBF2
 		return nullptr;
 	}
 
-	const List<const World*>& Container::GetWorlds()
+	const std::vector<const World*>& Container::GetWorlds()
 	{
 		return m_Worlds;
 	}
@@ -161,9 +156,9 @@ namespace LibSWBF2
 
 
 	// Model
-	const Model* Container::FindModel(String modelName) const
+	const Model* Container::FindModel(std::string modelName) const
 	{
-		if (modelName.IsEmpty())
+		if (modelName.empty())
 		{
 			return nullptr;
 		}
@@ -185,9 +180,9 @@ namespace LibSWBF2
 
 
 	// Texture
-	const Texture* Container::FindTexture(String textureName) const
+	const Texture* Container::FindTexture(std::string textureName) const
 	{
-		if (textureName.IsEmpty())
+		if (textureName.empty())
 		{
 			return nullptr;
 		}
@@ -209,9 +204,9 @@ namespace LibSWBF2
 
 
 	// World
-	const World* Container::FindWorld(String worldName) const
+	const World* Container::FindWorld(std::string worldName) const
 	{
-		if (worldName.IsEmpty())
+		if (worldName.empty())
 		{
 			return nullptr;
 		}
@@ -233,9 +228,9 @@ namespace LibSWBF2
 
 
 	// Terrain
-	const Terrain* Container::FindTerrain(String terrainName) const
+	const Terrain* Container::FindTerrain(std::string terrainName) const
 	{
-		if (terrainName.IsEmpty())
+		if (terrainName.empty())
 		{
 			return nullptr;
 		}
@@ -257,9 +252,9 @@ namespace LibSWBF2
 
 
 	// Script
-	const Script* Container::FindScript(String scriptName) const
+	const Script* Container::FindScript(std::string scriptName) const
 	{
-		if (scriptName.IsEmpty())
+		if (scriptName.empty())
 		{
 			return nullptr;
 		}
@@ -281,9 +276,9 @@ namespace LibSWBF2
 
 
 	// AnimationBank
-	const AnimationBank* Container::FindAnimationBank(String setName) const
+	const AnimationBank* Container::FindAnimationBank(std::string setName) const
 	{
-		if (setName.IsEmpty()) return nullptr;
+		if (setName.empty()) return nullptr;
 
 		return FindAnimationBank(FNV::Hash(setName));
 	}
@@ -302,9 +297,9 @@ namespace LibSWBF2
 
 
 	// AnimationSkeleton
-	const AnimationSkeleton* Container::FindAnimationSkeleton(String skelName) const
+	const AnimationSkeleton* Container::FindAnimationSkeleton(std::string skelName) const
 	{
-		if (skelName.IsEmpty()) return nullptr;
+		if (skelName.empty()) return nullptr;
 
 		return FindAnimationSkeleton(FNV::Hash(skelName));
 	}
@@ -323,9 +318,9 @@ namespace LibSWBF2
 
 
 	// Localization
-	const List<const Localization*>* Container::FindLocalizations(String languageName) const
+	const std::vector<const Localization*>* Container::FindLocalizations(std::string languageName) const
 	{
-		if (languageName.IsEmpty())
+		if (languageName.empty())
 		{
 			return nullptr;
 		}
@@ -333,7 +328,7 @@ namespace LibSWBF2
 		return FindLocalizations(FNV::Hash(languageName));
 	}
 
-	const List<const Localization*>* Container::FindLocalizations(FNVHash languageName) const
+	const std::vector<const Localization*>* Container::FindLocalizations(FNVHash languageName) const
 	{
 		auto it = m_LocalizationDB.find(languageName);
 		if (it != m_LocalizationDB.end())
@@ -347,9 +342,9 @@ namespace LibSWBF2
 
 
 	// EntityClass
-	const EntityClass* Container::FindEntityClass(String typeName) const
+	const EntityClass* Container::FindEntityClass(std::string typeName) const
 	{
-		if (typeName.IsEmpty())
+		if (typeName.empty())
 		{
 			return nullptr;
 		}
@@ -371,9 +366,9 @@ namespace LibSWBF2
 
 
 	// Sound
-	const Sound* Container::FindSound(String soundName) const
+	const Sound* Container::FindSound(std::string soundName) const
 	{
-		if (soundName.IsEmpty())
+		if (soundName.empty())
 		{
 			return nullptr;
 		}
@@ -404,15 +399,15 @@ namespace LibSWBF2
 	}
 
 
-	bool Container::GetLocalizedWideString(const String& language, const String& path, uint16_t*& chars, uint32_t& count) const
+	bool Container::GetLocalizedWideString(const std::string& language, const std::string& path, const wchar_t*& chars, uint32_t& count) const
 	{
-		const List<const Localization*>* locals = FindLocalizations(language);
+		const std::vector<const Localization*>* locals = FindLocalizations(language);
 		if (locals == nullptr)
 		{
 			LOG_WARN("Cannot find language '{}'!", language);
 			return false;
 		}
-		for (size_t i = 0; i < locals->Size(); ++i)
+		for (size_t i = 0; i < locals->size(); ++i)
 		{
 			if ((*locals)[i]->GetLocalizedWideString(path, chars, count))
 			{

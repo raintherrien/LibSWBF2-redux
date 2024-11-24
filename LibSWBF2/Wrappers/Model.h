@@ -1,9 +1,10 @@
 #pragma once
 #include "req.h"
+#include "Chunks/LVL/skel/skel.h"
 #include "Segment.h"
 #include "CollisionPrimitive.h"
 #include "CollisionMesh.h"
-
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -26,7 +27,6 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Wrappers
 {
-	using Types::List;
 	using Types::Vector3;
 	using Types::Vector4;
 	using Chunks::LVL::modl::modl;
@@ -37,42 +37,38 @@ namespace LibSWBF2::Wrappers
 
 	struct LIBSWBF2_API Bone
 	{
-		String m_BoneName;
-		String m_Parent;
+		std::string m_BoneName;
+		std::string m_Parent;
 		Vector3 m_Position;
 		Vector4 m_Rotation;
 	};
 
 	class LIBSWBF2_API Model
 	{
-
-	private:
 		friend Level;
-		friend List<Model>;
-
-		Model() = default;
-		~Model() = default;
-
 	private:
 		modl* p_Model;
 		skel* p_Skeleton;
-		List<Segment> m_Segments;
+		std::vector<Segment> m_Segments;
 
 		CollisionMesh m_CollisionMesh;
-		List<CollisionPrimitive> m_CollisionPrimitives;
-		List<Bone> m_Bones;
+		std::vector<CollisionPrimitive> m_CollisionPrimitives;
+		std::vector<Bone> m_Bones;
 
 	public:
+		Model() = default;
+		~Model() = default;
+
 		static bool FromChunk(Level* mainContainer, modl* modelChunk, Model& out);
 
-		const String& GetName() const;
-		const List<Segment>& GetSegments() const;
+		const std::string& GetName() const;
+		const std::vector<Segment>& GetSegments() const;
 		bool IsSkeletalMesh() const;
 		bool IsSkeletonBroken() const;
-		const List<Bone> &GetBones() const;
+		const std::vector<Bone> &GetBones() const;
 
 
 		const CollisionMesh& GetCollisionMesh() const;
-		const List<CollisionPrimitive> &GetCollisionPrimitives() const;
+		const std::vector<CollisionPrimitive> &GetCollisionPrimitives() const;
 	};
 }

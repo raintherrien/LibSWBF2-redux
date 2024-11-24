@@ -4,7 +4,8 @@
 #include "Chunks/LVL/config/ConfigChunk.h"
 #include "Chunks/LVL/config/SCOP.h"
 #include "InternalHelpers.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Wrappers
 {
@@ -18,19 +19,19 @@ namespace LibSWBF2::Wrappers
 
 	*/
 
-	List<Field> Field::FieldsFromChunkChildren(GenericBaseChunk *chunk)
+	std::vector<Field> Field::FieldsFromChunkChildren(GenericBaseChunk *chunk)
 	{
-		List<Field> fields;
-		const List<GenericBaseChunk *>& children = chunk -> GetChildren();
+		std::vector<Field> fields;
+		const std::vector<GenericBaseChunk *>& children = chunk -> GetChildren();
 		
-		for (uint16_t i = 0; i < children.Size(); i++)
+		for (uint16_t i = 0; i < children.size(); i++)
 		{
 			DATA_CONFIG *child = dynamic_cast<DATA_CONFIG *>(children[i]);
 			
 			if (child == nullptr) continue;
 			
 			SCOP *scope;
-			if (i == children.Size() - 1)
+			if (i == children.size() - 1)
 			{
 				scope = nullptr;
 			}
@@ -39,7 +40,7 @@ namespace LibSWBF2::Wrappers
 				scope = dynamic_cast<SCOP *>(children[i+1]);
 			}
 				
-			fields.Add(Field(child, scope));
+			fields.push_back(Field(child, scope));
 		}
 
 		return fields;
@@ -69,7 +70,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 		
-		LOG_WARN("Could not get field float value at index {0} in DATA chunk '{1}'!", index, GetName().Buffer());
+		LOG_WARN("Could not get field float value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return 0.0f;
 	}
 	
@@ -82,7 +83,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 		
-		LOG_WARN("Could not get field uint32 value at index {0} in DATA chunk '{1}'!", index, GetName().Buffer());
+		LOG_WARN("Could not get field uint32 value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return 0;
 	}	
 
@@ -95,7 +96,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector2 value in DATA chunk '{0}'!", GetName().Buffer());
+		LOG_WARN("Could not get field Vector2 value in DATA chunk '{0}'!", GetName());
 		return Vector2();
 	}
 
@@ -108,7 +109,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector3 value in DATA chunk '{0}'!", GetName().Buffer());
+		LOG_WARN("Could not get field Vector3 value in DATA chunk '{0}'!", GetName());
 		return Vector3();
 	}
 
@@ -121,29 +122,29 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector4 value in DATA chunk '{0}'!", GetName().Buffer());
+		LOG_WARN("Could not get field Vector4 value in DATA chunk '{0}'!", GetName());
 		return Vector4();
 	}
 
 
-	String Field::GetString(uint8_t index) const
+	std::string Field::GetString(uint8_t index) const
 	{
-		String strOut;
+		std::string strOut;
 		if (p_Data->GetString(strOut, index))
 		{
 			return strOut;
 		}
 	
-		LOG_WARN("Could not get field string value at index {0} in DATA chunk '{1}'!", index, GetName().Buffer());
+		LOG_WARN("Could not get field string value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return "";
 	}
 
-	String Field::GetName() const
+	std::string Field::GetName() const
 	{
-		String name;
+		std::string name;
 		if (!FNV::Lookup(p_Data->m_NameHash, name))
 		{
-			name = fmt::format("0x{0:x}", p_Data->m_NameHash).c_str();
+			name = fmt::format("0x{0:x}", p_Data->m_NameHash);
 		}
 		return name;
 	}
@@ -172,7 +173,7 @@ namespace LibSWBF2::Wrappers
 		{
 			Cache();
 		}
-		return m_Fields.Size() == 0;
+		return m_Fields.size() == 0;
 	}
 
 
@@ -183,7 +184,7 @@ namespace LibSWBF2::Wrappers
 			Cache();
 		}
 
-		for (uint16_t i = 0; i < m_Fields.Size(); i++)
+		for (uint16_t i = 0; i < m_Fields.size(); i++)
 		{
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
@@ -195,20 +196,20 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	List<const Field *> Scope::GetFields(FNVHash name) const
+	std::vector<const Field *> Scope::GetFields(FNVHash name) const
 	{
 		if (!m_IsValid)
 		{
 			Cache();
 		}
 
-		List<const Field *> matchedFields;
-		for (uint16_t i = 0; i < m_Fields.Size(); i++)
+		std::vector<const Field *> matchedFields;
+		for (uint16_t i = 0; i < m_Fields.size(); i++)
 		{
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
 			{
-				matchedFields.Add(&cur);
+				matchedFields.push_back(&cur);
 			}
 		}
 		return matchedFields;
@@ -232,7 +233,7 @@ namespace LibSWBF2::Wrappers
 
 	const Field& Config::GetField(FNVHash name) const
 	{
-		for (uint16_t i = 0; i < m_Fields.Size(); i++)
+		for (uint16_t i = 0; i < m_Fields.size(); i++)
 		{
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
@@ -244,15 +245,15 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	List<const Field *> Config::GetFields(FNVHash name) const
+	std::vector<const Field *> Config::GetFields(FNVHash name) const
 	{
-		List<const Field *> matchedFields;
-		for (uint16_t i = 0; i < m_Fields.Size(); i++)
+		std::vector<const Field *> matchedFields;
+		for (uint16_t i = 0; i < m_Fields.size(); i++)
 		{
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
 			{
-				matchedFields.Add(&cur);
+				matchedFields.push_back(&cur);
 			}
 		}
 		return matchedFields;
@@ -261,9 +262,9 @@ namespace LibSWBF2::Wrappers
 
 	bool Config::FromChunk(GenericBaseChunk *cfgPtr, Config& wrapperOut)
 	{
-		const List<GenericBaseChunk *>& children = cfgPtr -> GetChildren();
+		const std::vector<GenericBaseChunk *>& children = cfgPtr -> GetChildren();
 
-		if (children.Size() == 0) return false;
+		if (children.size() == 0) return false;
 		
 		config_NAME* nameChunk = dynamic_cast<config_NAME *>(children[0]);
 		

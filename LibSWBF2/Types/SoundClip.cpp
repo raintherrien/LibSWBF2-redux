@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Types/LibString.h"
 #include "SoundClip.h"
 #include "FileWriter.h"
 #include "FileReader.h"
@@ -104,14 +103,14 @@ namespace LibSWBF2::Types
 		stream.SkipBytes(m_Padding);
 	}
 
-	bool SoundClip::TryLookupName(String& result)
+	bool SoundClip::TryLookupName(std::string &result)
 	{
 		return FNV::Lookup(m_NameHash, result);
 	}
 
-	String SoundClip::ToString() const
+	std::string SoundClip::ToString() const
 	{
-		String clipName;
+		std::string clipName;
 		if (!FNV::Lookup(m_NameHash, clipName))
 			clipName = fmt::format("0x{0:x}", m_NameHash).c_str();
 
@@ -132,6 +131,6 @@ namespace LibSWBF2::Types
 			m_DataPosition,
 			m_Padding,
 			m_Alias
-		).c_str();
+		);
 	}
 }

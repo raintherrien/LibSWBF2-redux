@@ -1,10 +1,9 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
-
 #include "Chunks/LVL/common/PROP.h"
-
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -20,7 +19,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;		
+		std::string ToString() const override;		
 	};
 
 
@@ -34,7 +33,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 		
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 
 
@@ -42,12 +41,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	{
 		Hint_INFO* p_Info;
 
-		List<PROP*> m_Properties;
+		std::vector<PROP*> m_Properties;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

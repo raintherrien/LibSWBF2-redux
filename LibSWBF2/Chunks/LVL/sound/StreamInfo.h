@@ -1,6 +1,8 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Types/Enums.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::sound
 {
@@ -16,15 +18,15 @@ namespace LibSWBF2::Chunks::LVL::sound
 		uint32_t m_SubstreamInterleave;
 		uint32_t m_ChannelInterleave;
 
-		List<Types::SoundClip> m_SoundHeaders; //TODO: make a separate type for SoundHeaders in bnk/emo_
+		std::vector<Types::SoundClip> m_SoundHeaders; //TODO: make a separate type for SoundHeaders in bnk/emo_
 
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
-		String HeaderToString() const;
-		String SegmentInfoToString() const;
+		std::string ToString() const override;
+		std::string HeaderToString() const;
+		std::string SegmentInfoToString() const;
 	};
 }

@@ -1,14 +1,10 @@
 #pragma once
 #include "Types/SoundClip.h"
-#include "Types/LibString.h"
-#include "Types/List.h"
 #include "Types/Enums.h"
 
 namespace LibSWBF2::Wrappers
 {
 	using LibSWBF2::Types::SoundClip;
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
 
 	class Level;
 	class SoundBank;
@@ -20,10 +16,6 @@ namespace LibSWBF2::Wrappers
 		friend Level;
 		friend SoundBank;
 		friend SoundStream;
-		friend List<Sound>;
-
-		Sound() = default;
-		~Sound() = default;
 
 	private:
 
@@ -34,6 +26,9 @@ namespace LibSWBF2::Wrappers
 		SoundClip* p_SoundClip;
 
 	public:
+		Sound() = default;
+		~Sound() = default;
+
 		static bool FromSoundClip(SoundClip* soundClip, Sound& out);
 
 		bool HasData() const;

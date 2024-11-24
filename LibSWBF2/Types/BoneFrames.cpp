@@ -7,7 +7,7 @@ namespace LibSWBF2::Types
 {
 	uint32_t BoneFrames::GetDataSize()
 	{
-		return (uint32_t)((sizeof(uint32_t) * 2) + (TranslationFrame::SIZE * m_TranslationFrames.Size()) + (RotationFrame::SIZE * m_RotationFrames.Size()));
+		return (uint32_t)((sizeof(uint32_t) * 2) + (TranslationFrame::SIZE * m_TranslationFrames.size()) + (RotationFrame::SIZE * m_RotationFrames.size()));
 	}
 
 	void BoneFrames::WriteToStream(FileWriter& stream)
@@ -15,15 +15,15 @@ namespace LibSWBF2::Types
 		stream.WriteUInt32(m_CRCchecksum);
 		stream.WriteUInt32(m_KeyFrameType);
 
-		stream.WriteUInt32((uint32_t)m_TranslationFrames.Size());
-		stream.WriteUInt32((uint32_t)m_RotationFrames.Size());
+		stream.WriteUInt32((uint32_t)m_TranslationFrames.size());
+		stream.WriteUInt32((uint32_t)m_RotationFrames.size());
 
-		for (size_t i = 0; i < m_TranslationFrames.Size(); ++i)
+		for (size_t i = 0; i < m_TranslationFrames.size(); ++i)
 		{
 			m_TranslationFrames[i].WriteToStream(stream);
 		}
 
-		for (size_t i = 0; i < m_RotationFrames.Size(); ++i)
+		for (size_t i = 0; i < m_RotationFrames.size(); ++i)
 		{
 			m_RotationFrames[i].WriteToStream(stream);
 		}
@@ -37,20 +37,20 @@ namespace LibSWBF2::Types
 		const uint32_t numTranFrames = stream.ReadUInt32();
 		const uint32_t numRotFrames = stream.ReadUInt32();
 
-		m_TranslationFrames.Clear();
-		m_TranslationFrames.Resize(numTranFrames);
-		m_RotationFrames.Clear();
-		m_RotationFrames.Resize(numRotFrames);
+		m_TranslationFrames.clear();
+		m_TranslationFrames.resize(numTranFrames);
+		m_RotationFrames.clear();
+		m_RotationFrames.resize(numRotFrames);
 
 		for (size_t i = 0; i < numTranFrames; ++i)
 		{
-			TranslationFrame& tran = m_TranslationFrames.Emplace();
+			TranslationFrame& tran = m_TranslationFrames.emplace_back();
 			tran.ReadFromStream(stream);
 		}
 
 		for (size_t i = 0; i < numRotFrames; ++i)
 		{
-			RotationFrame& rot = m_RotationFrames.Emplace();
+			RotationFrame& rot = m_RotationFrames.emplace_back();
 			rot.ReadFromStream(stream);
 		}
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
 #include "Types/Animation.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -15,7 +16,7 @@ namespace LibSWBF2::Chunks::MSH
 		CYCL() = default;
 		~CYCL() = default;
 
-		List<Animation> m_Animations;
+		std::vector<Animation> m_Animations;
 
 	protected:
 		friend ANM2;

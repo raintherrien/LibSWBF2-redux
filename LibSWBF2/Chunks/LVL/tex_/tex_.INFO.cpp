@@ -26,19 +26,19 @@ namespace LibSWBF2::Chunks::LVL::texture
 		m_FormatCount = stream.ReadUInt32();
 		for (uint32_t i = 0; i < m_FormatCount; ++i)
 		{
-			m_Formats.Add((D3DFORMAT)stream.ReadUInt32());
+			m_Formats.push_back((D3DFORMAT)stream.ReadUInt32());
 		}
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String INFO::ToString() const
+	std::string INFO::ToString() const
 	{
 		std::string result = fmt::format("Number of formats: {}\n", m_FormatCount);
-		for (size_t i = 0; i < m_Formats.Size(); ++i)
+		for (size_t i = 0; i < m_Formats.size(); ++i)
 		{
 			result += fmt::format("\tFormat: {}\n", D3DToString(m_Formats[i]));
 		}
-		return result.c_str();
+		return result;
 	}
 }

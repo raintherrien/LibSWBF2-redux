@@ -28,9 +28,9 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::EnsureEnd(stream);
     }
 
-    String Hint_TYPE::ToString() const
+    std::string Hint_TYPE::ToString() const
     {
-    	return fmt::format("{0}", m_Type).c_str();
+    	return fmt::format("{0}", m_Type);
     }
 
 
@@ -76,7 +76,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String Hint_INFO::ToString() const
+    std::string Hint_INFO::ToString() const
     {
         return p_Name -> ToString();
     }
@@ -109,7 +109,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
             }
             else if (next == "PROP"_h)
             {
-                READ_CHILD(stream, m_Properties.Emplace());
+                READ_CHILD(stream, m_Properties.emplace_back());
             }
             else 
             {
@@ -121,7 +121,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String Hint::ToString() const
+    std::string Hint::ToString() const
     {
         return p_Info == nullptr ? "" : p_Info -> ToString();
     }

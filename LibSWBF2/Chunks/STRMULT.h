@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-#include "Types/LibString.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks
 {
@@ -8,13 +9,13 @@ namespace LibSWBF2::Chunks
 	struct LIBSWBF2_API STRMULT : public GenericChunk<Header>
 	{
 	public:
-		List<String> m_Texts;
+		std::vector<std::string> m_Texts;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

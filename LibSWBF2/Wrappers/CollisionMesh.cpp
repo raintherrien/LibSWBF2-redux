@@ -21,7 +21,7 @@ namespace LibSWBF2::Wrappers
     CollisionMesh::CollisionMesh() : p_CollisionChunk(nullptr) {}
 
 
-    String CollisionMesh::GetName() const
+    std::string CollisionMesh::GetName() const
     {
         if (p_CollisionChunk == nullptr || p_CollisionChunk -> p_ChunkName == nullptr)
         {
@@ -31,7 +31,7 @@ namespace LibSWBF2::Wrappers
     }
 
 
-    String CollisionMesh::GetNodeName() const
+    std::string CollisionMesh::GetNodeName() const
     {
         if (p_CollisionChunk == nullptr || p_CollisionChunk -> p_NodeName == nullptr)
         {
@@ -59,19 +59,20 @@ namespace LibSWBF2::Wrappers
             return;
         }
 
-        if (m_Indicies.Size() == 0) //lazy load
+        if (m_Indicies.size() == 0) //lazy load
         {
-            List<TREE_LEAF *>& leaves = p_CollisionChunk -> p_Tree -> m_Leaves;
+		std::vector<TREE_LEAF *>& leaves = p_CollisionChunk -> p_Tree -> m_Leaves;
             
-            for (int i = 0; i < leaves.Size(); i++)
+            for (int i = 0; i < leaves.size(); i++)
             {
-                List<uint16_t>& leaf_fan = leaves[i] -> m_Indicies;
-                m_Indicies.Append(TriangleFanToTriangleList<uint16_t, uint16_t>(leaf_fan, 0));
+		    std::vector<uint16_t>& leaf_fan = leaves[i] -> m_Indicies;
+			const auto tris = TriangleFanToTriangleList<uint16_t, uint16_t>(leaf_fan, 0);
+			m_Indicies.insert(std::end(m_Indicies), std::begin(tris), std::end(tris));
             }
         }
 
-        count = (uint32_t)m_Indicies.Size();
-        indexBuffer = m_Indicies.GetArrayPtr();
+        count = (uint32_t)m_Indicies.size();
+        indexBuffer = m_Indicies.data();
     }
 
     void CollisionMesh::GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const
@@ -83,12 +84,12 @@ namespace LibSWBF2::Wrappers
     		return;
     	}
 
-    	List<Vector3>& verts = p_CollisionChunk -> p_Verts -> m_Verts;
-        count = (uint32_t) verts.Size();
-        vertexBuffer = verts.GetArrayPtr();
+	std::vector<Vector3>& verts = p_CollisionChunk -> p_Verts -> m_Verts;
+        count = (uint32_t) verts.size();
+        vertexBuffer = verts.data();
     }
         
-    String CollisionMesh::ToString() const
+    std::string CollisionMesh::ToString() const
     {
     	if (p_CollisionChunk == nullptr)
     	{

@@ -1,7 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
 #include "Hashing.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::config
 {
@@ -14,6 +14,6 @@ namespace LibSWBF2::Chunks::LVL::config
 
         FNVHash m_Name;
 
-        String ToString() const override;
+	std::string ToString() const override;
     };
 }

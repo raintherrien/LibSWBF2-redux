@@ -37,11 +37,11 @@ namespace LibSWBF2::Chunks::LVL::animation
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String zaf_::ToString() const
+	std::string zaf_::ToString() const
 	{
 		return fmt::format(
 			"Animation skeleton of name: {}\n\n",
 			p_Name->m_Text
-		).c_str();
+		);
 	}
 }

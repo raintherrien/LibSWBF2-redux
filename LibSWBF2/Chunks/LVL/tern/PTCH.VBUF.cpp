@@ -43,7 +43,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             //{
                 for (uint32_t i = 0; i < m_ElementCount; ++i)
                 {
-                    m_TerrainBuffer.Emplace().ReadFromStream(stream);
+                    m_TerrainBuffer.emplace_back().ReadFromStream(stream);
                 }
             //}
         }
@@ -58,8 +58,8 @@ namespace LibSWBF2::Chunks::LVL::terrain
             PTCH *parentPatch = dynamic_cast<PTCH*>(GetParent());
             PTCH_INFO *patchInfo = parentPatch -> p_PatchInfo;
 
-            List<uint32_t>& slotsList = patchInfo -> m_TextureSlotsUsed;
-            uint32_t numSlotsUsed = (uint32_t)slotsList.Size();
+	    std::vector<uint32_t>& slotsList = patchInfo -> m_TextureSlotsUsed;
+            uint32_t numSlotsUsed = (uint32_t)slotsList.size();
             
             //Temp buffer for storing each raw (usually 16 byte long)
             //VBUF element
@@ -73,7 +73,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
                 {                 
                     //Don't know how > 3 strengths are stored per VBUF element just yet
                     uint32_t newElement = j < 3 ? elementBuffer[KNOWN_STRENGTH_OFFSETS[j]] : 0;
-                    m_BlendMapData.Add(newElement);
+                    m_BlendMapData.push_back(newElement);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
         BaseChunk::EnsureEnd(stream);
     }
 
-    String VBUF::ToString() const
+    std::string VBUF::ToString() const
     {
         std::string result = fmt::format(
             "Element Count: {}\n"
@@ -100,12 +100,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
             TerrainBufferTypeToString(m_BufferType)
         );
 
-        for (uint32_t i = 0; i < m_TerrainBuffer.Size(); ++i)
+        for (uint32_t i = 0; i < m_TerrainBuffer.size(); ++i)
         {
-            result += m_TerrainBuffer[i].ToString().Buffer();
+            result += m_TerrainBuffer[i].ToString();
             result += "\n\n";
         }
 
-        return result.c_str();
+        return result;
     }
 }

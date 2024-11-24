@@ -26,7 +26,7 @@ namespace LibSWBF2::Chunks::LVL::skel
         BaseChunk::EnsureEnd(stream);
     }
 
-    String INFO::ToString() const
+    std::string INFO::ToString() const
     {
         return fmt::format(
             "Model Name: {}\n"

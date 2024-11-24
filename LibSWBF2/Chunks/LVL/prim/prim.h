@@ -5,7 +5,8 @@
 #include "MASK.h"
 #include "prim.DATA.h"
 #include "../wrld/XFRM.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
@@ -15,14 +16,14 @@ namespace LibSWBF2::Chunks::LVL::prim
 	    void WriteToStream(FileWriter& stream) override;
 	    void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
+	    std::string ToString() const override;
         
         INFO_prim *p_InfoChunk;  
         
-        List<STR<"NAME"_m> *> m_PrimitiveNAMEs;
-        List<MASK *>          m_PrimitiveMASKs;
-        List<STR<"PRNT"_m> *> m_PrimitivePRNTs;  
-        List<wrld::XFRM *>    m_PrimitiveXFRMs;
-        List<DATA_PRIM *>     m_PrimitiveDATAs;
+	std::vector<STR<"NAME"_m> *> m_PrimitiveNAMEs;
+	std::vector<MASK *>          m_PrimitiveMASKs;
+	std::vector<STR<"PRNT"_m> *> m_PrimitivePRNTs;  
+	std::vector<wrld::XFRM *>    m_PrimitiveXFRMs;
+	std::vector<DATA_PRIM *>     m_PrimitiveDATAs;
     };
 }

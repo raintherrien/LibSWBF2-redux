@@ -38,13 +38,13 @@ namespace LibSWBF2::Chunks::LVL::modl
         BaseChunk::EnsureEnd(stream);
     }
 
-    String INFO::ToString() const
+    std::string INFO::ToString() const
     {
         return
             "VertexBox[0] = " + m_VertexBox[0].ToString() + "\n" + 
             "VertexBox[1] = " + m_VertexBox[1].ToString() + "\n" +
             "VisibilityBox[0] = " + m_VisibilityBox[1].ToString() + "\n" +
             "VisibilityBox[1] = " + m_VisibilityBox[1].ToString() + "\n" +
-            "FaceCount = " + std::to_string(m_FaceCount).c_str();
+            "FaceCount = " + std::to_string(m_FaceCount);
     }
 }

@@ -3,7 +3,7 @@
 #include "Chunks/RawData.h"
 #include "Chunks/LVL/common/DATA.h"
 #include "Types/Enums.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
@@ -13,7 +13,7 @@ namespace LibSWBF2::Chunks::LVL::prim
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		Types::String ToString() const override;
+		std::string ToString() const override;
 
 		ECollisionPrimitiveType m_PrimitiveType;
 		float_t m_Field1, m_Field2, m_Field3;

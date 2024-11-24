@@ -3,6 +3,8 @@
 #include "Chunks/STR.h"
 #include "INFO.h"
 #include "modl.segm.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -13,13 +15,13 @@ namespace LibSWBF2::Chunks::LVL::modl
 		STR<"NODE"_m>* p_Node;	// parent class?
 		INFO* p_Info;
 
-		List<segm*> m_Segments;
+		std::vector<segm*> m_Segments;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

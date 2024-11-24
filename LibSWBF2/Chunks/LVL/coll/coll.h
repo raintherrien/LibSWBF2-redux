@@ -5,7 +5,7 @@
 #include "TREE.h"
 #include "../prim/MASK.h"
 #include "coll.INFO.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
@@ -16,7 +16,7 @@ namespace LibSWBF2::Chunks::LVL::coll
 	    void WriteToStream(FileWriter& stream) override;
 	    void ReadFromStream(FileReader& stream) override;
 
-        Types::String ToString() const override;
+	    std::string ToString() const override;
 
         STR<"NAME"_m> *p_ChunkName;
 

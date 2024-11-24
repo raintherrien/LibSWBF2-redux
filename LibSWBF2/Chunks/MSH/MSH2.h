@@ -3,6 +3,7 @@
 #include "SINF.h"
 #include "MATL.h"
 #include "MODL.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -12,7 +13,7 @@ namespace LibSWBF2::Chunks::MSH
 	{
 		SINF m_SceneInformation;
 		MATL m_MaterialList;
-		List<MODL> m_Models;
+		std::vector<MODL> m_Models;
 
 	protected:
 		friend MSH;

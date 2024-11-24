@@ -1,11 +1,9 @@
 #pragma once
-
 #include "Chunks/GenericChunk.h"
-
 #include "Types/Planning.h"
+#include <string>
+#include <vector>
 
-
-using LibSWBF2::Types::String;
 using LibSWBF2::Types::Hub;
 using LibSWBF2::Types::Connection;
 
@@ -20,7 +18,7 @@ namespace LibSWBF2::Chunks::plan
 		uint16_t m_iConnectionCount;
 
 		void ReadFromStream(FileReader& stream) override;
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 
 	struct LIBSWBF2_API NODE : public GenericChunk<"NODE"_m>
@@ -30,10 +28,10 @@ namespace LibSWBF2::Chunks::plan
 		NODE(uint16_t count);
 
 		uint16_t m_iCount;
-		Types::List<Hub> m_aHubs;
+		std::vector<Hub> m_aHubs;
 
 		void ReadFromStream(FileReader& stream) override;
-		String ToString() const override;
+		std::string ToString() const override;
 
 	};
 
@@ -43,10 +41,10 @@ namespace LibSWBF2::Chunks::plan
 		ARCS(uint16_t count);
 
 		uint16_t m_iCount;
-		Types::List<Connection> m_aConnections;
+		std::vector<Connection> m_aConnections;
 
 		void ReadFromStream(FileReader& stream) override;
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 
 	struct LIBSWBF2_API plan : public GenericChunk<"plan"_m>

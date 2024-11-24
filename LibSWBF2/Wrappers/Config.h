@@ -2,7 +2,8 @@
 #include "Types/Color4.h"
 #include "Types/Vector4.h"
 #include "Types/Vector3.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks
 {
@@ -32,7 +33,7 @@ namespace LibSWBF2::Wrappers
 	friend Field;
 
 	public:
-		List<const Field *> GetFields(FNVHash name = 0) const;
+		std::vector<const Field *> GetFields(FNVHash name = 0) const;
 		const Field& GetField(FNVHash name = 0) const;
 
 		bool IsEmpty() const;
@@ -45,7 +46,7 @@ namespace LibSWBF2::Wrappers
 
 		// These are lazily initialized, since we may not
 		// use many Config types
-		mutable List<Field> m_Fields;
+		mutable std::vector<Field> m_Fields;
 		mutable bool m_IsValid;
 
 		// Inits above members
@@ -65,7 +66,7 @@ namespace LibSWBF2::Wrappers
 		Field(DATA_CONFIG* data, SCOP* scope);
 		Field() = default;
 
-		static List<Field> FieldsFromChunkChildren(GenericBaseChunk *chunk);
+		static std::vector<Field> FieldsFromChunkChildren(GenericBaseChunk *chunk);
 
 		FNVHash GetNameHash() const;
 
@@ -75,8 +76,8 @@ namespace LibSWBF2::Wrappers
 		Vector2 GetVector2() const;
 		Vector3 GetVector3() const;
 		Vector4 GetVector4() const;
-		String GetString(uint8_t index=0) const;
-		String GetName() const;
+		std::string GetString(uint8_t index=0) const;
+		std::string GetName() const;
 
 		Scope m_Scope;
 
@@ -98,7 +99,6 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::GenericBaseChunk GenericBaseChunk;
 
 	friend class Level;
-	friend List<Config>;
 
 	public:
 
@@ -106,13 +106,13 @@ namespace LibSWBF2::Wrappers
 		FNVHash m_Name;
 				
 		const Field& GetField(FNVHash hash = 0) const;
-		List<const Field *> GetFields(FNVHash hash = 0) const;
+		std::vector<const Field *> GetFields(FNVHash hash = 0) const;
 
 		static bool FromChunk(GenericBaseChunk *cfg, Config& wrapperOut);
 
 	private:
 
 		ConfigChunkNC *p_Chunk;
-		List<Field> m_Fields;
+		std::vector<Field> m_Fields;
 	};
 }

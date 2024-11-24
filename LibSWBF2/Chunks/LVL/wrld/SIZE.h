@@ -1,6 +1,6 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-#include "Types/List.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -14,6 +14,6 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

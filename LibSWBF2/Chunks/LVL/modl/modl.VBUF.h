@@ -2,6 +2,8 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "Types/Enums.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -12,22 +14,22 @@ namespace LibSWBF2::Chunks::LVL::modl
 		uint32_t m_Stride;	// bytes per vertex
 		EVBUFFlags m_Flags;
 		
-		List<Vector3> m_Positions;
-		List<Vector3> m_Normals;
-		List<Vector3> m_Tangents;
-		List<Vector3> m_BiTangents;
+		std::vector<Vector3> m_Positions;
+		std::vector<Vector3> m_Normals;
+		std::vector<Vector3> m_Tangents;
+		std::vector<Vector3> m_BiTangents;
 
-		List<Color4u8> m_Colors;
-		List<Vector2> m_TexCoords;
+		std::vector<Color4u8> m_Colors;
+		std::vector<Vector2> m_TexCoords;
 
-		List<Vector3u8> m_BoneIndicies;
-		List<Vector3> m_Weights;
+		std::vector<Vector3u8> m_BoneIndicies;
+		std::vector<Vector3> m_Weights;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

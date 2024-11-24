@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "Types/LibString.h"
 #include "Matrix3x3.h"
 #include "FileWriter.h"
 #include "FileReader.h"
 #include <fmt/format.h>
+#include <string>
 
 namespace LibSWBF2::Types
 {
@@ -37,7 +37,7 @@ namespace LibSWBF2::Types
 		matrix[2][2] = stream.ReadFloat();
 	}
 
-	String Matrix3x3::ToString() const
+	std::string Matrix3x3::ToString() const
 	{
 		return fmt::format(
 			"[{}, {}, {}]\n"

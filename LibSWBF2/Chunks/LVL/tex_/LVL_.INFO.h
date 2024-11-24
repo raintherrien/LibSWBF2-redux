@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::LVL_texture
 {
@@ -14,6 +15,6 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

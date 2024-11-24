@@ -25,15 +25,15 @@ namespace LibSWBF2
 		return ~crc;
 	}
 
-	FNVHash FNV::Hash(const Types::String& str)
+	FNVHash FNV::Hash(const std::string &str)
 	{
 		constexpr uint32_t FNV_prime = 16777619;
 		constexpr uint32_t offset_basis = 2166136261;
 
 		uint32_t hash = offset_basis;
 
-		const char* buffer = str.Buffer();
-		for (size_t i = 0; i < str.Length(); ++i)
+		const char* buffer = str.c_str();
+		for (size_t i = 0; i < str.size(); ++i)
 		{
 			char c = buffer[i];
 			c |= 0x20;
@@ -45,7 +45,7 @@ namespace LibSWBF2
 		return hash;
 	}
 
-	bool FNV::Lookup(FNVHash hash, Types::String& result)
+	bool FNV::Lookup(FNVHash hash, std::string &result)
 	{
 #ifdef LOOKUP_CSV_PATH
 		if (p_LookupTable == nullptr)

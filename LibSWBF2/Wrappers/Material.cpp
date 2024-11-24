@@ -66,12 +66,12 @@ namespace LibSWBF2::Wrappers
 		return p_Material->m_Parameters[1];
 	}
 
-	const String& Material::GetAttachedLight() const
+	std::string Material::GetAttachedLight() const
 	{
 		return p_Material->m_AttachedLight;
 	}
 
-	bool Material::GetTextureName(uint8_t index, String& outName) const
+	bool Material::GetTextureName(uint8_t index, std::string& outName) const
 	{
 		segm* segment = dynamic_cast<segm*>(p_Material->GetParent());
 		if (segment == nullptr)
@@ -80,9 +80,9 @@ namespace LibSWBF2::Wrappers
 			return false;
 		}
 
-		if (index >= segment->m_Textures.Size())
+		if (index >= segment->m_Textures.size())
 		{
-			LOG_WARN("Texture index '{}' is out of bounds ({})!", index, segment->m_Textures.Size());
+			LOG_WARN("Texture index '{}' is out of bounds ({})!", index, segment->m_Textures.size());
 			return false;
 		}
 		outName = segment->m_Textures[index]->m_Name;
@@ -91,7 +91,7 @@ namespace LibSWBF2::Wrappers
 
 	const Texture* Material::GetTexture(uint8_t index) const
 	{
-		String textureName;
+		std::string textureName;
 		if (m_MainContainer != nullptr && GetTextureName(index, textureName))
 		{
 			return m_MainContainer->GetTexture(textureName);

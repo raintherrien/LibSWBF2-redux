@@ -39,7 +39,7 @@ namespace LibSWBF2::Chunks::LVL::modl
             {
                 segm* segment;
                 READ_CHILD(stream, segment);
-                m_Segments.Add(segment);
+                m_Segments.push_back(segment);
             }
             else
             {
@@ -50,12 +50,12 @@ namespace LibSWBF2::Chunks::LVL::modl
         BaseChunk::EnsureEnd(stream);
     }
 
-    String modl::ToString() const
+    std::string modl::ToString() const
     {
         return
             "NAME: " + p_Name->m_Text + "\n\n" +
             "INFO:\n" +
             p_Info->ToString() + "\n\n" +
-            "Number of Segments: " + std::to_string(m_Segments.Size()).c_str();
+            "Number of Segments: " + std::to_string(m_Segments.size());
     }
 }

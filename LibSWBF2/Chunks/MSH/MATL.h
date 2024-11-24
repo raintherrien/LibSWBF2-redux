@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
 #include "MATD.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -11,7 +12,7 @@ namespace LibSWBF2::Chunks::MSH
 		MATL() = default;
 		~MATL() = default;
 
-		List<MATD> m_Materials;
+		std::vector<MATD> m_Materials;
 
 	protected:
 		friend MSH2;

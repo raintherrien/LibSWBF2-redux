@@ -2,8 +2,10 @@
 #include "req.h"
 #include "EntityClass.h"
 #include "Types/Vector4.h"
-#include "Types/List.h"
 #include "Chunks/LVL/wrld/inst.h"
+
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -15,8 +17,6 @@ namespace LibSWBF2::Wrappers
 	using namespace LibSWBF2::Chunks::LVL::wrld;
 	using Types::Vector3;
 	using Types::Vector4;
-	using Types::List;
-	using Types::String;
 
 	class Level;
 	class Model;
@@ -26,10 +26,6 @@ namespace LibSWBF2::Wrappers
 	{
 	private:
 		friend World;
-		friend List<Instance>;
-
-		Instance();
-		~Instance();
 
 		Instance& operator=(const Instance& other);
 		Instance& operator=(Instance&& other);
@@ -40,10 +36,14 @@ namespace LibSWBF2::Wrappers
 		class PropertyMap* m_PropertyMapping;
 
 	public:
+		Instance();
+		~Instance();
+		Instance(const Instance &);
+
 		static bool FromChunk(Container* mainContainer, inst* instanceChunk, Instance& out);
 
-		const String& GetEntityClassName() const;
-		const String& GetName() const;
+		const std::string& GetEntityClassName() const;
+		const std::string& GetName() const;
 		Vector3 GetPosition() const;
 		Vector4 GetRotation() const;
 
@@ -56,14 +56,14 @@ namespace LibSWBF2::Wrappers
 		//   HoloImageGeometry = "com_icon_CIS CIS"
 
 		// these will return the first encounter. will fall back to base class, if existent
-		bool GetProperty(FNVHash hashedPropertyName, String& outValue) const;
-		bool GetProperty(const String& propertyName, String& outValue) const;
+		bool GetProperty(FNVHash hashedPropertyName, std::string& outValue) const;
+		bool GetProperty(const std::string& propertyName, std::string& outValue) const;
 
 		// these will return all encounters. will also recursively search base classes, if existent
-		bool GetProperty(const String& propertyName, List<String>& outValues) const;
-		bool GetProperty(FNVHash hashedPropertyName, List<String>& outValues) const;
+		bool GetProperty(const std::string& propertyName, std::vector<std::string>& outValues) const;
+		bool GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const;
 
-		void GetOverriddenProperties(List<FNVHash>& hashesOut, List<String>& valuesOut) const;
+		void GetOverriddenProperties(std::vector<FNVHash>& hashesOut, std::vector<std::string>& valuesOut) const;
 		const EntityClass* GetEntityClass() const;
 	};
 }

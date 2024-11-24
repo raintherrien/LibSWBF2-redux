@@ -2,6 +2,8 @@
 #include "Chunks/GenericChunk.h"
 #include "Types/Vector3.h"
 #include "Types/Matrix3x3.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::skel
 {
@@ -11,14 +13,14 @@ namespace LibSWBF2::Chunks::LVL::skel
 	struct LIBSWBF2_API XFRM : public GenericChunk<"XFRM"_m>
 	{
 	public:
-		List<Matrix3x3> m_BoneRotations;
-		List<Vector3> m_BonePositions;
+		std::vector<Matrix3x3> m_BoneRotations;
+		std::vector<Vector3> m_BonePositions;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

@@ -2,7 +2,7 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "segm.INFO.h"
-
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -25,8 +25,8 @@ namespace LibSWBF2::Chunks::LVL::modl
 		SKIN* p_Skin;					// OPTIONAL
 		BMAP* p_BoneMap;				// OPTIONAL. This mapper seems unnecessary to me...
 
-		List<VBUF*> m_VertexBuffers;
-		List<TNAM*> m_Textures;
+		std::vector<VBUF*> m_VertexBuffers;
+		std::vector<TNAM*> m_Textures;
 
 	public:
 		void RefreshSize() override;

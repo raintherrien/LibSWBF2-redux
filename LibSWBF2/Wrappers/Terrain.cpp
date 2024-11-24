@@ -19,7 +19,7 @@ namespace LibSWBF2::Wrappers
 			LOG_ERROR("Given terrainChunk was NULL!");
 			return false;
 		}
-		if (terrainChunk->p_Patches == nullptr || terrainChunk->p_Patches->m_Patches.Size() == 0)
+		if (terrainChunk->p_Patches == nullptr || terrainChunk->p_Patches->m_Patches.size() == 0)
 		{
 			// there's simply no terrain data present
 			return false;
@@ -46,8 +46,8 @@ namespace LibSWBF2::Wrappers
 		// For some reason, terrain seems to be offset by gridUnitSize in Z direction...
 		glm::vec3 patchOffset = { 0.0f, 0.0f, -distToCenter + gridUnitSize };
 
-		List<PTCH*>& patches = out.p_Terrain->p_Patches->m_Patches;
-		for (size_t i = 0; i < patches.Size(); ++i)
+		std::vector<PTCH*>& patches = out.p_Terrain->p_Patches->m_Patches;
+		for (size_t i = 0; i < patches.size(); ++i)
 		{
 			VBUF* vertexBuffer = patches[i]->m_GeometryBuffer;
 			if (vertexBuffer == nullptr)
@@ -62,10 +62,10 @@ namespace LibSWBF2::Wrappers
 				continue;
 			}
 
-			List<Types::TerrainBufferEntry>& terrainBuffer = vertexBuffer->m_TerrainBuffer;
-			if (vertexBuffer->m_ElementCount != terrainBuffer.Size())
+			std::vector<Types::TerrainBufferEntry>& terrainBuffer = vertexBuffer->m_TerrainBuffer;
+			if (vertexBuffer->m_ElementCount != terrainBuffer.size())
 			{
-				LOG_WARN("Specified element count '{}' does not match up with actual buffer size '{}'! Patch index: {}", vertexBuffer->m_ElementCount, terrainBuffer.Size(), i);
+				LOG_WARN("Specified element count '{}' does not match up with actual buffer size '{}'! Patch index: {}", vertexBuffer->m_ElementCount, terrainBuffer.size(), i);
 				continue;
 			}
 
@@ -95,13 +95,13 @@ namespace LibSWBF2::Wrappers
 			// If not, just just the expected amount. Apparently there're some VBUFs with more
 			// vertices than expected, but no custom index buffer.
 			// In those cases, we just ignore all remaining vertices.
-			size_t numVertices = patches[i]->m_GeometryIndexBuffer != nullptr ? terrainBuffer.Size() : numVertsPerPatch;
+			size_t numVertices = patches[i]->m_GeometryIndexBuffer != nullptr ? terrainBuffer.size() : numVertsPerPatch;
 			for (size_t j = 0; j < numVertices; ++j)
 			{
 				glm::vec3 pos = (ToGLM(terrainBuffer[j].m_Position) + patchOffset);
-				out.m_Positions.Add(ToLib(pos));
-				out.m_Normals.Add(terrainBuffer[j].m_Normal);
-				out.m_Colors.Add(terrainBuffer[j].m_Color);
+				out.m_Positions.push_back(ToLib(pos));
+				out.m_Normals.push_back(terrainBuffer[j].m_Normal);
+				out.m_Colors.push_back(terrainBuffer[j].m_Color);
 
 				// global UV calculation
 				//float_t u = ((pos.x + distToCenter) / (terrainEdgeUnitSize)) * 2.0f;
@@ -110,7 +110,7 @@ namespace LibSWBF2::Wrappers
 				// per patch UV calculation
 				float_t u = (terrainBuffer[j].m_Position.m_X / (dataEdgeSize * gridUnitSize)) * 2.0f;
 				float_t v = (terrainBuffer[j].m_Position.m_Z / (dataEdgeSize * gridUnitSize)) * 2.0f;
-				out.m_TexCoords.Add({ u, v });
+				out.m_TexCoords.push_back({ u, v });
 			}
 		}
 
@@ -145,17 +145,17 @@ namespace LibSWBF2::Wrappers
 			uint32_t dataLength = dim * dim * numTexLayers;
 	        p_BlendMap = new uint8_t[dataLength]();
 
-			List<PTCH*>& patches = p_Terrain->p_Patches->m_Patches;
+		std::vector<PTCH*>& patches = p_Terrain->p_Patches->m_Patches;
 
-			for (uint32_t i = 0; i < (uint32_t)patches.Size(); i++)
+			for (uint32_t i = 0; i < (uint32_t)patches.size(); i++)
 			{	
 				auto *curPatch = patches[i];
 				auto *patchInfo = curPatch -> p_PatchInfo;
 				auto *patchSplatChunk = curPatch -> m_TextureBuffer;
-				const List<uint8_t>& curPatchBlendMap = patchSplatChunk -> m_BlendMapData;
+				const std::vector<uint8_t>& curPatchBlendMap = patchSplatChunk -> m_BlendMapData;
 
-	            List<uint32_t>& slotsList = patchInfo -> m_TextureSlotsUsed;
-				uint32_t numSlotsInPatch = (uint32_t)slotsList.Size();
+				std::vector<uint32_t>& slotsList = patchInfo -> m_TextureSlotsUsed;
+				uint32_t numSlotsInPatch = (uint32_t)slotsList.size();
 
 				uint32_t globalPatchY = i / numPatchesPerRow;
 				uint32_t globalPatchX = i % numPatchesPerRow;
@@ -193,7 +193,7 @@ namespace LibSWBF2::Wrappers
 
 	bool Terrain::GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint32_t*& indexBuffer) const
 	{
-		m_Indices.Clear();
+		m_Indices.clear();
 
 		if (requestedTopology == ETopology::TriangleList)
 		{
@@ -206,7 +206,7 @@ namespace LibSWBF2::Wrappers
 			uint32_t numPatches = (gridSize * gridSize) / (patchEdgeSize * patchEdgeSize);
 			uint32_t verticesPerPatch = dataEdgeSize * dataEdgeSize;
 
-			size_t numStoredPatches = p_Terrain->p_Patches->m_Patches.Size();
+			size_t numStoredPatches = p_Terrain->p_Patches->m_Patches.size();
 			if (numStoredPatches != numPatches)
 			{
 				LOG_ERROR("Expected {} patches according to info data, but found {}!", numPatches, numStoredPatches);
@@ -223,10 +223,10 @@ namespace LibSWBF2::Wrappers
 				VBUF* vertexBuffer = p_Terrain->p_Patches->m_Patches[i]->m_GeometryBuffer;
 				if (indexBuffer != nullptr)
 				{
-					List<uint32_t> triangleList = TriangleStripToTriangleList<uint32_t>(indexBuffer->m_IndexBuffer, vertexOffset);
+					std::vector<uint32_t> triangleList = TriangleStripToTriangleList<uint32_t>(indexBuffer->m_IndexBuffer, vertexOffset);
 
-					m_Indices.Append(triangleList);
-					vertexOffset += (uint32_t)vertexBuffer->m_TerrainBuffer.Size();
+					m_Indices.insert(std::end(m_Indices), std::begin(triangleList), std::end(triangleList));
+					vertexOffset += (uint32_t)vertexBuffer->m_TerrainBuffer.size();
 				}
 				else
 				{
@@ -247,14 +247,14 @@ namespace LibSWBF2::Wrappers
 							d = (globalX + 1) + ((y + 1) * dataEdgeSize);
 
 							// triangle 1 clockwise
-							m_Indices.Add(a);
-							m_Indices.Add(b);
-							m_Indices.Add(c);
+							m_Indices.push_back(a);
+							m_Indices.push_back(b);
+							m_Indices.push_back(c);
 
 							// triangle 2 clockwise
-							m_Indices.Add(c);
-							m_Indices.Add(b);
-							m_Indices.Add(d);
+							m_Indices.push_back(c);
+							m_Indices.push_back(b);
+							m_Indices.push_back(d);
 						}
 					}
 
@@ -268,36 +268,36 @@ namespace LibSWBF2::Wrappers
 			return false;
 		}
 
-		count = (uint32_t)m_Indices.Size();
-		indexBuffer = m_Indices.GetArrayPtr();
+		count = (uint32_t)m_Indices.size();
+		indexBuffer = m_Indices.data();
 		return true;
 	}
 
-	void Terrain::GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const
+	void Terrain::GetVertexBuffer(uint32_t& count, const Vector3*& vertexBuffer) const
 	{
-		count = (uint32_t)m_Positions.Size();
-		vertexBuffer = m_Positions.GetArrayPtr();
+		count = (uint32_t)m_Positions.size();
+		vertexBuffer = m_Positions.data();
 	}
 
-	void Terrain::GetNormalBuffer(uint32_t& count, Vector3*& normalBuffer) const
+	void Terrain::GetNormalBuffer(uint32_t& count, const Vector3*& normalBuffer) const
 	{
-		count = (uint32_t)m_Normals.Size();
-		normalBuffer = m_Normals.GetArrayPtr();
+		count = (uint32_t)m_Normals.size();
+		normalBuffer = m_Normals.data();
 	}
 
-	void Terrain::GetColorBuffer(uint32_t& count, Color4u8*& colorBuffer) const
+	void Terrain::GetColorBuffer(uint32_t& count, const Color4u8*& colorBuffer) const
 	{
-		count = (uint32_t)m_Colors.Size();
-		colorBuffer = m_Colors.GetArrayPtr();
+		count = (uint32_t)m_Colors.size();
+		colorBuffer = m_Colors.data();
 	}
 
-	void Terrain::GetUVBuffer(uint32_t& count, Vector2*& uvBuffer) const
+	void Terrain::GetUVBuffer(uint32_t& count, const Vector2*& uvBuffer) const
 	{
-		count = (uint32_t)m_TexCoords.Size();
-		uvBuffer = m_TexCoords.GetArrayPtr();
+		count = (uint32_t)m_TexCoords.size();
+		uvBuffer = m_TexCoords.data();
 	}
 
-	String Terrain::GetName() const
+	std::string Terrain::GetName() const
 	{
 		return p_Terrain->p_Name->m_Text;
 	}
@@ -362,7 +362,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const List<String>& Terrain::GetLayerTextures() const
+	const std::vector<std::string>& Terrain::GetLayerTextures() const
 	{
 		return p_Terrain->p_LayerTextures->m_LayerTextures;
 	}

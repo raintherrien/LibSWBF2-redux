@@ -25,6 +25,12 @@ namespace LibSWBF2::Wrappers
 		delete m_LocalizationMaps;
 	}
 
+	Localization::Localization(const Localization &other)
+	{
+		m_LocalizationMaps = new LocalizationMaps();
+		*m_LocalizationMaps = *other.m_LocalizationMaps;
+	}
+
 	Localization& Localization::operator=(const Localization& other)
 	{
 		p_Locl = other.p_Locl;
@@ -50,7 +56,7 @@ namespace LibSWBF2::Wrappers
 
 		out.p_Locl = loclChunk;
 
-		for (size_t i = 0; i < loclChunk->p_Body->m_LocalizeEntries.Size(); ++i)
+		for (size_t i = 0; i < loclChunk->p_Body->m_LocalizeEntries.size(); ++i)
 		{
 			out.m_LocalizationMaps->m_HashToIndexMap.emplace(
 				loclChunk->p_Body->m_LocalizeEntries[i].m_LocalizePathHash, 
@@ -61,14 +67,14 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const String& Localization::GetName() const
+	const std::string& Localization::GetName() const
 	{
 		return p_Locl->p_Name->m_Text;
 	}
 
-	bool Localization::GetLocalizedWideString(const String& path, uint16_t*& chars, uint32_t& count) const
+	bool Localization::GetLocalizedWideString(const std::string& path, const wchar_t*& chars, uint32_t& count) const
 	{
-		if (path.IsEmpty())
+		if (path.empty())
 		{
 			LOG_WARN("Given localize path was EMPTY!");
 			return false;
@@ -78,9 +84,9 @@ namespace LibSWBF2::Wrappers
 		auto it = m_LocalizationMaps->m_HashToIndexMap.find(hashedPath);
 		if (it != m_LocalizationMaps->m_HashToIndexMap.end())
 		{
-			List<uint16_t>& wideString = p_Locl->p_Body->m_LocalizeEntries[it->second].m_WideString;
-			chars = wideString.GetArrayPtr();
-			count = (uint32_t)wideString.Size();
+			std::wstring wideString = p_Locl->p_Body->m_LocalizeEntries[it->second].m_WideString;
+			chars = wideString.c_str();
+			count = (uint32_t)wideString.size();
 			return true;
 		}
 

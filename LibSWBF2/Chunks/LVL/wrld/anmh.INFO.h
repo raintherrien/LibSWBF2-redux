@@ -1,6 +1,7 @@
 #pragma once
 #include "Chunks/GenericChunk.h"
-
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
@@ -10,13 +11,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
 		uint8_t m_NumStrings;
 
-		String m_RootName;
-		List<String> m_ChildNames;
+		std::string m_RootName;
+		std::vector<std::string> m_ChildNames;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 		
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

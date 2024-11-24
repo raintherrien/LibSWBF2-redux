@@ -2,6 +2,8 @@
 #include "Chunks/GenericChunk.h"
 #include "Types/Enums.h"
 #include "Types/TerrainBufferEntry.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
@@ -11,15 +13,15 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		uint32_t m_ElementCount;
 		uint32_t m_ElementSize;
 		ETerrainBufferType m_BufferType;
-		List<Types::TerrainBufferEntry> m_TerrainBuffer;
+		std::vector<Types::TerrainBufferEntry> m_TerrainBuffer;
 
-		List<uint8_t> m_BlendMapData;
+		std::vector<uint8_t> m_BlendMapData;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

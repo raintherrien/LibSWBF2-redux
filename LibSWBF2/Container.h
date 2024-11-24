@@ -4,14 +4,12 @@
 #include "Wrappers/Localization.h"
 #include "Wrappers/SoundBank.h"
 #include "Wrappers/AnimationSkeleton.h"
-#include "Types/LibString.h"
-#include "Types/List.h"
 #include "Types/Enums.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
 	using LibSWBF2::Wrappers::Level;
 	using LibSWBF2::Wrappers::SoundBank;
 	using LibSWBF2::Wrappers::Sound;
@@ -35,7 +33,7 @@ namespace LibSWBF2
 		Container() = default;
 		~Container() = default;
 
-		List<Level *> m_Levels;
+		std::vector<Level *> m_Levels;
 
 		// TODO: rework once we allow modifications (add / delete) in Levels
 		std::unordered_map<FNVHash, const Texture*> m_TextureDB;
@@ -48,36 +46,36 @@ namespace LibSWBF2
 		std::unordered_map<FNVHash, const AnimationSkeleton*> m_AnimationSkeletonDB;
 		std::unordered_map<FNVHash, const Config*> m_ConfigDB;
 		std::unordered_map<FNVHash, const Sound*> m_SoundDB;
-		std::unordered_map<FNVHash, List<const Localization*>> m_LocalizationDB;
+		std::unordered_map<FNVHash, std::vector<const Localization*>> m_LocalizationDB;
 
 
-		List<const World*> m_Worlds;
+		std::vector<const World*> m_Worlds;
 
 		uint64_t m_OverallSize = 0;
 
-		Level *LoadLevel(const String& path, const List<String>* subLVLsToLoad, bool bRegisterContents);
+		Level *LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents);
 
 	public:
 		static Container* Create();
 		static void Delete(Container* instance);
 
-		Level *AddLevel(const String& path, const List<String>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
+		Level *AddLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
 		Level *GetLevel(size_t index) const;
 
 		// will return the first encountered world LVL, if existent
 		Level* TryGetWorldLevel() const;
 
-		const List<const World*>& GetWorlds();
+		const std::vector<const World*>& GetWorlds();
 
-		const Model* FindModel(String modelName) const;
-		const Texture* FindTexture(String textureName) const;
-		const World* FindWorld(String worldName) const;
-		const Terrain* FindTerrain(String terrainName) const;
-		const Script* FindScript(String scriptName) const;
-		const EntityClass* FindEntityClass(String typeName) const;
-		const Sound* FindSound(String soundName) const;
-		const AnimationBank* FindAnimationBank(String setName) const;
-		const AnimationSkeleton* FindAnimationSkeleton(String skelName) const;
+		const Model* FindModel(std::string modelName) const;
+		const Texture* FindTexture(std::string textureName) const;
+		const World* FindWorld(std::string worldName) const;
+		const Terrain* FindTerrain(std::string terrainName) const;
+		const Script* FindScript(std::string scriptName) const;
+		const EntityClass* FindEntityClass(std::string typeName) const;
+		const Sound* FindSound(std::string soundName) const;
+		const AnimationBank* FindAnimationBank(std::string setName) const;
+		const AnimationSkeleton* FindAnimationSkeleton(std::string skelName) const;
 
 
 		const Model* FindModel(FNVHash modelName) const;
@@ -93,10 +91,10 @@ namespace LibSWBF2
 
 		const Config* FindConfig(EConfigType type, FNVHash hashedConfigName) const;
 
-		const List<const Localization*>* FindLocalizations(String languageName) const;
-		const List<const Localization*>* FindLocalizations(FNVHash languageName) const;
+		const std::vector<const Localization*>* FindLocalizations(std::string languageName) const;
+		const std::vector<const Localization*>* FindLocalizations(FNVHash languageName) const;
 
 		// count is number of wide chars, NOT number of bytes!
-		bool GetLocalizedWideString(const String& language, const String& path, uint16_t*& chars, uint32_t& count) const;
+		bool GetLocalizedWideString(const std::string& language, const std::string& path, const wchar_t*& chars, uint32_t& count) const;
 	};
 }

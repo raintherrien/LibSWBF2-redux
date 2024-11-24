@@ -4,6 +4,8 @@
 #include "Chunks/STR.h"
 #include "tex_.INFO.h"
 #include "FMT_.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2::Chunks::LVL::texture
 {
@@ -12,13 +14,13 @@ namespace LibSWBF2::Chunks::LVL::texture
 	public:
 		STR<"NAME"_m>* p_Name;
 		texture::INFO* p_Info;
-		List<FMT_*> m_FMTs;
+		std::vector<FMT_*> m_FMTs;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

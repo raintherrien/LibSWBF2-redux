@@ -30,19 +30,19 @@ namespace LibSWBF2::Chunks::LVL::config
 
         for (uint8_t i = 0; i < numFloats; i++)
         {
-        	m_Floats.Add(stream.ReadFloat());
+        	m_Floats.push_back(stream.ReadFloat());
         }
 
 
         BaseChunk::EnsureEnd(stream);
 	}
 
-	String DATA_FLOAT::ToString() const
+	std::string DATA_FLOAT::ToString() const
 	{
-		String rep = fmt::format("Hash value: {}\nFloats: ", m_NameHash).c_str();
-		for (uint8_t i = 0; i < m_Floats.Size(); i++)
+		std::string rep = fmt::format("Hash value: {}\nFloats: ", m_NameHash);
+		for (uint8_t i = 0; i < m_Floats.size(); i++)
 		{
-			rep = rep + fmt::format("{} ", m_Floats[i]).c_str();
+			rep = rep + fmt::format("{} ", m_Floats[i]);
 		}
 		return rep;
 	}

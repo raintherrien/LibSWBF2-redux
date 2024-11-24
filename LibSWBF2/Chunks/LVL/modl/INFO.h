@@ -3,6 +3,7 @@
 #include "Chunks/STR.h"
 #include "Types/Enums.h"
 #include "Types/Vector3.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
@@ -19,6 +20,6 @@ namespace LibSWBF2::Chunks::LVL::modl
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 }

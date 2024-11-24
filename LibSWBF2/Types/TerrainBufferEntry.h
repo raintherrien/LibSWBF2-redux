@@ -1,5 +1,4 @@
 #pragma once
-#include "LibString.h"
 #include "Vector3.h"
 #include "Color4u8.h"
 
@@ -16,7 +15,7 @@ namespace LibSWBF2::Types
 		void WriteToStream(FileWriter& stream);
 		void ReadFromStream(FileReader& stream);
 
-		String ToString() const;
+		std::string ToString() const;
 
 		Vector3 m_Position;
 		Vector3 m_Normal;

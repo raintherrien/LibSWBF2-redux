@@ -29,9 +29,9 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::EnsureEnd(stream);
     }
 
-    String BARR_FLAG::ToString() const
+    std::string BARR_FLAG::ToString() const
     {
-    	return fmt::format("{0}", m_Flag).c_str();
+    	return fmt::format("{0}", m_Flag);
     }
 
 
@@ -81,7 +81,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String BARR_INFO::ToString() const
+    std::string BARR_INFO::ToString() const
     {
         return p_Name -> ToString();
     }
@@ -122,7 +122,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String BARR::ToString() const
+    std::string BARR::ToString() const
     {
         return p_Info == nullptr ? "" : p_Info -> ToString();
     }

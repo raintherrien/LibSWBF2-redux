@@ -2,6 +2,7 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "Types/Enums.h"
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL
 {
@@ -18,7 +19,7 @@ namespace LibSWBF2::Chunks::LVL
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		bool TryLookupName(String& result);
-		String ToString() const override;
+		bool TryLookupName(std::string& result);
+		std::string ToString() const override;
 	};
 }

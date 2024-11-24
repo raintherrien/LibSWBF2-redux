@@ -26,11 +26,11 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String INFO::ToString() const
+	std::string INFO::ToString() const
 	{
 		return fmt::format(
 			"Mip Level:\t{}\n"
 			"Body Size:\t{}\n",
-			m_MipLevel, m_BodySize).c_str();
+			m_MipLevel, m_BodySize);
 	}
 }

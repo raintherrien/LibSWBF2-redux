@@ -25,21 +25,21 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 		for (int i = 0; i < desc -> m_NumAnimations; i++)
 		{
-			m_TransBitFlags.Add(stream.ReadUInt32());
+			m_TransBitFlags.push_back(stream.ReadUInt32());
 			stream.SkipBytes(4);
-			m_AnimNameHashes.Add(stream.ReadUInt32());
-			m_AnimFrameCounts.Add(stream.ReadUInt16());
-			m_AnimBoneCounts.Add(stream.ReadUInt16());
+			m_AnimNameHashes.push_back(stream.ReadUInt32());
+			m_AnimFrameCounts.push_back(stream.ReadUInt16());
+			m_AnimBoneCounts.push_back(stream.ReadUInt16());
 		}
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String MINA::ToString() const
+	std::string MINA::ToString() const
 	{
-		String rep = String("");
+		std::string rep = "";
 
-		for (int i = 0; i < m_AnimNameHashes.Size(); i++)
+		for (int i = 0; i < m_AnimNameHashes.size(); i++)
 		{
 			rep = rep + fmt::format(
 					"\n\nAnim name crc: {}\n"
@@ -50,7 +50,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 					m_TransBitFlags[i],
 					m_AnimFrameCounts[i],
 					m_AnimBoneCounts[i]
-				).c_str();
+				);
 		}
 
 		return rep;

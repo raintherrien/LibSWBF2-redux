@@ -28,7 +28,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 			ChunkHeader next = stream.ReadChunkHeader(true);
 			if (next == "SampleBank"_fnvh)
 			{
-				READ_CHILD(stream, m_SampleBanks.Emplace())
+				READ_CHILD(stream, m_SampleBanks.emplace_back())
 			}
 			else 
 			{
@@ -39,13 +39,13 @@ namespace LibSWBF2::Chunks::LVL::sound
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String SoundBankList::ToString() const
+	std::string SoundBankList::ToString() const
 	{
 		std::string result = fmt::format(
 			"Num sample banks: {0}",
-			m_SampleBanks.Size()
+			m_SampleBanks.size()
 		);
 
-		return result.c_str();
+		return result;
 	}
 }

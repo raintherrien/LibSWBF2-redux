@@ -9,7 +9,7 @@ namespace LibSWBF2::Chunks::MSH
 	{
 		m_Size = 0;
 
-		for (size_t i = 0; i < m_BoneFrames.Size(); ++i)
+		for (size_t i = 0; i < m_BoneFrames.size(); ++i)
 		{
 			m_Size += m_BoneFrames[i].GetDataSize();
 		}
@@ -18,9 +18,9 @@ namespace LibSWBF2::Chunks::MSH
 	void KFR3::WriteToStream(FileWriter& stream)
 	{
 		BaseChunk::WriteToStream(stream);
-		stream.WriteUInt32((uint32_t)m_BoneFrames.Size());
+		stream.WriteUInt32((uint32_t)m_BoneFrames.size());
 
-		for (size_t i = 0; i < m_BoneFrames.Size(); ++i)
+		for (size_t i = 0; i < m_BoneFrames.size(); ++i)
 		{
 			m_BoneFrames[i].WriteToStream(stream);
 		}
@@ -31,12 +31,12 @@ namespace LibSWBF2::Chunks::MSH
 		BaseChunk::ReadFromStream(stream);
 		uint32_t num = stream.ReadUInt32();
 
-		m_BoneFrames.Clear();
-		m_BoneFrames.Resize(num);
+		m_BoneFrames.clear();
+		m_BoneFrames.resize(num);
 
 		for (uint32_t i = 0; i < num; ++i)
 		{
-			BoneFrames& bf = m_BoneFrames.Emplace();
+			BoneFrames& bf = m_BoneFrames.emplace_back();
 			bf.ReadFromStream(stream);
 		}
 

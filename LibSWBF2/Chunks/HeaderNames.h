@@ -2,17 +2,16 @@
 
 #include <stdint.h>
 #include "Hashing.h"
+#include <string>
 
 namespace LibSWBF2
 {
-	namespace Types { struct String; }
-
 	union ChunkHeader
 	{
 		uint32_t m_Magic = 0;
 		uint8_t m_Name[4];
 
-		Types::String ToString() const;
+		std::string ToString() const;
 		bool operator==(const ChunkHeader other) const;
 		bool operator!=(const ChunkHeader other) const;
 

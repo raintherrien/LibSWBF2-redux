@@ -1,6 +1,7 @@
 #pragma once
 #include "Types/Enums.h"
-#include "Types/List.h"
+#include <string>
+#include <vector>
 
 namespace LibSWBF2
 {
@@ -14,21 +15,11 @@ namespace LibSWBF2
 
 namespace LibSWBF2::Wrappers
 {
-	using LibSWBF2::Types::String;
-	using LibSWBF2::Types::List;
-
-
 	class LIBSWBF2_API EntityClass
 	{
-	typedef LibSWBF2::Chunks::LVL::common::GenericClassNC GenericClassNC;
-
-
+		typedef LibSWBF2::Chunks::LVL::common::GenericClassNC GenericClassNC;
 	private:
 		friend class Level;
-		friend List<EntityClass>;
-
-		EntityClass();
-		~EntityClass();
 
 		EntityClass& operator=(const EntityClass& other);
 		EntityClass& operator=(EntityClass&& other);
@@ -40,6 +31,10 @@ namespace LibSWBF2::Wrappers
 		class PropertyMap* m_PropertyMapping;
 
 	public:
+		EntityClass();
+		~EntityClass();
+		EntityClass(const EntityClass &);
+
 		// Only available template instances for "FromChunk" are:
 		// - entc*
 		// - ordc*
@@ -49,8 +44,8 @@ namespace LibSWBF2::Wrappers
 		static bool FromChunk(Container* mainContainer, ChunkType* classChunk, EntityClass& out);
 
 		EEntityClassType GetClassType() const;
-		const String& GetTypeName() const;
-		const String& GetBaseName() const;
+		const std::string& GetTypeName() const;
+		const std::string& GetBaseName() const;
 		const EntityClass* GetBase() const;
 
 		// Note about properties:
@@ -62,14 +57,14 @@ namespace LibSWBF2::Wrappers
 		//   HoloImageGeometry = "com_icon_CIS CIS"
 
 		// these will return the first encounter. will fall back to base class, if existent
-		bool GetProperty(FNVHash hashedPropertyName, String& outValue) const;
-		bool GetProperty(const String& propertyName, String& outValue) const;
+		bool GetProperty(FNVHash hashedPropertyName, std::string& outValue) const;
+		bool GetProperty(const std::string& propertyName, std::string& outValue) const;
 
 		// these will return all encounters. will also recursively search base classes, if existent
-		bool GetProperty(const String& propertyName, List<String>& outValues) const;
-		bool GetProperty(FNVHash hashedPropertyName, List<String>& outValues) const;
+		bool GetProperty(const std::string& propertyName, std::vector<std::string>& outValues) const;
+		bool GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const;
 
-		void GetOverriddenProperties(List<FNVHash>& outHashes, List<String>& outValues) const;
-		void GetAllProperties(List<FNVHash>& outHashes, List<String>& outValues) const;
+		void GetOverriddenProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
+		void GetAllProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 }

@@ -62,13 +62,13 @@ namespace LibSWBF2::Chunks::LVL::modl
             {
                 VBUF* vertexBuffer;
                 READ_CHILD(stream, vertexBuffer);
-                m_VertexBuffers.Add(vertexBuffer);
+                m_VertexBuffers.push_back(vertexBuffer);
             }
             else if (next == "TNAM"_h)
             {
                 TNAM* texture;
                 READ_CHILD(stream, texture);
-                m_Textures.Add(texture);
+                m_Textures.push_back(texture);
             }
             else if (next == "MNAM"_h)
             {

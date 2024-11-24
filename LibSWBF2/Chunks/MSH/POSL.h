@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -10,7 +11,7 @@ namespace LibSWBF2::Chunks::MSH
 		POSL() = default;
 		~POSL() = default;
 
-		List<Vector3> m_Vertices;
+		std::vector<Vector3> m_Vertices;
 
 	protected:
 		friend SEGM;

@@ -20,9 +20,9 @@ namespace LibSWBF2
 		try { Close(); } catch (...) {}
 	}
 
-	bool StreamReader::Open(const Types::String& File)
+	bool StreamReader::Open(const std::string &File)
 	{
-		m_Reader.open(File.Buffer(), std::ofstream::in | std::ofstream::binary | std::ofstream::ate);
+		m_Reader.open(File, std::ofstream::in | std::ofstream::binary | std::ofstream::ate);
 		bool success = m_Reader.good() && m_Reader.is_open();
 
 		if (!success)
@@ -139,9 +139,9 @@ namespace LibSWBF2
 		return value;
 	}
 
-	Types::String StreamReader::ReadString(size_t length)
+	std::string StreamReader::ReadString(size_t length)
 	{
-		Types::String value;
+		std::string value;
 		if (CheckGood(length))
 		{
 			char* str = new char[length+1];
@@ -153,7 +153,7 @@ namespace LibSWBF2
 		return value;
 	}
 
-	Types::String StreamReader::ReadString()
+	std::string StreamReader::ReadString()
 	{
 		char str[1024]; // should be enough
 		uint8_t current = 1;

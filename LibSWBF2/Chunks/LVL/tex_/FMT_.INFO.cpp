@@ -33,7 +33,7 @@ namespace LibSWBF2::Chunks::LVL::FMT
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String INFO::ToString() const
+	std::string INFO::ToString() const
 	{
 		return fmt::format(
 			"Format:\t{}\n"
@@ -42,6 +42,6 @@ namespace LibSWBF2::Chunks::LVL::FMT
 			"Depth:\t{}\n"
 			"Mip Map Count:\t{}\n"
 			"Type:\t{}\n",
-			D3DToString(m_Format), m_Width, m_Height, m_Depth, m_MipmapCount, m_Type).c_str();
+			D3DToString(m_Format), m_Width, m_Height, m_Depth, m_MipmapCount, m_Type);
 	}
 }

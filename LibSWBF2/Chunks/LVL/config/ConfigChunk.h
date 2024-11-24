@@ -2,9 +2,8 @@
 #include "Chunks/GenericChunk.h"
 #include "Chunks/STR.h"
 #include "config.NAME.h"
-
 #include "DATA.h"
-
+#include <string>
 
 namespace LibSWBF2::Chunks::LVL::config
 {
@@ -19,15 +18,12 @@ namespace LibSWBF2::Chunks::LVL::config
 	public:
 		config_NAME *p_Hash = nullptr;
 
-		//List<SCOP *> m_ChildConfigs;
-		//List<DATA_CONFIG *> m_Fields;
-
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
-		String ToString() const override;
+		std::string ToString() const override;
 	};
 
 	struct LIBSWBF2_API ConfigChunkNC : public ConfigChunk<0> {};

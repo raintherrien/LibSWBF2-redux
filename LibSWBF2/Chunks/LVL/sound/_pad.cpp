@@ -39,13 +39,13 @@ namespace LibSWBF2::Chunks::LVL::sound
 		BaseChunk::EnsureEnd(stream);
 	}
 
-	String _pad::ToString() const
+	std::string _pad::ToString() const
 	{
 		return fmt::format(
 			"Unknown 1: {}\n"
 			"Size of next stream chunk: {}",
 			m_Unknown1,
 			m_SizeNextStreamChunk
-		).c_str();
+		);
 	}
 }

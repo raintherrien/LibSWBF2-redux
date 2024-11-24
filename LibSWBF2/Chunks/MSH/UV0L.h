@@ -1,5 +1,6 @@
 #pragma once
 #include "Chunks/BaseChunk.h"
+#include <vector>
 
 namespace LibSWBF2::Chunks::MSH
 {
@@ -10,7 +11,7 @@ namespace LibSWBF2::Chunks::MSH
 		UV0L() = default;
 		~UV0L() = default;
 
-		List<Vector2> m_UVs;
+		std::vector<Vector2> m_UVs;
 
 	protected:
 		friend SEGM;

@@ -27,11 +27,11 @@ namespace LibSWBF2::Wrappers
 		}
 
 		bool DecompressFromOffset(size_t offset, uint16_t num_frames, 
-								List<uint16_t> &frame_indicies, 
-								List<float_t> &frame_values) const
+								std::vector<uint16_t> &frame_indicies, 
+								std::vector<float_t> &frame_values) const
 		{
-			List<uint16_t> indicies;
-			List<float_t> values;
+			std::vector<uint16_t> indicies;
+			std::vector<float_t> values;
 
 			m_ReadHead = offset;
 
@@ -49,8 +49,8 @@ namespace LibSWBF2::Wrappers
 
 				accum = m_Bias + m_Multiplier * (float) shortVal;
 
-				indicies.Add(frame_counter);
-				values.Add(accum);
+				indicies.push_back(frame_counter);
+				values.push_back(accum);
 
 				frame_counter++;
 
@@ -70,8 +70,8 @@ namespace LibSWBF2::Wrappers
 					#else
 						for (int i = 0; i < holdDuration; i++)
 						{
-							indicies.Add(frame_counter);
-							values.Add(accum);
+							indicies.push_back(frame_counter);
+							values.push_back(accum);
 
 							frame_counter++;
 						}
@@ -92,8 +92,8 @@ namespace LibSWBF2::Wrappers
 					{
 						accum += m_Multiplier * (float) byteVal;
 
-						indicies.Add(frame_counter);
-						values.Add(accum);
+						indicies.push_back(frame_counter);
+						values.push_back(accum);
 
 						frame_counter++;
 					}
@@ -200,7 +200,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const String& AnimationBank::GetName() const
+	std::string AnimationBank::GetName() const
 	{
 		return p_AnimChunk -> p_Name -> m_Text;
 	}
@@ -208,11 +208,12 @@ namespace LibSWBF2::Wrappers
 
 	bool AnimationBank::ContainsAnimation(CRCChecksum animName) const
 	{
-		return p_AnimChunk -> p_Bin -> p_AnimsMetadata -> m_AnimNameHashes.Contains(animName);
+		const auto &anims = p_AnimChunk->p_Bin->p_AnimsMetadata->m_AnimNameHashes;
+		return std::find(std::begin(anims), std::end(anims), animName) != std::end(anims);
 	}
 
 
-	List<CRCChecksum> AnimationBank::GetAnimations() const
+	std::vector<CRCChecksum> AnimationBank::GetAnimations() const
 	{
 		return p_AnimChunk -> p_Bin -> p_AnimsMetadata -> m_AnimNameHashes;
 	}
@@ -222,9 +223,9 @@ namespace LibSWBF2::Wrappers
 	{
 		MINA *metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
 
-		List<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
+		std::vector<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
 
-		for (int i = 0; i < animCRCs.Size(); i++)
+		for (int i = 0; i < animCRCs.size(); i++)
 		{
 			if (animCRCs[i] == animCRC)
 			{
@@ -238,21 +239,21 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	List<CRCChecksum> AnimationBank::GetBones(CRCChecksum animCRC) const
+	std::vector<CRCChecksum> AnimationBank::GetBones(CRCChecksum animCRC) const
 	{
-		List<CRCChecksum> boneHashes;
+		std::vector<CRCChecksum> boneHashes;
 
 		TNJA *index = p_AnimChunk -> p_Bin -> p_JointAddresses;
 		MINA *metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
 
 
-		List<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
+		std::vector<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
 
 		uint32_t TNJAOffset = 0;
 
 		bool foundAnim = false;
 
-		for (uint32_t i = 0; i < animCRCs.Size(); i++)
+		for (uint32_t i = 0; i < animCRCs.size(); i++)
 		{
 			if (animCRCs[i] == animCRC)
 			{
@@ -263,9 +264,9 @@ namespace LibSWBF2::Wrappers
 				for (uint32_t j = 0; j < num_bones; j++)
 				{
 					CRCChecksum currCRC = index -> m_BoneCRCs[TNJAOffset + j];
-					if (!boneHashes.Contains(currCRC))
+					if (std::find(std::begin(boneHashes), std::end(boneHashes), currCRC) == std::end(boneHashes))
 					{
-						boneHashes.Add(currCRC);
+						boneHashes.push_back(currCRC);
 					}
 				}
 			}
@@ -277,7 +278,7 @@ namespace LibSWBF2::Wrappers
 
 		if (!foundAnim)
 		{
-			LOG_WARN("Unable to get bones of missing animation 0x{0:x} in bank '{1}'", animCRC, p_AnimChunk->p_Name->m_Text.Buffer());
+			LOG_WARN("Unable to get bones of missing animation 0x{0:x} in bank '{1}'", animCRC, p_AnimChunk->p_Name->m_Text);
 		}
 
 		return boneHashes;
@@ -285,7 +286,7 @@ namespace LibSWBF2::Wrappers
 	
 
 	bool AnimationBank::GetCurve(CRCChecksum animName, CRCChecksum boneName, uint16_t component,
-										List<uint16_t> &frame_indices, List<float_t> &frame_values) const
+										std::vector<uint16_t> &frame_indices, std::vector<float_t> &frame_values) const
 	{
 		TNJA *index = p_AnimChunk -> p_Bin -> p_JointAddresses;
 		TADA *data = p_AnimChunk -> p_Bin -> p_CompressedAnimData;
@@ -293,14 +294,14 @@ namespace LibSWBF2::Wrappers
 
 		bool decompStatus = false;
 
-		List<float_t> values;
-		List<uint16_t> indicies;
+		std::vector<float_t> values;
+		std::vector<uint16_t> indicies;
 
-		List<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
+		std::vector<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
 
 		uint32_t TNJAOffset = 0;	
 
-		for (uint32_t i = 0; i < animCRCs.Size(); i++)
+		for (uint32_t i = 0; i < animCRCs.size(); i++)
 		{
 			if (animCRCs[i] == animName)
 			{

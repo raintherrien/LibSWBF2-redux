@@ -24,21 +24,21 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
         for (int i = 0; i < (int) m_NumStrings; i++)
         {
-            String newStr = stream.ReadString();
+		std::string newStr = stream.ReadString();
             if (i == 0)
             {
                 m_RootName = newStr;
             }
             else 
             {
-                m_ChildNames.Add(newStr);
+                m_ChildNames.push_back(newStr);
             }
         }
 
         BaseChunk::EnsureEnd(stream);
     }
 
-    String anmh_INFO::ToString() const
+    std::string anmh_INFO::ToString() const
     {
         if (m_NumStrings == 0)
         {
@@ -46,10 +46,10 @@ namespace LibSWBF2::Chunks::LVL::wrld
         }
         else 
         {
-            String rep = fmt::format("Root: {} ", m_RootName).c_str();   
-            for (int i = 0; i < m_ChildNames.Size(); i++)
+		std::string rep = fmt::format("Root: {} ", m_RootName);
+            for (int i = 0; i < m_ChildNames.size(); i++)
             {
-                rep = rep + fmt::format("\n  Child {0}: {1}", i, m_ChildNames[i]).c_str();
+                rep = rep + fmt::format("\n  Child {0}: {1}", i, m_ChildNames[i]);
             }  
 
             return rep;       

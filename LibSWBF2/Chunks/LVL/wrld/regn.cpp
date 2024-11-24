@@ -30,7 +30,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
             }
             else if (next == "PROP"_h)
             {
-                READ_CHILD(stream, m_Props.Emplace());
+                READ_CHILD(stream, m_Props.emplace_back());
             }
             else 
             {
@@ -42,11 +42,11 @@ namespace LibSWBF2::Chunks::LVL::wrld
     }
 
 
-    String regn::ToString() const
+    std::string regn::ToString() const
     {
-        String rep = fmt::format("Name: {}\nType: {}\n",
-                                p_Info -> p_Name -> m_Text.Buffer(),
-                                p_Info -> p_Type -> m_Text.Buffer()).c_str();
+	    std::string rep = fmt::format("Name: {}\nType: {}\n",
+                                p_Info -> p_Name -> m_Text,
+                                p_Info -> p_Type -> m_Text);
         return rep;
     }
 }
