@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace LibSWBF2
 {
@@ -27,19 +28,12 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend World;
 
-		Instance& operator=(const Instance& other);
-		Instance& operator=(Instance&& other);
-
 	private:
 		Container* p_MainContainer;
 		inst* p_Instance;
-		class PropertyMap* m_PropertyMapping;
+		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
 
 	public:
-		Instance();
-		~Instance();
-		Instance(const Instance &);
-
 		static bool FromChunk(Container* mainContainer, inst* instanceChunk, Instance& out);
 
 		const std::string& GetEntityClassName() const;

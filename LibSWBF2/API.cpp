@@ -15,12 +15,13 @@
 #include "StreamReader.h"
 
 #include <string>
+#include <cstring>
 
 namespace LibSWBF2
 {
-#define CheckPtr(PTR, ...) if (PTR == nullptr) { LOG_ERROR("[API] Given Pointer was NULL!"); return __VA_ARGS__; }
+#define CHECKNULL(PTR, ...) if (PTR == nullptr) { LOG_ERROR("Given Pointer was NULL!"); return __VA_ARGS__; }
 
-	template<typename T> auto catchall(T &&t) noexcept->decltype(t())
+	template<typename T> auto catchall(T &&t) noexcept -> decltype(t())
 	{
 		try {
 			return t();
@@ -33,12 +34,88 @@ namespace LibSWBF2
 		return decltype(t()){};
 	}
 
+	static void copy_c_str(const std::string &s, char *c_str, size_t maxlen) noexcept
+	{
+		if (c_str) {
+			std::strncpy(c_str, s.c_str(), maxlen);
+			c_str[maxlen - 1] = '\0';
+		}
+	}
+
+	template<typename T> TList<T> vector_to_tlist(std::vector<T> &&v)
+	{
+		static_assert(sizeof(TList<T>) == sizeof(CList));
+		static_assert(std::is_standard_layout_v<TList<T>>);
+
+		TList<T> l;
+		if (v.size() > 0) {
+			l.size = v.size();
+			l.elements = new T[l.size];
+		}
+		if constexpr (std::is_trivially_copyable_v<T>) {
+			std::memcpy(l.elements, v.data(), l.element_size * l.size);
+		} else {
+			for (size_t i = 0; i < l.size; ++ i) {
+				l[i] = std::move(v[i]);
+			}
+		}
+		return l;
+	}
+
+	template<typename T> TList<T> vector_to_tlist(const std::vector<T> &v)
+	{
+		static_assert(sizeof(TList<T>) == sizeof(CList));
+		static_assert(std::is_standard_layout_v<TList<T>>);
+
+		TList<T> l;
+		if (v.size() > 0) {
+			l.size = v.size();
+			l.elements = new T[l.size];
+		}
+		if constexpr (std::is_trivially_copyable_v<T>) {
+			std::memcpy(l.elements, v.data(), l.element_size * l.size);
+		} else {
+			for (size_t i = 0; i < l.size; ++ i) {
+				l[i] = v[i];
+			}
+		}
+		return l;
+	}
+
+	// API List //
+
+	void CList_free(struct CList *l) noexcept
+	{
+		free(l->elements);
+		free(l);
+	}
+
 	// Helpers //
 
 	uint32_t FNVHashString(const char *string) noexcept
 	{
 		return catchall([&] {
 			return FNV::Hash(string);
+		});
+	}
+
+	// World //
+
+	size_t World_GetName(const World *world, char *out_buffer, size_t out_buffer_len) noexcept
+	{
+		return catchall([&] {
+			CHECKNULL(world, static_cast<size_t>(0));
+			std::string name = world->GetName();
+			copy_c_str(name, out_buffer, out_buffer_len);
+			return name.size();
+		});
+	}
+
+	TList<Instance> World_GetInstances(const World *world) noexcept
+	{
+		return catchall([&] {
+			CHECKNULL(world, TList<Instance>{});
+			return vector_to_tlist(world->GetInstances());
 		});
 	}
 
@@ -896,79 +973,6 @@ namespace LibSWBF2
 
 	// World //
 
-	bool World_GetChildrenList(const World *world, uint8_t listID, void **out_listPtr, int32_t *out_listCount, int32_t *out_wrapperSize) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(world, false);
-
-			*out_listPtr = nullptr;
-			switch (listID)
-			{
-				case 0: {
-					const std::vector<Instance>& instances = world->GetInstances();
-					*out_listPtr = (void *)instances.data();
-					*out_listCount = (int32_t)instances.size();
-					*out_wrapperSize = sizeof(Instance);
-					break;
-				}
-				case 1: {
-					const std::vector<Region>& regions = world->GetRegions();
-					*out_listPtr = regions.data();
-					*out_listCount = (int32_t)regions.size();
-					*out_wrapperSize = sizeof(Region);
-					break;
-				}
-				case 2: {
-					const std::vector<WorldAnimation>& anims = world->GetAnimations();
-					*out_listPtr = anims.data();
-					*out_listCount = (int32_t)anims.size();
-					*out_wrapperSize = sizeof(WorldAnimation);
-					break;
-				}
-				case 3: {
-					const std::vector<WorldAnimationGroup>& animGroups = world->GetAnimationGroups();
-					*out_listPtr = animGroups.data();
-					*out_listCount = (int32_t)animGroups.size();
-					*out_wrapperSize = sizeof(WorldAnimationGroup);
-					break;
-				}
-				case 4: {
-					const std::vector<WorldAnimationHierarchy>& animHiers = world->GetAnimationHierarchies();
-					*out_listPtr = animHiers.data();
-					*out_listCount = (int32_t)animHiers.size();
-					*out_wrapperSize = sizeof(WorldAnimationHierarchy);
-					break;
-				}
-				case 5: {
-					const std::vector<Barrier>& barriers = world->GetBarriers();
-					*out_listPtr = barriers.data();
-					*out_listCount = (int32_t)barriers.size();
-					*out_wrapperSize = sizeof(Barrier);
-					break;
-				}
-				case 6: {
-					const std::vector<HintNode>& hintNodes = world->GetHintNodes();
-					*out_listPtr = hintNodes.data();
-					*out_listCount = (int32_t)hintNodes.size();
-					*out_wrapperSize = sizeof(HintNode);
-					break;
-				}
-				default:
-					break;
-			}
-
-			return *out_listPtr != nullptr;
-		});
-	}
-
-	const char *World_GetName(const World *world) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(world, static_cast<const char *>(nullptr));
-			return world->GetName();
-		});
-	}
-
 	const char *World_GetSkyName(const World *world) noexcept
 	{
 		return catchall([&] {
@@ -990,22 +994,6 @@ namespace LibSWBF2
 		return catchall([&] {
 			CheckPtr(world, static_cast<const char *>(nullptr));
 			return world->GetTerrainName();
-		});
-	}
-
-	size_t World_GetInstanceCount(const World *world) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(world, (size_t)0);
-			return world->GetInstances().size();
-		});
-	}
-
-	const Instance *World_GetInstance(const World *world, size_t index) noexcept
-	{
-		return catchall([&] {
-			CheckPtr(world, (const Instance *)nullptr);
-			return &world->GetInstances()[index];
 		});
 	}
 #endif

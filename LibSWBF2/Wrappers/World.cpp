@@ -391,12 +391,12 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const std::string& World::GetName() const
+	std::string World::GetName() const
 	{
 		return p_World->p_Name->m_Text;
 	}
 
-	const std::vector<Instance>& World::GetInstances() const
+	std::vector<Instance> World::GetInstances() const
 	{
 		return m_Instances;
 	}

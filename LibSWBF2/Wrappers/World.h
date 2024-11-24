@@ -180,8 +180,8 @@ namespace LibSWBF2::Wrappers
 
 		static bool FromChunk(Container* mainContainer, wrld* worldChunk, World& out);
 
-		const std::string& GetName() const;
-		const std::vector<Instance>& GetInstances() const;
+		std::string GetName() const;
+		std::vector<Instance> GetInstances() const;
 		const std::vector<Region>& GetRegions() const;
 		const std::vector<Barrier>& GetBarriers() const;
 		const std::vector<HintNode>& GetHintNodes() const;

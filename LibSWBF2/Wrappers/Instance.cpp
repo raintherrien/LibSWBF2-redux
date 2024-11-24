@@ -7,44 +7,6 @@
 
 namespace LibSWBF2::Wrappers
 {
-	struct PropertyMap
-	{
-		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
-	};
-
-
-	Instance::Instance()
-	{
-		m_PropertyMapping = new PropertyMap();
-	}
-
-	Instance::~Instance()
-	{
-		delete m_PropertyMapping;
-	}
-
-	Instance::Instance(const Instance &other)
-	{
-		m_PropertyMapping = new PropertyMap();
-		*m_PropertyMapping = *other.m_PropertyMapping;
-	}
-
-	Instance& Instance::operator=(const Instance& other)
-	{
-		p_MainContainer = other.p_MainContainer;
-		p_Instance = other.p_Instance;
-		m_PropertyMapping->m_HashToIndices = other.m_PropertyMapping->m_HashToIndices;
-		return *this;
-	}
-	
-	Instance& Instance::operator=(Instance&& other)
-	{
-		p_MainContainer = other.p_MainContainer;
-		p_Instance = other.p_Instance;
-		other.m_PropertyMapping = new PropertyMap();
-		return *this;
-	}
-
 	bool Instance::FromChunk(Container* mainContainer, inst* instanceChunk, Instance& out)
 	{
 		if (instanceChunk == nullptr)
@@ -56,19 +18,19 @@ namespace LibSWBF2::Wrappers
 		out.p_MainContainer = mainContainer;
 		out.p_Instance = instanceChunk;
 
-		out.m_PropertyMapping->m_HashToIndices.clear();
+		out.m_HashToIndices.clear();
 		for (size_t i = 0; i < instanceChunk->m_OverrideProperties.size(); ++i)
 		{
 			FNVHash hashedName = instanceChunk->m_OverrideProperties[i]->m_PropertyName;
 
-			auto it = out.m_PropertyMapping->m_HashToIndices.find(hashedName);
-			if (it != out.m_PropertyMapping->m_HashToIndices.end())
+			auto it = out.m_HashToIndices.find(hashedName);
+			if (it != out.m_HashToIndices.end())
 			{
-				out.m_PropertyMapping->m_HashToIndices[hashedName].push_back((uint32_t)i);
+				out.m_HashToIndices[hashedName].push_back((uint32_t)i);
 			}
 			else
 			{
-				out.m_PropertyMapping->m_HashToIndices.insert(std::make_pair(hashedName, std::vector<uint32_t>{ (uint32_t)i }));
+				out.m_HashToIndices.insert(std::make_pair(hashedName, std::vector<uint32_t>{ (uint32_t)i }));
 			}
 		}
 
@@ -106,8 +68,8 @@ namespace LibSWBF2::Wrappers
 
 	bool Instance::GetProperty(FNVHash hashedPropertyName, std::string& outValue) const
 	{
-		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
-		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
+		auto it = m_HashToIndices.find(hashedPropertyName);
+		if (it != m_HashToIndices.end() && it->second.size() > 0)
 		{
 			outValue = p_Instance->m_OverrideProperties[it->second[0]]->m_Value;
 			return true;
@@ -145,8 +107,8 @@ namespace LibSWBF2::Wrappers
 	bool Instance::GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const
 	{
 		outValues.clear();
-		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
-		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
+		auto it = m_HashToIndices.find(hashedPropertyName);
+		if (it != m_HashToIndices.end() && it->second.size() > 0)
 		{
 			for (size_t i = 0; i < it->second.size(); ++i)
 			{

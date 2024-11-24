@@ -53,6 +53,7 @@ namespace Wrappers {
 	struct SoundBank;
 	struct SoundStream;
 	struct Terrain;
+	struct Texture;
 	struct World;
 #ifdef __cplusplus
 }
@@ -63,10 +64,63 @@ using namespace Types;
 using namespace Wrappers;
 #endif
 
+// A very basic list implementation with lifetime semantics, otherwise we're
+// passing pointers around owned by the library, statically allocated, etc. it's
+// just bad. Abuse C++ Standard Layout to supported a more user friendly
+// templated list for C++ consumers.
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct CList {
+	void *elements;
+	size_t size;
+	size_t element_size;
+};
+
+LIBSWBF2_API void CList_free(struct CList *) LIBSWBF2_NOEXCEPT;
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+
+#define LIBSWBF2_APILIST(T) TList<T>
+template<typename T>
+struct TList : CList{
+	TList() noexcept
+	{
+		elements = nullptr;
+		size = 0;
+		element_size = sizeof(T);
+	}
+
+	~TList() noexcept
+	{
+		CList_free(this);
+	}
+
+	T &operator[](size_t i)
+	{
+		return static_cast<T *>(elements)[i];
+	}
+
+	const T &operator[](size_t i) const
+	{
+		return static_cast<T *>(elements)[i];
+	}
+};
+
+#else
+
+#define LIBSWBF2_APILIST(T) struct CList
+
+#endif
+
 // C API which will never throw an exception and does its damndest to not return
 // any data subject to hidden lifetimes.
 //
-// # A note on strings and arrays
+// # A note on strings
 // I use sprintf-style for returning variable length data from functions, where
 // calling a string returning function with a NULL buffer will return the number
 // of characters that would have been written to the buffer EXCLUDING the null
@@ -76,6 +130,10 @@ extern "C" {
 #endif
 	// Helpers //
 	LIBSWBF2_API uint32_t FNVHashString(const char *string) LIBSWBF2_NOEXCEPT;
+
+	// World //
+	LIBSWBF2_API size_t World_GetName(const struct World *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API LIBSWBF2_APILIST(Instance) World_GetInstances(const struct World *) LIBSWBF2_NOEXCEPT;
 
 // XXX Everything below this line is a work in progress
 #if 0
@@ -213,13 +271,9 @@ extern "C" {
 	LIBSWBF2_API const char *Terrain_GetLayerTextureName(const struct Terrain *terr, size_t index) LIBSWBF2_NOEXCEPT;
 
 	// World //
-	LIBSWBF2_API bool World_GetChildrenList(const struct World *, uint8_t listID, void **out_listPtr, int32_t *out_listCount, int32_t *out_wrapperSize) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API const char *World_GetName(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const char *World_GetSkyName(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const struct Terrain *World_GetTerrain(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const char *World_GetTerrainName(const struct World *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API size_t World_GetInstanceCount(const struct World *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API const struct Instance *World_GetInstance(const struct World *, size_t index) LIBSWBF2_NOEXCEPT;
 #endif
 
 #ifdef __cplusplus
