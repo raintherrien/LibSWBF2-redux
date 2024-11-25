@@ -45,6 +45,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 
 				case "NumSamples"_fnv:
 					m_NumSamples = stream.ReadUInt32();
+					break;
 
 				case "Size"_fnv:
 					m_CombinedSoundSize = stream.ReadUInt32(); 

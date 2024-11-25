@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t numOfAnims = stream.ReadUInt32();
 		
 		m_Animations.clear();
-		m_Animations.resize(numOfAnims);
+		m_Animations.reserve(numOfAnims);
 
 		for (size_t i = 0; i < numOfAnims; ++i)
 		{

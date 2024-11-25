@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t numVertices = stream.ReadUInt32();
 
 		m_Normals.clear();
-		m_Normals.resize(numVertices);
+		m_Normals.reserve(numVertices);
 
 		for (uint32_t i = 0; i < numVertices; ++i)
 		{

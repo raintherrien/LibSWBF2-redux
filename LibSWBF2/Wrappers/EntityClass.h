@@ -44,8 +44,8 @@ namespace LibSWBF2::Wrappers
 		static bool FromChunk(Container* mainContainer, ChunkType* classChunk, EntityClass& out);
 
 		EEntityClassType GetClassType() const;
-		const std::string& GetTypeName() const;
-		const std::string& GetBaseName() const;
+		std::string GetTypeName() const;
+		std::string GetBaseName() const;
 		const EntityClass* GetBase() const;
 
 		// Note about properties:
@@ -65,6 +65,7 @@ namespace LibSWBF2::Wrappers
 		bool GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const;
 
 		void GetOverriddenProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
+		std::vector<FNVHash> GetAllPropertyHashes() const;
 		void GetAllProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 }

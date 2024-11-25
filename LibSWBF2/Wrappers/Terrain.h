@@ -34,10 +34,8 @@ namespace LibSWBF2::Wrappers
 		std::vector<Vector2> m_TexCoords;
 		std::vector<Color4u8> m_Colors;
 
-		mutable std::vector<uint32_t> m_Indices;
-
 		mutable float_t* p_HeightMap; //perhaps not commonly used, so lazy init
-		mutable uint8_t* p_BlendMap;  //
+		mutable std::vector<uint8_t> m_BlendMap;  //
 
 	public:
 		Terrain();
@@ -48,10 +46,10 @@ namespace LibSWBF2::Wrappers
 		std::string GetName() const;
 
 		// count is number of indices, NOT number of bytes!
-		bool GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint32_t*& indexBuffer) const;
+		std::vector<uint32_t> GetIndexBuffer(ETopology requestedTopology) const;
 
 		// count is number of vectors, NOT number of bytes!
-		void GetVertexBuffer(uint32_t& count, const Vector3*& vertexBuffer) const;
+		std::vector<Vector3> GetVertexBuffer() const;
 
 		// count is number of vectors, NOT number of bytes!
 		void GetNormalBuffer(uint32_t& count, const Vector3*& normalBuffer) const;
@@ -60,15 +58,15 @@ namespace LibSWBF2::Wrappers
 		void GetColorBuffer(uint32_t& count, const Color4u8*& colorBuffer) const;
 
 		// count is number of vectors, NOT number of bytes!
-		void GetUVBuffer(uint32_t& count, const Vector2*& uvBuffer) const;
+		std::vector<Vector2> GetUVBuffer() const;
 
 		void GetHeightMap(uint32_t& dim, uint32_t& dimScale, float_t*& heightData) const;
 
-		void GetBlendMap(uint32_t& dim, uint32_t& numLayers, uint8_t*& imgData) const;
+		std::vector<uint8_t> GetBlendMap(uint32_t& dim, uint32_t& numLayers) const;
 
 		void GetHeightBounds(float_t& floor, float_t& ceiling) const;
  
 		// Texture name for each terrain layer. Usually 16 layers
-		const std::vector<std::string>& GetLayerTextures() const;
+		std::vector<std::string> GetLayerTextures() const;
 	};
 }

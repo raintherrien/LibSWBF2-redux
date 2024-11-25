@@ -34,7 +34,7 @@ namespace LibSWBF2::Wrappers
 
 	public:
 		std::vector<const Field *> GetFields(FNVHash name = 0) const;
-		const Field& GetField(FNVHash name = 0) const;
+		const Field *GetField(FNVHash name = 0) const;
 
 		bool IsEmpty() const;
 
@@ -50,7 +50,7 @@ namespace LibSWBF2::Wrappers
 		mutable bool m_IsValid;
 
 		// Inits above members
-		const void Cache() const;
+		void Cache() const;
 	};
 
 
@@ -105,14 +105,13 @@ namespace LibSWBF2::Wrappers
 		EConfigType m_Type;
 		FNVHash m_Name;
 				
-		const Field& GetField(FNVHash hash = 0) const;
+		const Field *GetField(FNVHash hash = 0) const;
 		std::vector<const Field *> GetFields(FNVHash hash = 0) const;
 
 		static bool FromChunk(GenericBaseChunk *cfg, Config& wrapperOut);
 
 	private:
 
-		ConfigChunkNC *p_Chunk;
 		std::vector<Field> m_Fields;
 	};
 }

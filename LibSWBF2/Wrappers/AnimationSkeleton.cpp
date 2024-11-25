@@ -38,16 +38,15 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const std::string& AnimationSkeleton::GetName() const
+	std::string AnimationSkeleton::GetName() const
 	{
-		static std::string Missing;
 		if (p_AnimSkeleton -> p_Name != nullptr)
 		{
 			return p_AnimSkeleton -> p_Name -> m_Text;	
 		}
 		else 
 		{
-			return Missing;
+			return "";
 		}
 		
 	}

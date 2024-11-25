@@ -23,9 +23,8 @@ namespace LibSWBF2::Wrappers
     CollisionPrimitive::CollisionPrimitive(
                 STR<"NAME"_m> *name, MASK *mask,
                 STR<"PRNT"_m> *parent, XFRM *transform,
-                DATA_PRIM *fields) : p_TransformChunk(transform),
-                                     p_NameChunk(name), p_MaskChunk(mask),
-                                     p_ParentChunk(parent), p_FieldsChunk(fields) {}
+                DATA_PRIM *fields)
+	    : p_FieldsChunk(fields), p_TransformChunk(transform), p_NameChunk(name), p_MaskChunk(mask), p_ParentChunk(parent) {}
 
 
     Vector4 CollisionPrimitive::GetRotation() const

@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t length = stream.ReadUInt32();
 
 		m_ModelIndices.clear();
-		m_ModelIndices.resize(length);
+		m_ModelIndices.reserve(length);
 
 		for (size_t i = 0; i < length; ++i)
 		{

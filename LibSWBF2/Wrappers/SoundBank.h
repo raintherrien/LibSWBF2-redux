@@ -35,13 +35,13 @@ namespace LibSWBF2::Wrappers
 
 		static bool FromChunk(SampleBank* stream, SoundBank& out);
 
-		const bool HasData() const;
+		bool HasData() const;
 
 		const std::vector<Sound>& GetSounds() const;
 		const Sound* GetSound(const std::string& soundName) const;
 		const Sound* GetSound(FNVHash soundHash) const;
 
-		const ESoundFormat GetFormat() const;
-		const FNVHash GetHashedName() const;
+		ESoundFormat GetFormat() const;
+		FNVHash GetHashedName() const;
 	};
 }

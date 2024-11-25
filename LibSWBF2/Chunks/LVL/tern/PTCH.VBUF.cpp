@@ -53,7 +53,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             //The other data stored in each element isn't garbage 
             //or all default, it is mostly patterned.  Exact 
             //pattern/meaning still unknown.
-            static int KNOWN_STRENGTH_OFFSETS[] = {15, 11, 6};
+            const static int KNOWN_STRENGTH_OFFSETS[] = {15, 11, 6};
 
             PTCH *parentPatch = dynamic_cast<PTCH*>(GetParent());
             PTCH_INFO *patchInfo = parentPatch -> p_PatchInfo;

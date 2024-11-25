@@ -76,7 +76,7 @@ void a8r8g8b8ToRBGA(int w, int h, unsigned char *src, uint32_t *sink) {
 
 void bcToRGBA(int w, int h, unsigned char *src, uint32_t *sink, int mode) {
     
-    static uint32_t *blockSink = new uint32_t[16]; 
+    static uint32_t *blockSink = new uint32_t[16]; // XXX Race condition
 
     bool (*decomp_func) (const uint8_t * DETEX_RESTRICT bitstring, uint32_t mode_mask,
                         uint32_t flags, uint8_t * DETEX_RESTRICT pixel_buffer);

@@ -54,7 +54,7 @@ namespace LibSWBF2::Wrappers
 		Vector4 GetRotation() const;
 		const uint16_t& GetType() const;
 
-		const void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
+		void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 
 
@@ -95,7 +95,7 @@ namespace LibSWBF2::Wrappers
 		const std::string& GetType() const;
 		const Vector3& GetSize() const;
 
-		const void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
+		void GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const;
 	};
 
 	
@@ -111,9 +111,9 @@ namespace LibSWBF2::Wrappers
 
 	public:
 		const std::string& GetName() const;
-		const float GetRunTime() const;
-		const bool IsLooping() const;
-		const bool IsTranslationLocal() const;
+		float GetRunTime() const;
+		bool IsLooping() const;
+		bool IsTranslationLocal() const;
 		std::vector<WorldAnimationKey> GetRotationKeys() const;
 		std::vector<WorldAnimationKey> GetPositionKeys() const;
 	};
@@ -131,10 +131,10 @@ namespace LibSWBF2::Wrappers
 
 	public:
 		const std::string& GetName() const;
-		const bool IsPlayingAtStart() const;
-		const bool IsStoppedOnControl() const;
-		const bool DisablesHierarchies() const;
-		const void GetAnimationInstancePairs(std::vector<std::string>& animNamesOut, std::vector<std::string>& instanceNamesOut) const;
+		bool IsPlayingAtStart() const;
+		bool IsStoppedOnControl() const;
+		bool DisablesHierarchies() const;
+		void GetAnimationInstancePairs(std::vector<std::string>& animNamesOut, std::vector<std::string>& instanceNamesOut) const;
 	};
 
 

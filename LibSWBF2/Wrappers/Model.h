@@ -61,14 +61,14 @@ namespace LibSWBF2::Wrappers
 
 		static bool FromChunk(Level* mainContainer, modl* modelChunk, Model& out);
 
-		const std::string& GetName() const;
-		const std::vector<Segment>& GetSegments() const;
+		std::string GetName() const;
+		std::vector<Segment> GetSegments() const;
 		bool IsSkeletalMesh() const;
 		bool IsSkeletonBroken() const;
-		const std::vector<Bone> &GetBones() const;
+		std::vector<Bone> GetBones() const;
 
 
-		const CollisionMesh& GetCollisionMesh() const;
-		const std::vector<CollisionPrimitive> &GetCollisionPrimitives() const;
+		const CollisionMesh *GetCollisionMesh() const;
+		std::vector<CollisionPrimitive> GetCollisionPrimitives() const;
 	};
 }

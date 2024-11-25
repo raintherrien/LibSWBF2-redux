@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t WeightSize = stream.ReadUInt32();	// stores the number of indices (4 weight multiples), not the total amount of weights!
 
 		m_Weights.clear();
-		m_Weights.resize(WeightSize);
+		m_Weights.reserve(WeightSize);
 
 		for (uint32_t i = 0; i < WeightSize; ++i)
 		{

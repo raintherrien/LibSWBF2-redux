@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t numIndices = stream.ReadUInt32();
 
 		m_Triangles.clear();
-		m_Triangles.resize(numIndices);
+		m_Triangles.reserve(numIndices);
 
 		for (uint32_t i = 0; i < numIndices; ++i)
 		{

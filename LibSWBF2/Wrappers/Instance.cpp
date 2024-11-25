@@ -37,12 +37,12 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const std::string& Instance::GetEntityClassName() const
+	std::string Instance::GetEntityClassName() const
 	{
 		return p_Instance->p_Info->p_Type->m_Text;
 	}
 
-	const std::string& Instance::GetName() const
+	std::string Instance::GetName() const
 	{
 		return p_Instance->p_Info->p_Name->m_Text;
 	}

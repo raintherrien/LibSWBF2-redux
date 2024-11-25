@@ -42,17 +42,17 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const ESoundFormat SoundBank::GetFormat() const
+	ESoundFormat SoundBank::GetFormat() const
 	{
 		return p_soundBank -> p_Info -> m_Format;	
 	}
 
-	const FNVHash SoundBank::GetHashedName() const
+	FNVHash SoundBank::GetHashedName() const
 	{
 		return p_soundBank -> p_Info -> m_Name;			
 	}
 
-	const bool SoundBank::HasData() const
+	bool SoundBank::HasData() const
 	{
 		return p_soundBank -> p_Data != nullptr;
 	}

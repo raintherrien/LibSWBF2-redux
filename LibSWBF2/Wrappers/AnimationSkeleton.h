@@ -41,7 +41,7 @@ namespace LibSWBF2::Wrappers
 
 		static bool FromChunk(zaf_* animSkelChunk, AnimationSkeleton& out);
 
-		const std::string& GetName() const;
+		std::string GetName() const;
 		bool GetJoints(std::vector<Joint>& joints) const;
 	};
 }

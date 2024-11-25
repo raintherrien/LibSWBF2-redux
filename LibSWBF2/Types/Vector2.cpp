@@ -6,10 +6,8 @@
 
 namespace LibSWBF2::Types
 {
-	Vector2::Vector2() : m_X(m_X), m_Y(m_Y) 
+	Vector2::Vector2() : m_X(0.0f), m_Y(0.0f) 
 	{
-		m_X = 0.0;
-		m_Y = 0.0;
 	}
 
 	Vector2::Vector2(const float_t x, const float_t y)

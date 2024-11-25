@@ -3,6 +3,7 @@
 class SoundDecoder
 {
 public:
+	virtual ~SoundDecoder() = default;
 	virtual	void Reset() = 0;
 
 	// These 2 (and probably more) methods must allow caller to know number of bytes read and samples extracted!

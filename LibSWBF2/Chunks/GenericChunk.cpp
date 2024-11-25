@@ -329,7 +329,7 @@ namespace LibSWBF2::Chunks
 
 					LOG_INFO("Adding Child '{}' to '{}'", chunk->GetHeader(), m_Header);
 				}
-				catch (LibException e)
+				catch (const LibException &e)
 				{
 					delete chunk;
 					chunk = nullptr;

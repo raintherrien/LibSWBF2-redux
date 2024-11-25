@@ -34,7 +34,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t MaterialsSize = stream.ReadUInt32();
 
 		m_Materials.clear();
-		m_Materials.resize(MaterialsSize);
+		m_Materials.reserve(MaterialsSize);
 
 		for (uint32_t i = 0; i < MaterialsSize; ++i)
 		{

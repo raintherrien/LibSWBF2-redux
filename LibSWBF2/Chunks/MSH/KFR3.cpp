@@ -32,7 +32,7 @@ namespace LibSWBF2::Chunks::MSH
 		uint32_t num = stream.ReadUInt32();
 
 		m_BoneFrames.clear();
-		m_BoneFrames.resize(num);
+		m_BoneFrames.reserve(num);
 
 		for (uint32_t i = 0; i < num; ++i)
 		{

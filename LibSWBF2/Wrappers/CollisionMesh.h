@@ -31,8 +31,8 @@ namespace LibSWBF2::Wrappers
 		
 		std::string GetName() const;
 
-		void GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint16_t*& indexBuffer) const;
-		void GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const;
+		std::vector<uint16_t> GetIndexBuffer() const;
+		std::vector<Vector3> GetVertexBuffer() const;
 
 		ECollisionMaskFlags GetMaskFlags() const;
 

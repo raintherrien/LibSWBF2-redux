@@ -120,30 +120,28 @@ namespace LibSWBF2::Wrappers
 	Terrain::Terrain()
 	{
 		p_HeightMap = nullptr;
-		p_BlendMap = nullptr;
 	}
 
 	Terrain::~Terrain()
 	{
 		delete p_HeightMap;
-		delete p_BlendMap;
 	}
 
 
-	void Terrain::GetBlendMap(uint32_t& dim, uint32_t& numTexLayers, uint8_t*& finalBlendMapData) const
+	std::vector<uint8_t> Terrain::GetBlendMap(uint32_t& dim, uint32_t& numTexLayers) const
 	{
 		auto *info = p_Terrain -> p_Info;
 		dim = (uint32_t) info -> m_GridSize;
 		numTexLayers = (uint32_t) info -> m_TextureCount;
 
-		if (p_BlendMap == nullptr)
+		if (m_BlendMap.size() == 0)
 		{
 			uint16_t numVertsPerPatchEdge = info->m_PatchEdgeSize;
 			uint16_t dataEdgeSize = numVertsPerPatchEdge + 1;
 			uint32_t numPatchesPerRow = dim / numVertsPerPatchEdge;
 
 			uint32_t dataLength = dim * dim * numTexLayers;
-	        p_BlendMap = new uint8_t[dataLength]();
+			m_BlendMap.resize(dataLength);
 
 		std::vector<PTCH*>& patches = p_Terrain->p_Patches->m_Patches;
 
@@ -180,20 +178,20 @@ namespace LibSWBF2::Wrappers
 
 						if (finalDataIndex < dataLength)
 						{	
-							p_BlendMap[finalDataIndex] = (uint8_t)curPatchBlendMap[localPatchIndex + k];
+							m_BlendMap[finalDataIndex] = (uint8_t)curPatchBlendMap[localPatchIndex + k];
 						}
 					}
 				}
 			}
 		}
 
-		finalBlendMapData = p_BlendMap;  
+		return m_BlendMap;  
 	}
 
 
-	bool Terrain::GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint32_t*& indexBuffer) const
+	std::vector<uint32_t> Terrain::GetIndexBuffer(ETopology requestedTopology) const
 	{
-		m_Indices.clear();
+		std::vector<uint32_t> indices;
 
 		if (requestedTopology == ETopology::TriangleList)
 		{
@@ -210,7 +208,7 @@ namespace LibSWBF2::Wrappers
 			if (numStoredPatches != numPatches)
 			{
 				LOG_ERROR("Expected {} patches according to info data, but found {}!", numPatches, numStoredPatches);
-				return false;
+				return indices;
 			}
 
 			uint32_t vertexOffset = 0;
@@ -225,7 +223,7 @@ namespace LibSWBF2::Wrappers
 				{
 					std::vector<uint32_t> triangleList = TriangleStripToTriangleList<uint32_t>(indexBuffer->m_IndexBuffer, vertexOffset);
 
-					m_Indices.insert(std::end(m_Indices), std::begin(triangleList), std::end(triangleList));
+					indices.insert(std::end(indices), std::begin(triangleList), std::end(triangleList));
 					vertexOffset += (uint32_t)vertexBuffer->m_TerrainBuffer.size();
 				}
 				else
@@ -247,14 +245,14 @@ namespace LibSWBF2::Wrappers
 							d = (globalX + 1) + ((y + 1) * dataEdgeSize);
 
 							// triangle 1 clockwise
-							m_Indices.push_back(a);
-							m_Indices.push_back(b);
-							m_Indices.push_back(c);
+							indices.push_back(a);
+							indices.push_back(b);
+							indices.push_back(c);
 
 							// triangle 2 clockwise
-							m_Indices.push_back(c);
-							m_Indices.push_back(b);
-							m_Indices.push_back(d);
+							indices.push_back(c);
+							indices.push_back(b);
+							indices.push_back(d);
 						}
 					}
 
@@ -265,18 +263,14 @@ namespace LibSWBF2::Wrappers
 		else
 		{
 			LOG_WARN("Requested terrain index buffer as (yet) unsupported topology '{}'!", TopologyToString(requestedTopology));
-			return false;
 		}
 
-		count = (uint32_t)m_Indices.size();
-		indexBuffer = m_Indices.data();
-		return true;
+		return indices;
 	}
 
-	void Terrain::GetVertexBuffer(uint32_t& count, const Vector3*& vertexBuffer) const
+	std::vector<Vector3> Terrain::GetVertexBuffer() const
 	{
-		count = (uint32_t)m_Positions.size();
-		vertexBuffer = m_Positions.data();
+		return m_Positions;
 	}
 
 	void Terrain::GetNormalBuffer(uint32_t& count, const Vector3*& normalBuffer) const
@@ -291,10 +285,9 @@ namespace LibSWBF2::Wrappers
 		colorBuffer = m_Colors.data();
 	}
 
-	void Terrain::GetUVBuffer(uint32_t& count, const Vector2*& uvBuffer) const
+	std::vector<Vector2> Terrain::GetUVBuffer() const
 	{
-		count = (uint32_t)m_TexCoords.size();
-		uvBuffer = m_TexCoords.data();
+		return m_TexCoords;
 	}
 
 	std::string Terrain::GetName() const
@@ -324,16 +317,14 @@ namespace LibSWBF2::Wrappers
 	       	int heightDataLength = dim * dim;
 			p_HeightMap = new float_t[heightDataLength]();
 
-			uint32_t ibufLength;
-			uint32_t*ibufData;
-			GetIndexBuffer(ETopology::TriangleList, ibufLength, ibufData);
+			std::vector<uint32_t> indexBuffer = GetIndexBuffer(ETopology::TriangleList);
 
 			//Inits to -5.96541e+29
 			memset((void *) p_HeightMap, 0xf0, sizeof(float_t) * heightDataLength);
 
-			for (int i = 0; i < (int) ibufLength; i++)
+			for (int i = 0; i < (int) indexBuffer.size(); i++)
 			{
-				const Vector3& curVert = m_Positions[ibufData[i]];
+				const Vector3& curVert = m_Positions[indexBuffer[i]];
 
 				if (fmod(curVert.m_X, gridUnitSize) > .1 || //omit irregularities
 					fmod(curVert.m_Z, gridUnitSize) > .1)
@@ -362,7 +353,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const std::vector<std::string>& Terrain::GetLayerTextures() const
+	std::vector<std::string> Terrain::GetLayerTextures() const
 	{
 		return p_Terrain->p_LayerTextures->m_LayerTextures;
 	}

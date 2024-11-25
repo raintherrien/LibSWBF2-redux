@@ -30,7 +30,7 @@ namespace LibSWBF2::Types
 			return;
 		}
 
-		m_WideString.resize(numWideChars);
+		m_WideString.reserve(numWideChars);
 		for (int i = 0; i < numWideChars; ++i)
 		{
 			m_WideString.push_back(stream.ReadUInt16());
@@ -44,7 +44,5 @@ namespace LibSWBF2::Types
 				break;
 			}
 		}
-
-		m_WideString.resize((size_t)i + 1);
 	}
 }

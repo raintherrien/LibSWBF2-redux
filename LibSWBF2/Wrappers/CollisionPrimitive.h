@@ -29,18 +29,17 @@ namespace LibSWBF2::Wrappers
 		STR<"NAME"_m> *p_NameChunk;
 		MASK *p_MaskChunk;
 		STR<"PRNT"_m> *p_ParentChunk;
-		
-		CollisionPrimitive(STR<"NAME"_m> *name, MASK *mask,
-                           STR<"PRNT"_m> *parent, XFRM *transform,
-                           DATA_PRIM *fields);
-
-		CollisionPrimitive() = default;
 
 		
 		static bool FromChunks(STR<"NAME"_m> *name, MASK *mask,
                            STR<"PRNT"_m> *parent, XFRM *transform,
                            DATA_PRIM *fields, CollisionPrimitive& out);
 	public:
+		CollisionPrimitive(STR<"NAME"_m> *name, MASK *mask,
+                           STR<"PRNT"_m> *parent, XFRM *transform,
+                           DATA_PRIM *fields);
+
+		CollisionPrimitive() = default;
 		
 		std::string GetName() const;
 		std::string GetParentName() const;

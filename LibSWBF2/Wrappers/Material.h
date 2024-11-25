@@ -48,7 +48,7 @@ namespace LibSWBF2::Wrappers
 		// will try to resolve within this Level
 		const Texture* GetTexture(uint8_t index) const;
 
-		const uint32_t GetFirstParameter() const;
-		const uint32_t GetSecondParameter() const;
+		uint32_t GetFirstParameter() const;
+		uint32_t GetSecondParameter() const;
 	};
 }

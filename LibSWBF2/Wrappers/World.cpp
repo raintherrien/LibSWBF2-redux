@@ -49,7 +49,7 @@ namespace LibSWBF2::Wrappers
 		return p_HintNode -> p_Info -> p_Type -> m_Type;
 	}
 
-	const void HintNode::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
+	void HintNode::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
 		outHashes.clear();
 		outValues.clear();
@@ -152,7 +152,7 @@ namespace LibSWBF2::Wrappers
 		return p_Region -> p_Info -> p_Type -> m_Text;
 	}
 
-	const void Region::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
+	void Region::GetProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const
 	{
 		outHashes.clear();
 		outValues.clear();
@@ -185,18 +185,18 @@ namespace LibSWBF2::Wrappers
 		return p_WorldAnimation -> p_Info -> m_Name;
 	}
 
-	const float WorldAnimation::GetRunTime() const
+	float WorldAnimation::GetRunTime() const
 	{
 		return p_WorldAnimation -> p_Info -> m_RunTime;
 	}
 
 
-	const bool WorldAnimation::IsLooping() const
+	bool WorldAnimation::IsLooping() const
 	{
 		return p_WorldAnimation -> p_Info -> m_Looping == 1;
 	}
 
-	const bool WorldAnimation::IsTranslationLocal() const
+	bool WorldAnimation::IsTranslationLocal() const
 	{
 		return p_WorldAnimation -> p_Info -> m_LocalTranslation == 1;
 	}
@@ -243,22 +243,22 @@ namespace LibSWBF2::Wrappers
 		return p_WorldAnimationGroup -> p_Info -> m_Name;	
 	}
 
-	const bool WorldAnimationGroup::IsPlayingAtStart() const
+	bool WorldAnimationGroup::IsPlayingAtStart() const
 	{
 		return p_WorldAnimationGroup -> p_Info -> m_PlayAtStart == 1;
 	}
 
-	const bool WorldAnimationGroup::IsStoppedOnControl() const
+	bool WorldAnimationGroup::IsStoppedOnControl() const
 	{
 		return p_WorldAnimationGroup -> p_Info -> m_StopOnControl == 1;
 	}
 
-	const bool WorldAnimationGroup::DisablesHierarchies() const
+	bool WorldAnimationGroup::DisablesHierarchies() const
 	{
 		return p_WorldAnimationGroup -> p_NoHierarchy != nullptr;
 	}
 
-	const void WorldAnimationGroup::GetAnimationInstancePairs(
+	void WorldAnimationGroup::GetAnimationInstancePairs(
 									std::vector<std::string>& animNamesOut, 
 									std::vector<std::string>& instanceNamesOut) const
 	{

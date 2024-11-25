@@ -45,9 +45,9 @@ namespace LibSWBF2::Wrappers
 		bool FillDataBuffer(ESoundFormat format, int16_t* bufferToFill) const;
 
 		const uint8_t* GetDataPtr() const;
-		const size_t GetDataLength() const;
+		size_t GetDataLength() const;
 
-		const size_t GetDataPosition() const;
+		size_t GetDataPosition() const;
 
 
 		bool GetData(uint32_t& sampleRate, uint32_t& sampleCount, uint8_t& blockAlign, const uint8_t*& data) const;

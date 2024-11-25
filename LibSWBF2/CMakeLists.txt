@@ -25,7 +25,6 @@ target_include_directories(LibSWBF2 PRIVATE ${PROJECT_SOURCE_DIR} "${PROJECT_SOU
 
 target_compile_definitions(LibSWBF2 PRIVATE LOOKUP_CSV_PATH="${PROJECT_SOURCE_DIR}/../lookup.csv")
 
-
 target_link_libraries(LibSWBF2 glm)
 target_link_libraries(LibSWBF2 fmt)
 
@@ -33,18 +32,25 @@ target_precompile_headers(LibSWBF2 PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:${PROJECT_
 target_compile_definitions(LibSWBF2 PUBLIC MEMORY_MAPPED_READER)
 
 if (UNIX)
-  target_compile_options(LibSWBF2 PUBLIC -Wno-attributes)
+  target_compile_options(LibSWBF2 PUBLIC -Wall -Wextra -Wno-attributes -Wno-unused-variable -Wno-unused-parameter -Wno-sign-compare)
   #target_compile_options(LibSWBF2 PUBLIC -Wno-deprecated-volatile)
 
   # Per convention, in UNIX shared libraries start with a lower 
   # case "lib" prefix, which would result in "libLibSWBF2". 
   # To circumvent that, just change the file output name accordingly.
   set_target_properties(LibSWBF2 PROPERTIES OUTPUT_NAME "SWBF2")
+
+  # Optionally build with GCC/Clang sanitizers
+  option(BUILD_SAN "Build with sanitizers" OFF)
+  if(BUILD_SAN)
+    target_compile_options(LibSWBF2 PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3)
+    target_link_options   (LibSWBF2 PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3)
+  endif()
 endif(UNIX)
 
 if(MSVC)
   # Enable multi processor compilation for VS projects
-  target_compile_options(LibSWBF2 PRIVATE "/MP")
+  target_compile_options(LibSWBF2 PRIVATE "/MP /W4 /WX")
 endif()
 
 # Just for folder display in generated project

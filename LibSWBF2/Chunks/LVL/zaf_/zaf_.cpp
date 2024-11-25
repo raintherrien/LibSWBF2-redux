@@ -28,7 +28,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		{
 			READ_CHILD(stream, p_Bin);
 		}
-		catch (LibException le)
+		catch (const LibException &le)
 		{
 			LOG_ERROR("{0}", le.what());
 			p_Bin = nullptr;

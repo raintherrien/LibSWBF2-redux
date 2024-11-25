@@ -21,7 +21,7 @@ namespace LibSWBF2::Chunks::LVL::modl
         Check(stream);
 
         m_IndicesCount = stream.ReadUInt32();
-        m_Indices.resize(m_IndicesCount);
+        m_Indices.reserve(m_IndicesCount);
         for (uint32_t i = 0; i < m_IndicesCount; ++i)
         {
             m_Indices.push_back(stream.ReadUInt16());

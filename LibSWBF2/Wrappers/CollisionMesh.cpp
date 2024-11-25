@@ -50,43 +50,29 @@ namespace LibSWBF2::Wrappers
         return p_CollisionChunk -> p_Mask -> m_MaskFlags;
     }
 
-    void CollisionMesh::GetIndexBuffer(ETopology requestedTopology, uint32_t& count, uint16_t*& indexBuffer) const
+    std::vector<uint16_t> CollisionMesh::GetIndexBuffer() const
     {
-        if (requestedTopology != ETopology::TriangleList || p_CollisionChunk == nullptr)
-        {
-            count = 0;
-            indexBuffer = nullptr;
-            return;
-        }
-
-        if (m_Indicies.size() == 0) //lazy load
+        if (p_CollisionChunk != nullptr && m_Indicies.size() == 0) //lazy load
         {
 		std::vector<TREE_LEAF *>& leaves = p_CollisionChunk -> p_Tree -> m_Leaves;
             
-            for (int i = 0; i < leaves.size(); i++)
-            {
-		    std::vector<uint16_t>& leaf_fan = leaves[i] -> m_Indicies;
+		for (int i = 0; i < leaves.size(); i++) {
+			std::vector<uint16_t>& leaf_fan = leaves[i] -> m_Indicies;
 			const auto tris = TriangleFanToTriangleList<uint16_t, uint16_t>(leaf_fan, 0);
 			m_Indicies.insert(std::end(m_Indicies), std::begin(tris), std::end(tris));
-            }
+		}
         }
 
-        count = (uint32_t)m_Indicies.size();
-        indexBuffer = m_Indicies.data();
+	return m_Indicies;
     }
 
-    void CollisionMesh::GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const
+    std::vector<Vector3> CollisionMesh::GetVertexBuffer() const
     {
-    	if (p_CollisionChunk== nullptr)
-    	{
-    		count = 0;
-            vertexBuffer = nullptr;
-    		return;
+    	if (p_CollisionChunk== nullptr) {
+    		return {};
     	}
 
-	std::vector<Vector3>& verts = p_CollisionChunk -> p_Verts -> m_Verts;
-        count = (uint32_t) verts.size();
-        vertexBuffer = verts.data();
+	return p_CollisionChunk->p_Verts->m_Verts;
     }
         
     std::string CollisionMesh::ToString() const

@@ -55,7 +55,7 @@ namespace LibSWBF2::Wrappers
 		return p_SoundClip->GetSampleData();
 	}
 
-	const size_t Sound::GetDataLength() const
+	size_t Sound::GetDataLength() const
 	{
 		return p_SoundClip->m_DataLength;
 	}
@@ -84,7 +84,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const size_t Sound::GetDataPosition() const 
+	size_t Sound::GetDataPosition() const 
 	{
 		return p_SoundClip->m_DataPosition;
 	}

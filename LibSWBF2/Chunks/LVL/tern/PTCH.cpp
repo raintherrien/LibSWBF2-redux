@@ -25,7 +25,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
         // chunk order. 
         // The Geometry IBUF chunk comes right after the Geometry VBUF,
         // same for TextureExtra IBUF
-        static ETerrainBufferType lastVBUFType;
+        static ETerrainBufferType lastVBUFType; // XXX Race condition
 
         while (ThereIsAnother(stream))
         {

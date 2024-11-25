@@ -40,8 +40,10 @@ namespace LibSWBF2::Wrappers
 
 	EntityClass::EntityClass(const EntityClass &other)
 	{
-		m_PropertyMapping = new PropertyMap();
 		p_MainContainer = other.p_MainContainer;
+		p_classChunk = other.p_classChunk;
+		m_EntityClassType = other.m_EntityClassType;
+		m_PropertyMapping = new PropertyMap();
 		*m_PropertyMapping = *other.m_PropertyMapping;
 	}
 
@@ -125,12 +127,12 @@ namespace LibSWBF2::Wrappers
 		return m_EntityClassType;
 	}
 
-	const std::string& EntityClass::GetTypeName() const
+	std::string EntityClass::GetTypeName() const
 	{
 		return p_classChunk->p_Type->m_Text;
 	}
 
-	const std::string& EntityClass::GetBaseName() const
+	std::string EntityClass::GetBaseName() const
 	{
 		return p_classChunk->p_Base->m_Text;
 	}
@@ -212,6 +214,26 @@ namespace LibSWBF2::Wrappers
 			outHashes.push_back(properties[i] -> m_PropertyName);
 			outValues.push_back(properties[i] -> m_Value);
 		}
+	}
+
+	std::vector<FNVHash> EntityClass::GetAllPropertyHashes() const
+	{
+		std::vector<FNVHash> outHashes;
+
+		const EntityClass* base = GetBase();
+		if (base != nullptr)
+		{
+			std::vector<FNVHash> base_hashes = base->GetAllPropertyHashes();
+			outHashes.insert(outHashes.end(), base_hashes.begin(), base_hashes.end());
+		}
+
+		std::vector<PROP*>& properties = p_classChunk->m_Properties;
+		for (int i = 0; i < properties.size(); i++)
+		{
+			outHashes.push_back(properties[i]->m_PropertyName);
+		}
+
+		return outHashes;
 	}
 
 	void EntityClass::GetAllProperties(std::vector<FNVHash>& outHashes, std::vector<std::string>& outValues) const

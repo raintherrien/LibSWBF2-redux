@@ -136,33 +136,29 @@ namespace LibSWBF2::Wrappers
 		return p_Segment->p_Info->m_Topology;
 	}
 
-	const Material& Segment::GetMaterial() const
+	const Material *Segment::GetMaterial() const
 	{
-		return m_Material;
+		return &m_Material;
 	}
 
-	void Segment::GetIndexBuffer(uint32_t& count, uint16_t*& indexBuffer) const
+	std::vector<uint16_t> Segment::GetIndexBuffer() const
 	{
-		count = p_Segment->p_IndexBuffer->m_IndicesCount;
-		indexBuffer = p_Segment->p_IndexBuffer->m_Indices.data();
+		return p_Segment->p_IndexBuffer->m_Indices;
 	}
 
-	void Segment::GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const
+	std::vector<Vector3> Segment::GetVertexBuffer() const
 	{
-		count = (uint32_t)p_VertexBuffer->m_Positions.size();
-		vertexBuffer = p_VertexBuffer->m_Positions.data();
+		return p_VertexBuffer->m_Positions;
 	}
 
-	void Segment::GetNormalBuffer(uint32_t& count, Vector3*& normalBuffer) const
+	std::vector<Vector3> Segment::GetNormalBuffer() const
 	{
-		count = (uint32_t)p_VertexBuffer->m_Normals.size();
-		normalBuffer = p_VertexBuffer->m_Normals.data();
+		return p_VertexBuffer->m_Normals;
 	}
 
-	void Segment::GetUVBuffer(uint32_t& count, Vector2*& uvBuffer) const
+	std::vector<Vector2> Segment::GetUVBuffer() const
 	{
-		count = (uint32_t)p_VertexBuffer->m_TexCoords.size();
-		uvBuffer = p_VertexBuffer->m_TexCoords.data();
+		return p_VertexBuffer->m_TexCoords;
 	}
 
 	bool Segment::ContainsWeights() const

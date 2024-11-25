@@ -58,12 +58,12 @@ namespace LibSWBF2::Wrappers
 		return true;
 	}
 
-	const std::string& Model::GetName() const
+	std::string Model::GetName() const
 	{
 		return p_Model->p_Name->m_Text;
 	}
 
-	const std::vector<Segment>& Model::GetSegments() const
+	std::vector<Segment> Model::GetSegments() const
 	{
 		return m_Segments;
 	}
@@ -119,18 +119,18 @@ namespace LibSWBF2::Wrappers
 		return false;
 	}
 
-	const std::vector<Bone> &Model::GetBones() const
+	std::vector<Bone> Model::GetBones() const
 	{
 		return m_Bones;
 	}
 
-	const CollisionMesh& Model::GetCollisionMesh() const
+	const CollisionMesh *Model::GetCollisionMesh() const
 	{
-		return m_CollisionMesh;
+		return &m_CollisionMesh;
 	}
 
 
-	const std::vector<CollisionPrimitive> &Model::GetCollisionPrimitives() const
+	std::vector<CollisionPrimitive> Model::GetCollisionPrimitives() const
 	{
 		return m_CollisionPrimitives;
 	}

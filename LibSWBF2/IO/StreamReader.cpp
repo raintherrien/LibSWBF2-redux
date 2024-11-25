@@ -188,7 +188,7 @@ namespace LibSWBF2
 
 	void StreamReader::SetPosition(size_t NewPosition)
 	{
-		if (NewPosition < 0 || NewPosition > m_FileSize)
+		if (NewPosition > m_FileSize)
 		{
 			LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
 			return;

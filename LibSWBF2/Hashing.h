@@ -6,10 +6,6 @@ namespace LibSWBF2
 {
 	class CRC
 	{
-	private:
-		static uint32_t m_Table32[256];
-		static uint8_t m_ToLower[256];
-
 	public:
 		LIBSWBF2_API static CRCChecksum CalcLowerCRC(const char* str);
 	};
@@ -22,14 +18,7 @@ namespace LibSWBF2
 
 		static constexpr FNVHash HashConstexpr(const std::string_view str);
 
-#ifdef LOOKUP_CSV_PATH
-	private:
-		static std::unordered_map<FNVHash, std::string>* p_LookupTable;
-
-	public:
-		static void ReadLookupTable();
-		static void ReleaseLookupTable();
-#endif // LOOKUP_CSV_PATH
+		static const std::unordered_map<FNVHash, std::string> &LookupTable();
 	};
 
 

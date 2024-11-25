@@ -49,19 +49,19 @@ namespace LibSWBF2::Wrappers
 		ETopology GetTopology() const;
 		bool ContainsWeights() const;
 
-		const Material& GetMaterial() const;
+		const Material *GetMaterial() const;
 
 		// count is number of indices, NOT number of bytes!
-		void GetIndexBuffer(uint32_t& count, uint16_t*& indexBuffer) const;
+		std::vector<uint16_t> GetIndexBuffer() const;
 
 		// count is number of vectors, NOT number of bytes!
-		void GetVertexBuffer(uint32_t& count, Vector3*& vertexBuffer) const;
+		std::vector<Vector3> GetVertexBuffer() const;
 
 		// count is number of vectors, NOT number of bytes!
-		void GetNormalBuffer(uint32_t& count, Vector3*& normalBuffer) const;
+		std::vector<Vector3> GetNormalBuffer() const;
 
 		// count is number of vectors, NOT number of bytes!
-		void GetUVBuffer(uint32_t& count, Vector2*& uvBuffer) const;
+		std::vector<Vector2> GetUVBuffer() const;
 
 		// count corresponmds to number of vertices, NOT number of bytes!
 		// returns false if there are no vertex weights present

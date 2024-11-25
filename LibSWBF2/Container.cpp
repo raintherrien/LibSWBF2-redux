@@ -50,7 +50,6 @@ namespace LibSWBF2
 		using LibSWBF2::Chunks::LVL::LVL;
 
 		LVL* lvl = nullptr;
-		GenericBaseChunk* chunk = nullptr;
 		{
 			StreamReader reader;
 			if (!reader.Open(path)) {
@@ -59,7 +58,6 @@ namespace LibSWBF2
 			reader.Close();
 
 			lvl = LVL::Create();
-			chunk = lvl;
 		}
 
 		if (lvl->ReadFromFile(path, subLVLsToLoad)) {

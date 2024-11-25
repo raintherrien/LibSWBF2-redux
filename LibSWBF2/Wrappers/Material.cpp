@@ -56,12 +56,12 @@ namespace LibSWBF2::Wrappers
 		return p_Material->m_SpecularExponent;
 	}
 
-	const uint32_t Material::GetFirstParameter() const
+	uint32_t Material::GetFirstParameter() const
 	{	
 		return p_Material->m_Parameters[0];
 	}
 
-	const uint32_t Material::GetSecondParameter() const
+	uint32_t Material::GetSecondParameter() const
 	{
 		return p_Material->m_Parameters[1];
 	}

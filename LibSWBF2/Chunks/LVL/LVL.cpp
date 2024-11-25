@@ -83,7 +83,7 @@ namespace LibSWBF2::Chunks::LVL
 						BaseChunk::SkipChunk(stream,false);
 					}
 				}
-				catch (LibException e)
+				catch (const LibException &e)
 				{
 					LOG_WARN("{}", e.what());
 					return false;

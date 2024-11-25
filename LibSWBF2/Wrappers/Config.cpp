@@ -156,7 +156,7 @@ namespace LibSWBF2::Wrappers
 
 	*/
 
-	const void Scope::Cache() const
+	void Scope::Cache() const
 	{
 		if (p_Scope == nullptr)
 		{
@@ -177,7 +177,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	const Field& Scope::GetField(FNVHash name) const
+	const Field *Scope::GetField(FNVHash name) const
 	{
 		if (!m_IsValid)
 		{
@@ -189,10 +189,11 @@ namespace LibSWBF2::Wrappers
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
 			{
-				return cur;
+				return &cur;
 			}
 		}
-		THROW("Field not found!");
+
+		return nullptr;
 	}
 
 
@@ -231,17 +232,17 @@ namespace LibSWBF2::Wrappers
 
 	*/
 
-	const Field& Config::GetField(FNVHash name) const
+	const Field *Config::GetField(FNVHash name) const
 	{
 		for (uint16_t i = 0; i < m_Fields.size(); i++)
 		{
 			const Field& cur = m_Fields[i];
 			if (name == 0 || cur.p_Data->m_NameHash == name)
 			{
-				return cur;
+				return &cur;
 			}
 		}
-		THROW("Field not found!");
+		return nullptr;
 	}
 
 
@@ -323,7 +324,6 @@ namespace LibSWBF2::Wrappers
 		}
 
 		wrapperOut.m_Type = type; 
-		wrapperOut.p_Chunk = (ConfigChunkNC *) cfgPtr;
 		wrapperOut.m_Fields = Field::FieldsFromChunkChildren(cfgPtr);
 		wrapperOut.m_Name = nameChunk -> m_Name;
 
