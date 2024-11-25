@@ -110,17 +110,10 @@ struct fmt::formatter<LibSWBF2::Chunks::BaseChunk> {
 };
 
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define LOG_DEBUG(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Debug, __LINE__, __FILENAME__)
 #define LOG_INFO(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Info, __LINE__, __FILENAME__)
 #define LOG_WARN(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Warning, __LINE__, __FILENAME__)
 #define LOG_ERROR(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, __FILENAME__)
 
 #define THROW(...) throw LibException(fmt::format("{} - IN {} {}", fmt::format(__VA_ARGS__), __LINE__, __FILENAME__))
 #define LOG_THROW(...) throw LibException(fmt::format("{} - IN {} {}", fmt::format(__VA_ARGS__), __LINE__, __FILENAME__)); LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, __FILENAME__)
-
-#ifdef _MSC_VER
-#define STRNLEN(...) strnlen_s(__VA_ARGS__)
-#define MEMCPY(...) memcpy_s(__VA_ARGS__)
-#else
-#define STRNLEN(...) strnlen(__VA_ARGS__)
-#define MEMCPY(x,y,z,w) memcpy(x,z,w)
-#endif

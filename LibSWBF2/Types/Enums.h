@@ -20,9 +20,10 @@ namespace LibSWBF2 {
 
 	LIBSWBF2_ENUMCLASS ELogType : uint8_t
 	{
-		LIBSWBF2_ENUML(ELogType,Info) = 0,
-		LIBSWBF2_ENUML(ELogType,Warning) = 1,
-		LIBSWBF2_ENUML(ELogType,Error) = 2
+		LIBSWBF2_ENUML(ELogType,Debug) = 0,
+		LIBSWBF2_ENUML(ELogType,Info) = 1,
+		LIBSWBF2_ENUML(ELogType,Warning) = 2,
+		LIBSWBF2_ENUML(ELogType,Error) = 3
 	};
 
 	// Bitmap flags

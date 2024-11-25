@@ -9,6 +9,8 @@ namespace LibSWBF2
 	{
 		switch (type)
 		{
+			case ELogType::Debug:
+				return "Debug";
 			case ELogType::Info:
 				return "Info";
 			case ELogType::Warning:
