@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::skel
 {
     void XFRM::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void XFRM::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void XFRM::ReadFromStream(FileReader& stream)
@@ -24,7 +24,7 @@ namespace LibSWBF2::Chunks::LVL::skel
         skel* parent = dynamic_cast<skel*>(GetParent());
         if (parent == nullptr)
         {
-            THROW("Parent is NOT a skel chunk!");
+            LIBSWBF2_THROW("Parent is NOT a skel chunk!");
         }
 
         m_BoneRotations.clear();
@@ -37,7 +37,7 @@ namespace LibSWBF2::Chunks::LVL::skel
 
         if (m_BoneRotations.size() != m_BonePositions.size())
         {
-            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
+            LIBSWBF2_THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
         }
 
         BaseChunk::EnsureEnd(stream);
@@ -47,7 +47,7 @@ namespace LibSWBF2::Chunks::LVL::skel
     {
         if (m_BoneRotations.size() != m_BonePositions.size())
         {
-            THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
+            LIBSWBF2_THROW("Number of Bone Rotations {} does not match up with number of Bone Positions {}!", m_BoneRotations.size(), m_BonePositions.size());
         }
 
         std::string result;

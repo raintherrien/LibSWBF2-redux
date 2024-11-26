@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
 {
     void PTCH::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PTCH::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PTCH::ReadFromStream(FileReader& stream)
@@ -47,7 +47,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
                         m_TextureExtraBuffer = bufferChunk;
                         break;
                     default:
-                        LOG_WARN("Unknown VBUF chunk with type: {}", TerrainBufferTypeToString(bufferChunk->m_BufferType));
+                        LIBSWBF2_LOG_WARN("Unknown VBUF chunk with type: {}", TerrainBufferTypeToString(bufferChunk->m_BufferType));
                         break;
                 }
                 lastVBUFType = bufferChunk->m_BufferType;
@@ -60,7 +60,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
                 switch (lastVBUFType)
                 {
                     case ETerrainBufferType::Texture:
-                        LOG_WARN("Unexpected IBUF found right after Texture VBUF!");
+                        LIBSWBF2_LOG_WARN("Unexpected IBUF found right after Texture VBUF!");
                         break;
                     case ETerrainBufferType::Geometry:
                         m_GeometryIndexBuffer = bufferChunk;
@@ -69,7 +69,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
                         m_TextureExtraIndexBuffer = bufferChunk;
                         break;
                     default:
-                        LOG_WARN("Unknown last VBUF chunk with type: {}", TerrainBufferTypeToString(lastVBUFType));
+                        LIBSWBF2_LOG_WARN("Unknown last VBUF chunk with type: {}", TerrainBufferTypeToString(lastVBUFType));
                         break;
                 }
             }

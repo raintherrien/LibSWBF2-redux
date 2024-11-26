@@ -46,14 +46,14 @@ namespace LibSWBF2
 	{
 		if (p_MappingBase != nullptr)
 		{
-			LOG_ERROR("Already reading file: {}!", m_FileName);
+			LIBSWBF2_LOG_ERROR("Already reading file: {}!", m_FileName);
 			return false;
 		}
 
 		fs::path path = File;
 		if (!fs::exists(path) || fs::is_directory(path))
 		{
-			LOG_ERROR("File '{}' could not be found!", File);
+			LIBSWBF2_LOG_ERROR("File '{}' could not be found!", File);
 			return false;
 		}
 		   
@@ -64,7 +64,7 @@ namespace LibSWBF2
 		int fd = open(m_FileName.c_str(), O_RDONLY);
 		if (fd < 0)
 		{
-			LOG_ERROR("Failed to open file: {}!", m_FileName);
+			LIBSWBF2_LOG_ERROR("Failed to open file: {}!", m_FileName);
 			return false;
 		}
 
@@ -73,7 +73,7 @@ namespace LibSWBF2
 
 	    if (p_MappingBase == MAP_FAILED)
 		{
-			LOG_ERROR("Memory map failed for file: {}!", m_FileName);
+			LIBSWBF2_LOG_ERROR("Memory map failed for file: {}!", m_FileName);
 			return false;
 	    }	  
 #else
@@ -84,24 +84,24 @@ namespace LibSWBF2
 				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (fileHandle == INVALID_HANDLE_VALUE)
 			{
-				THROW("Failed to open file: {}!", m_FileName);
+				LIBSWBF2_THROW("Failed to open file: {}!", m_FileName);
 			}
 
 			fileMappingHandle = CreateFileMapping(fileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
 			if (fileMappingHandle == NULL)
 			{
-				THROW("Failed to create file mapping object for file: {}!", m_FileName);
+				LIBSWBF2_THROW("Failed to create file mapping object for file: {}!", m_FileName);
 			}
 
 			p_MappingBase = static_cast<uint8_t*>(MapViewOfFile(fileMappingHandle, FILE_MAP_READ, 0, 0, 0));
 			if (p_MappingBase == nullptr)
 			{
-				THROW("Memory map failed for file: {}!", m_FileName);
+				LIBSWBF2_THROW("Memory map failed for file: {}!", m_FileName);
 			}
 		}
 		catch (LibException e)
 		{
-			LOG_ERROR("{}", e.what());
+			LIBSWBF2_LOG_ERROR("{}", e.what());
 			if (fileMappingHandle != NULL) CloseHandle(fileMappingHandle);
 			if (fileHandle != INVALID_HANDLE_VALUE) CloseHandle(fileHandle);
 			
@@ -114,7 +114,7 @@ namespace LibSWBF2
 
 		p_ReaderHead = p_MappingBase;
 
-		LOG_INFO("File '{}' ({} bytes) successfully opened.", m_FileName, m_FileSize);
+		LIBSWBF2_LOG_INFO("File '{}' ({} bytes) successfully opened.", m_FileName, m_FileSize);
 		return true;
 	}
 
@@ -252,7 +252,7 @@ namespace LibSWBF2
 		{
 			if (i >= 1024)
 			{
-				LOG_WARN("Reading null terminated string exceeded buffer size!");
+				LIBSWBF2_LOG_WARN("Reading null terminated string exceeded buffer size!");
 				break;
 			}
 			current = ReadByte();
@@ -265,7 +265,7 @@ namespace LibSWBF2
 	{
 		if (p_MappingBase == nullptr)
 		{
-			THROW("Nothing has been opened yet!");
+			LIBSWBF2_THROW("Nothing has been opened yet!");
 		}
 
 #ifndef WIN32
@@ -289,7 +289,7 @@ namespace LibSWBF2
 	{
 		if (NewPosition > m_FileSize)
 		{
-			LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
+			LIBSWBF2_LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
 			return;
 		}
 
@@ -305,13 +305,13 @@ namespace LibSWBF2
 	{
 		if (p_MappingBase == nullptr) 
 		{
-			THROW("Cant read {:#x} bytes, memory mapping uninitialized!", ReadSize);
+			LIBSWBF2_THROW("Cant read {:#x} bytes, memory mapping uninitialized!", ReadSize);
 		}
 
 		size_t current = (size_t) (p_ReaderHead - p_MappingBase);
 		if (current + ReadSize > m_FileSize)
 		{
-			THROW("Reading {:#x} bytes will end up out of file!  Current position: {:#x}  FileSize: {:#x}", ReadSize, current, m_FileSize);
+			LIBSWBF2_THROW("Reading {:#x} bytes will end up out of file!  Current position: {:#x}  FileSize: {:#x}", ReadSize, current, m_FileSize);
 		}
 
 		return true;

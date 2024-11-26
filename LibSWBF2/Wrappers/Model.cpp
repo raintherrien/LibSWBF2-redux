@@ -14,12 +14,12 @@ namespace LibSWBF2::Wrappers
 	{
 		if (mainContainer == nullptr)
 		{
-			LOG_ERROR("Given mainContainer was NULL!");
+			LIBSWBF2_LOG_ERROR("Given mainContainer was NULL!");
 			return false;
 		}
 		if (modelChunk == nullptr)
 		{
-			LOG_ERROR("Given modelChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given modelChunk was NULL!");
 			return false;
 		}
 
@@ -99,7 +99,7 @@ namespace LibSWBF2::Wrappers
 		size_t equalParents = parents.size() + 1;
 		if (count != names.size() || count != equalParents || count != rotations.size() || count != positions.size())
 		{
-			LOG_ERROR(
+			LIBSWBF2_LOG_ERROR(
 				"Broken Skeleton! Sizes don't match up!\n"
 				"\tCount: {}\n"
 				"\tNames: {}\n"

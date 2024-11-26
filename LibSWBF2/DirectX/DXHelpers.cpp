@@ -80,9 +80,8 @@ namespace LibSWBF2
                 return DXGI_FORMAT_R8G8_UNORM;
             case D3DFMT_L16:
                 return DXGI_FORMAT_R16_UNORM;
-            default:
-                THROW("Unknown D3D Format: {}", (int)d3dFormat);
         }
+	LIBSWBF2_THROW("Unknown D3D Format: {}", (int)d3dFormat);
     }
 
     std::string D3DToString(D3DFORMAT d3dFormat)
@@ -177,7 +176,7 @@ namespace LibSWBF2
             case ETextureFormat::B8_G8_R8_A8:
                 return DXGI_FORMAT_B8G8R8A8_UNORM;
             default:
-                THROW("Unknown ETextureFormat Format: {}", (int)format);
+                LIBSWBF2_THROW("Unknown ETextureFormat Format: {}", (int)format);
         }
     }
 }

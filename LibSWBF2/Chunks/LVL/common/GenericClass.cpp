@@ -8,13 +8,13 @@ namespace LibSWBF2::Chunks::LVL::common
 	template<uint32_t Header>
 	void GenericClass<Header>::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
 	void GenericClass<Header>::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>

@@ -278,7 +278,7 @@ namespace LibSWBF2::Wrappers
 
 		if (!foundAnim)
 		{
-			LOG_WARN("Unable to get bones of missing animation 0x{0:x} in bank '{1}'", animCRC, p_AnimChunk->p_Name->m_Text);
+			LIBSWBF2_LOG_WARN("Unable to get bones of missing animation 0x{0:x} in bank '{1}'", animCRC, p_AnimChunk->p_Name->m_Text);
 		}
 
 		return boneHashes;

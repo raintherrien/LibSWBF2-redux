@@ -11,7 +11,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (soundClip == nullptr)
 		{
-			LOG_ERROR("Given soundClip was NULL!");
+			LIBSWBF2_LOG_ERROR("Given soundClip was NULL!");
 			return false;
 		}
 
@@ -98,7 +98,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (p_SoundClip == nullptr)
 		{
-			LOG_ERROR("Encapsuled SoundClip is NULL!");
+			LIBSWBF2_LOG_ERROR("Encapsuled SoundClip is NULL!");
 			return false;
 		}
 

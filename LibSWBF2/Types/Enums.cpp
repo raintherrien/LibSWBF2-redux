@@ -5,6 +5,37 @@
 
 namespace LibSWBF2
 {
+	std::string ConfigTypeToString(EConfigType type)
+	{
+		switch (type) {
+			case EConfigType::All:
+				return "All";
+			case EConfigType::Lighting:
+				return "Lighting";
+			case EConfigType::Effect:
+				return "Effect";
+			case EConfigType::Boundary:
+				return "Boundary";
+			case EConfigType::Skydome:
+				return "Skydome";
+			case EConfigType::Path:
+				return "Path";
+			case EConfigType::Combo:
+				return "Combo";
+			case EConfigType::Music:
+				return "Music";
+			case EConfigType::FoleyFX:
+				return "FoleyFX";
+			case EConfigType::Sound:
+				return "Sound";
+			case EConfigType::TriggerSoundRegion:
+				return "TriggerSoundRegion";
+			case EConfigType::HUD:
+				return "HUD";
+		}
+		return fmt::format("Unknown ConfigLog Type: {}", (int)type);
+	}
+
 	std::string LogTypeToString(ELogType type)
 	{
 		switch (type)
@@ -18,7 +49,7 @@ namespace LibSWBF2
 			case ELogType::Error:
 				return "Error";
 		}
-		return fmt::format("Unknown Log Type: {}", (int)type).c_str();
+		return fmt::format("Unknown Log Type: {}", (int)type);
 	}
 
 	std::string TopologyToString(ETopology topology)
@@ -38,7 +69,7 @@ namespace LibSWBF2
 			case ETopology::TriangleFan:
 				return "Triangle Strip";
 		}
-		return fmt::format("Unknown Topology: {}", (int)topology).c_str();
+		return fmt::format("Unknown Topology: {}", (int)topology);
 	}
 
 	std::string MaterialFlagsToString(EMaterialFlags flags)
@@ -116,7 +147,7 @@ namespace LibSWBF2
 		}
 
 		result += "]";
-		return result.c_str();
+		return result;
 	}
 
 	std::string ModelPurposeToString(EModelPurpose purpose)
@@ -161,7 +192,7 @@ namespace LibSWBF2
 			case EModelPurpose::Skeleton_BoneEnd:
 				return "Skeleton_BoneEnd";
 		}
-		return fmt::format("Unknown Model Purpose: {}", (int)purpose).c_str();
+		return fmt::format("Unknown Model Purpose: {}", (int)purpose);
 	}
 
 	std::string VBUFFlagsToString(EVBUFFlags flags)
@@ -217,7 +248,7 @@ namespace LibSWBF2
 		}
 		result.resize(result.size() - 2);
 		result += "]";
-		return result.c_str();
+		return result;
 	}
 
 	std::string TerrainBufferTypeToString(ETerrainBufferType type)
@@ -231,7 +262,7 @@ namespace LibSWBF2
 			case ETerrainBufferType::TextureExtra:
 				return "TextureExtra";
 			default:
-				return fmt::format("Unknown ETerrainBufferType: {}", (int)type).c_str();
+				return fmt::format("Unknown ETerrainBufferType: {}", (int)type);
 		}
 	}
 
@@ -263,7 +294,7 @@ namespace LibSWBF2
 			case EEntityClassType::ExplosionClass:
 				return "ExplosionClass";
 			default:
-				return fmt::format("Unknown EEntityClassType: {}", (int)type).c_str();
+				return fmt::format("Unknown EEntityClassType: {}", (int)type);
 		}
 	}
 
@@ -313,7 +344,7 @@ namespace LibSWBF2
         	result += "[All]";
         }
 
-		return result.c_str();
+		return result;
 	}
 
 	std::string CollisionPrimitiveTypeToString(ECollisionPrimitiveType type)
@@ -338,7 +369,7 @@ namespace LibSWBF2
 			return "Empty";
 		}
 
-		return fmt::format("Unknown Collision Primitive Type: {}", (uint32_t)type).c_str();
+		return fmt::format("Unknown Collision Primitive Type: {}", (uint32_t)type);
 	}
 
 	std::string WorldAnimKeyTransitionTypeToString(EWorldAnimKeyTransitionType type)
@@ -352,7 +383,7 @@ namespace LibSWBF2
 			case EWorldAnimKeyTransitionType::Spline:
 				return "Spline";
 			default:
-				return fmt::format("Unknown EWorldAnimKeyTransitionType: {}", (uint8_t)type).c_str();
+				return fmt::format("Unknown EWorldAnimKeyTransitionType: {}", (uint8_t)type);
 		}
 	}
 
@@ -373,7 +404,7 @@ namespace LibSWBF2
 			case ESoundFormat::Unity:
 				return "Unity";
 			default:
-				return fmt::format("Unknown ESoundFormat: {}", (uint32_t)format).c_str();
+				return fmt::format("Unknown ESoundFormat: {}", (uint32_t)format);
 		}	
 	}
 
@@ -412,7 +443,7 @@ namespace LibSWBF2
 		}
 
 		result += "]";
-		return result.c_str();
+		return result;
 	}
 
 	std::string LIBSWBF2_API ArcAttributesToString(EArcAttributeFlags flags)
@@ -438,7 +469,7 @@ namespace LibSWBF2
 		}
 
 		result += "]";
-		return result.c_str();
+		return result;
 	}
 
 	

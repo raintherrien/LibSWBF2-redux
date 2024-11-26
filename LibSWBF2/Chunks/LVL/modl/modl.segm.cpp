@@ -14,12 +14,12 @@ namespace LibSWBF2::Chunks::LVL::modl
 {
     void segm::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void segm::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void segm::ReadFromStream(FileReader& stream)
@@ -83,7 +83,7 @@ namespace LibSWBF2::Chunks::LVL::modl
         if (p_Skin != nullptr && p_BoneMap == nullptr)
         {
             // does this ever exist?
-            LOG_WARN("Found model segment (segm) with SKIN, but without BMAP! Chunk pos: {:#x}", GetPosition());
+            LIBSWBF2_LOG_WARN("Found model segment (segm) with SKIN, but without BMAP! Chunk pos: {:#x}", GetPosition());
         }
 
         BaseChunk::EnsureEnd(stream);

@@ -11,13 +11,13 @@ namespace LibSWBF2::Chunks::LVL::config
 	template<uint32_t Header>
 	void ConfigChunk<Header>::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
 	void ConfigChunk<Header>::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
@@ -46,7 +46,7 @@ namespace LibSWBF2::Chunks::LVL::config
 			}
 			else 
 			{
-				LOG_WARN("Irregular config chunk child found ({0:x})!", Header);
+				LIBSWBF2_LOG_WARN("Irregular config chunk child found ({0:x})!", Header);
 				BaseChunk::EnsureEnd(stream);
 				//GenericChunk<Header>::READ_CHILD_GENERIC(stream);
 			}

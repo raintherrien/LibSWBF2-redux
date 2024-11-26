@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
 {
     void LTEX::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void LTEX::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void LTEX::ReadFromStream(FileReader& stream)
@@ -24,14 +24,14 @@ namespace LibSWBF2::Chunks::LVL::terrain
         tern* parent = dynamic_cast<tern*>(GetParent());
         if (parent == nullptr)
         {
-            LOG_ERROR("Parent of LTEX is not a tern chunk!");
+            LIBSWBF2_LOG_ERROR("Parent of LTEX is not a tern chunk!");
             return;
         }
 
         INFO* info = parent->p_Info;
         if (info == nullptr)
         {
-            LOG_ERROR("Cannot read texture layers, terrain has no Info chunk!");
+            LIBSWBF2_LOG_ERROR("Cannot read texture layers, terrain has no Info chunk!");
             return;
         }
 

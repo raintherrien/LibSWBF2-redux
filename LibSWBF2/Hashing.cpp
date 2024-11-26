@@ -116,7 +116,7 @@ namespace LibSWBF2
 	{
 		if (str == nullptr)
 		{
-			LOG_ERROR("Given string pointer was NULL!");
+			LIBSWBF2_LOG_ERROR("Given string pointer was NULL!");
 			return 0;
 		}
 

@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::coll
 {
 	void POSI::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void POSI::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void POSI::ReadFromStream(FileReader& stream)

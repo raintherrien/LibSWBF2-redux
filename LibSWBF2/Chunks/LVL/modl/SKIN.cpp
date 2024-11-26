@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::modl
 {
     void SKIN::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SKIN::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SKIN::ReadFromStream(FileReader& stream)
@@ -32,7 +32,7 @@ namespace LibSWBF2::Chunks::LVL::modl
         }
         else
         {
-            LOG_WARN("Ignore yet unsupported SKIN type {}!", m_Type);
+            LIBSWBF2_LOG_WARN("Ignore yet unsupported SKIN type {}!", m_Type);
         }
 
         BaseChunk::EnsureEnd(stream);

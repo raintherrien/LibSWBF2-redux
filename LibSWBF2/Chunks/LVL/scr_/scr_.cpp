@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::script
 {
 	void scr_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void scr_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void scr_::ReadFromStream(FileReader& stream)

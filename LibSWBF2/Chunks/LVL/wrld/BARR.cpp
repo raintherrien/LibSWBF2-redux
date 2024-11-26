@@ -13,12 +13,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void BARR_FLAG::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR_FLAG::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR_FLAG::ReadFromStream(FileReader& stream)
@@ -39,12 +39,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void BARR_INFO::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR_INFO::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR_INFO::ReadFromStream(FileReader& stream)
@@ -92,12 +92,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void BARR::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BARR::ReadFromStream(FileReader& stream)

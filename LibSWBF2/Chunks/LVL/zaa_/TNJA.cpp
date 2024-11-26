@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void TNJA::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TNJA::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TNJA::ReadFromStream(FileReader& stream)

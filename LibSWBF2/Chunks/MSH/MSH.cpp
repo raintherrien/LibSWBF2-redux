@@ -39,7 +39,7 @@ namespace LibSWBF2::Chunks::MSH
 
 		if (m_Header != "HEDR"_h)
 		{
-			THROW("This is not a valid MSH file!");
+			LIBSWBF2_THROW("This is not a valid MSH file!");
 		}
 
 		while (ThereIsAnother(stream))
@@ -72,7 +72,7 @@ namespace LibSWBF2::Chunks::MSH
 			else if (head == "CL1L"_h)
 			{
 				// EoF reached;
-				LOG_INFO("Reached end of file!");
+				LIBSWBF2_LOG_INFO("Reached end of file!");
 				return;
 			}
 			else

@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::sound
 {
 	void SoundBankList::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void SoundBankList::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void SoundBankList::ReadFromStream(FileReader& stream)

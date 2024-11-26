@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::gmod
 {
     void gmod::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void gmod::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void gmod::ReadFromStream(FileReader& stream)

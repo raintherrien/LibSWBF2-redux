@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void BIN_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void BIN_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void BIN_::ReadFromStream(FileReader& stream)
@@ -32,7 +32,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 		if (m_DebugLevel != 0 || m_Version != 8)
 		{
-			LOG_ERROR("Encountered zaa_(BIN_) chunk with unusual version ({}) or debug level ({})...", m_Version, m_DebugLevel);
+			LIBSWBF2_LOG_ERROR("Encountered zaa_(BIN_) chunk with unusual version ({}) or debug level ({})...", m_Version, m_DebugLevel);
 
 			while (ThereIsAnother(stream))
 			{

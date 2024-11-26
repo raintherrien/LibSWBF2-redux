@@ -8,7 +8,7 @@
 
 namespace DXTexCrossPlat {
 
-#define VALIDATE_DIMS(w,h) m_IsValid = true; uint32_t m=w*h; if (m == 0 || (m & (m-1)) != 0){ LOG_ERROR("Texture dims ({0},{1}) must both be powers of 2 and nonzero",w,h); m_IsValid = false; }
+#define VALIDATE_DIMS(w,h) m_IsValid = true; uint32_t m=w*h; if (m == 0 || (m & (m-1)) != 0){ LIBSWBF2_LOG_ERROR("Texture dims ({0},{1}) must both be powers of 2 and nonzero",w,h); m_IsValid = false; }
 
 
 CrossPlatImage::CrossPlatImage(uint16_t w, uint16_t h,
@@ -134,7 +134,7 @@ bool CrossPlatImage::ToRGBA(){
       lumToRGBA(width, height, p_Data, sink, format);
       break;
     default:
-      LOG_ERROR("(Shouldn't happen...) Cannot convert {} to R8_G8_B8_A8!", LibSWBF2::D3DToString(format));
+      LIBSWBF2_LOG_ERROR("(Shouldn't happen...) Cannot convert {} to R8_G8_B8_A8!", LibSWBF2::D3DToString(format));
       delete[] sink;
       return false;
   }

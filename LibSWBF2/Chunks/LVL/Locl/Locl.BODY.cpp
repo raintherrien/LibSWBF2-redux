@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::Localization
 {
     void BODY::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BODY::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BODY::ReadFromStream(FileReader& stream)

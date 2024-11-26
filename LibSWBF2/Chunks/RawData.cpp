@@ -29,13 +29,13 @@ namespace LibSWBF2::Chunks
 	template<uint32_t Header>
 	void RawData<Header>::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
 	void RawData<Header>::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
@@ -49,7 +49,7 @@ namespace LibSWBF2::Chunks
 		
 		if (!stream.ReadBytes(p_Data, dataSize))
 		{
-			LOG_WARN("Could not read binary data of size {:#x} at position {:#x}", dataSize, stream.GetPosition());
+			LIBSWBF2_LOG_WARN("Could not read binary data of size {:#x} at position {:#x}", dataSize, stream.GetPosition());
 			delete[] p_Data;
 			p_Data = nullptr;
 		}

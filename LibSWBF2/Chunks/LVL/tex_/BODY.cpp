@@ -16,12 +16,12 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
 
     void BODY::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BODY::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void BODY::ReadFromStream(FileReader& stream)
@@ -35,7 +35,7 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
         const FMT_* fmt = dynamic_cast<const FMT_*>(lvl->GetParent()->GetParent());
         if (fmt == nullptr)
         {
-            LOG_ERROR("Could not grab FMT parent!");
+            LIBSWBF2_LOG_ERROR("Could not grab FMT parent!");
             BaseChunk::EnsureEnd(stream);
             return;
         }
@@ -67,7 +67,7 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
         if (dataSize > width * height * 4)
         {
             stream.SkipBytes(dataSize);
-            LOG_WARN("Suspicious image size: {}! Skipping image!", dataSize);
+            LIBSWBF2_LOG_WARN("Suspicious image size: {}! Skipping image!", dataSize);
             BaseChunk::EnsureEnd(stream);
             return;
         }
@@ -78,7 +78,7 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
 
         if (imageBufferPtr == nullptr || !stream.ReadBytes(imageBufferPtr, dataSize))
         {
-            LOG_ERROR("Reading image data of size '{}' failed!", dataSize);
+            LIBSWBF2_LOG_ERROR("Reading image data of size '{}' failed!", dataSize);
             BaseChunk::EnsureEnd(stream);
             return;
         }
@@ -91,7 +91,7 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
     {
         if (p_Image == nullptr)
         {
-            LOG_WARN("No image!");
+            LIBSWBF2_LOG_WARN("No image!");
             width = 0;
             height = 0;
             data = nullptr;

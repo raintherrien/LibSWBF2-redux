@@ -31,7 +31,7 @@ namespace LibSWBF2
 		{
 			if (!LogFile)
 			{
-				LOG_ERROR("File '{}' could not be found / created!", File);
+				LIBSWBF2_LOG_ERROR("File '{}' could not be found / created!", File);
 			}
 			m_FileName = "";
 			m_Writer.close();
@@ -42,7 +42,7 @@ namespace LibSWBF2
 
 		if (!LogFile)
 		{
-			LOG_INFO("File '{}' successfully created/opened.", m_FileName);
+			LIBSWBF2_LOG_INFO("File '{}' successfully created/opened.", m_FileName);
 		}
 		return true;
 	}
@@ -139,7 +139,7 @@ namespace LibSWBF2
 		{
 			if (value.size() > fixedSize)
 			{
-				LOG_WARN("Actual string size ({}) is greater than fixed size ({}) !", value.size(), fixedSize);
+				LIBSWBF2_LOG_WARN("Actual string size ({}) is greater than fixed size ({}) !", value.size(), fixedSize);
 			}
 
 			m_Writer.write(value.c_str(), fixedSize);
@@ -160,7 +160,7 @@ namespace LibSWBF2
 	{
 		if (!m_Writer.is_open())
 		{
-			LOG_WARN("Nothing has been opened yet!");
+			LIBSWBF2_LOG_WARN("Nothing has been opened yet!");
 			return;
 		}
 
@@ -172,7 +172,7 @@ namespace LibSWBF2
 	{
 		if (!m_Writer.is_open())
 		{
-			THROW("Error during write process! File '{}' is not open!", m_FileName);
+			LIBSWBF2_THROW("Error during write process! File '{}' is not open!", m_FileName);
 		}
 
 		if (!m_Writer.good())
@@ -190,7 +190,7 @@ namespace LibSWBF2
 			{
 				reason += " Writing Error on I/O operation!";
 			}
-			THROW("Error during write process in '{}'! Reason: {}", m_FileName, reason);
+			LIBSWBF2_THROW("Error during write process in '{}'! Reason: {}", m_FileName, reason);
 		}
 
 		return true;

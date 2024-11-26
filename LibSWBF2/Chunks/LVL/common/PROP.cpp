@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::common
 {
     void PROP::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PROP::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PROP::ReadFromStream(FileReader& stream)

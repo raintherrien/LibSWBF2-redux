@@ -3,23 +3,17 @@
 
 namespace LibSWBF2::Logging
 {
-	LoggerEntry::LoggerEntry(const char* message, const ELogType level, const uint32_t line, const char* file)
+	LoggerEntry::LoggerEntry(const char *message, ELogType level, unsigned long line, const char *file, const char *func)
 	{
 		this->m_Message = message;
 		this->m_Level = level;
 		this->m_Line = line;
 		this->m_File = file;
+		this->m_Func = func;
 	}
 
 	std::string LoggerEntry::ToString() const
 	{
-		if (m_Level == ELogType::Info)
-		{
-			return "[" + LogTypeToString(m_Level) + "] " + m_Message;
-		}
-		else
-		{
-			return "[" + LogTypeToString(m_Level) + "] " + m_Message + " - IN " + m_File + ":" + std::to_string(m_Line).c_str();
-		}
+		return "[" + LogTypeToString(m_Level) + "] " + m_File + ":" + std::to_string(m_Line) + ":" + m_Func + " " + m_Message;
 	}
 }

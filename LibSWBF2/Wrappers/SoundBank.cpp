@@ -17,7 +17,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (bankChunk == nullptr)
 		{
-			LOG_WARN("Given SampleBank chunk is NULL!");
+			LIBSWBF2_LOG_WARN("Given SampleBank chunk is NULL!");
 			return false;
 		}
 
@@ -81,7 +81,7 @@ namespace LibSWBF2::Wrappers
 			return &m_Sounds[it->second];
 		}
 
-		//LOG_WARN("Could not find Sound '{}'!", soundHash);
+		LIBSWBF2_LOG_INFO("Could not find Sound '{}'!", soundHash);
 		return nullptr;
 	}
 }

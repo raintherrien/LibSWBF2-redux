@@ -129,7 +129,7 @@ namespace LibSWBF2
 	{
 		if (index >= m_Levels.size())
 		{
-			LOG_WARN("Given Level index '{}' is illegal!", index);
+			LIBSWBF2_LOG_WARN("Given Level index '{}' is illegal!", index);
 			return nullptr;
 		}
 
@@ -402,7 +402,7 @@ namespace LibSWBF2
 		const std::vector<const Localization*>* locals = FindLocalizations(language);
 		if (locals == nullptr)
 		{
-			LOG_WARN("Cannot find language '{}'!", language);
+			LIBSWBF2_LOG_WARN("Cannot find language '{}'!", language);
 			return false;
 		}
 		for (size_t i = 0; i < locals->size(); ++i)

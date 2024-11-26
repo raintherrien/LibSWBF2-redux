@@ -9,12 +9,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void zaf_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void zaf_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void zaf_::ReadFromStream(FileReader& stream)
@@ -28,9 +28,9 @@ namespace LibSWBF2::Chunks::LVL::animation
 		{
 			READ_CHILD(stream, p_Bin);
 		}
-		catch (const LibException &le)
+		catch (const LibSWBF2Exception &le)
 		{
-			LOG_ERROR("{0}", le.what());
+			LIBSWBF2_LOG_ERROR("{0}", le.what());
 			p_Bin = nullptr;
 		}
 

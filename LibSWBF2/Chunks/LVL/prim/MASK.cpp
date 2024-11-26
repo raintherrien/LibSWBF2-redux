@@ -11,12 +11,12 @@ namespace LibSWBF2::Chunks::LVL::prim
 {
     void MASK::RefreshSize()
     {
-    	THROW("Not implemented!");
+    	LIBSWBF2_THROW("Not implemented!");
     }
 
     void MASK::WriteToStream(FileWriter& stream)
     {
-    	THROW("Not implemented!");
+    	LIBSWBF2_THROW("Not implemented!");
     }
 
     void MASK::ReadFromStream(FileReader& stream)

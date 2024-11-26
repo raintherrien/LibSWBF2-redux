@@ -61,7 +61,7 @@ namespace LibSWBF2::Wrappers
 
 		if (p_lvl == nullptr)
 		{
-			LOG_ERROR("p_lvl of Level was NULL!");
+			LIBSWBF2_LOG_ERROR("p_lvl of Level was NULL!");
 		}
 		else
 		{
@@ -249,7 +249,7 @@ namespace LibSWBF2::Wrappers
 				}
 				else 
 				{
-					LOG_ERROR("CollisionMesh references missing model {}", collMesh.GetName());
+					LIBSWBF2_LOG_ERROR("CollisionMesh references missing model {}", collMesh.GetName());
 				}
 			}
 		}
@@ -286,7 +286,7 @@ namespace LibSWBF2::Wrappers
 			} 
 			else
 			{
-				LOG_ERROR("CollisionPrimitive references missing model {}", modelName);
+				LIBSWBF2_LOG_ERROR("CollisionPrimitive references missing model {}", modelName);
 			}
 		}
 
@@ -454,7 +454,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (lvl == nullptr)
 		{
-			LOG_WARN("Given LVL chunk is NULL!");
+			LIBSWBF2_LOG_WARN("Given LVL chunk is NULL!");
 			return nullptr;
 		}
 
@@ -481,7 +481,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (level == nullptr)
 		{
-			LOG_ERROR("Given level was NULL!");
+			LIBSWBF2_LOG_ERROR("Given level was NULL!");
 			return;
 		}
 

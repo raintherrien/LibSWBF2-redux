@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::coll
 {
 	void TREE_NODE::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TREE_NODE::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TREE_NODE::ReadFromStream(FileReader& stream)

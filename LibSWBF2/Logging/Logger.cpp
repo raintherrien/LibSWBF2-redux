@@ -28,13 +28,18 @@ namespace LibSWBF2::Logging
 		GetInstance().m_LogfileLevel = LogfileLevel;
 	}
 
-	void Logger::Log(const std::string &message, const ELogType level, const unsigned long line, const char* file) noexcept
-	{
+	void Logger::Log(
+		const std::string &message,
+		ELogType level,
+		unsigned long line,
+		const char *file,
+		const char *func
+	) noexcept {
 		try {
 			Logger &instance = GetInstance();
 			if (message.length() > 0 && level >= instance.m_LogfileLevel)
 			{
-				LoggerEntry entry(message.c_str(), level, line, file);
+				LoggerEntry entry(message.c_str(), level, line, file, func);
 				instance.m_Writer->WriteLine(entry.ToString());
 			}
 		} catch (...) {

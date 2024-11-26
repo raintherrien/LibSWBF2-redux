@@ -46,13 +46,13 @@ namespace LibSWBF2::Chunks
 		m_Header = stream.ReadChunkHeader(false);
 		m_Size = stream.ReadChunkSize();
 
-		LOG_INFO("Position: {}", m_ChunkPosition);
-		LOG_INFO("Header: {}", m_Header);
-		LOG_INFO("Size: {:#x}", m_Size);
+		LIBSWBF2_LOG_DEBUG("Position: {}", m_ChunkPosition);
+		LIBSWBF2_LOG_DEBUG("Header: {}", m_Header);
+		LIBSWBF2_LOG_DEBUG("Size: {:#x}", m_Size);
 
 		if (stream.GetPosition() + m_Size > 8 + stream.GetFileSize())
 		{
-			THROW("Chunk is too big and will end up out of file! Chunk: '{}' Size: {:#x} At Position: {:#x} with File Size of: {:#x} (File: {})", m_Header, m_Size, stream.GetPosition() - 8, stream.GetFileSize(), stream.GetFileName());
+			LIBSWBF2_THROW("Chunk is too big and will end up out of file! Chunk: '{}' Size: {:#x} At Position: {:#x} with File Size of: {:#x} (File: {})", m_Header, m_Size, stream.GetPosition() - 8, stream.GetFileSize(), stream.GetFileName());
 		}
 	}
 
@@ -66,16 +66,16 @@ namespace LibSWBF2::Chunks
 				WriteToStream(writer);
 				writer.Close();
 			}
-			catch (const LibException &e)
+			catch (const LibSWBF2Exception &e)
 			{
-				LOG_ERROR("{}", e.what());
-				LOG_ERROR("Aborting write process...");
+				LIBSWBF2_LOG_ERROR("{}", e.what());
+				LIBSWBF2_LOG_ERROR("Aborting write process...");
 				return false;
 			}
-			LOG_INFO("Successfully finished writing process!");
+			LIBSWBF2_LOG_INFO("Successfully finished writing process!");
 			return true;
 		}
-		LOG_WARN("Could not write to File {}!", Path);
+		LIBSWBF2_LOG_WARN("Could not write to File {}!", Path);
 		return false;
 	}
 
@@ -92,19 +92,19 @@ namespace LibSWBF2::Chunks
 			{
 				ReadFromStream(reader);
 				reader.Close();
-				LOG_INFO("Successfully finished reading process!");
+				LIBSWBF2_LOG_INFO("Successfully finished reading process!");
 				bSuccess = true;
 			}
-			catch (const LibException &e)
+			catch (const LibSWBF2Exception &e)
 			{
-				LOG_ERROR("{}", e.what());
-				LOG_ERROR("Aborting read process...");
+				LIBSWBF2_LOG_ERROR("{}", e.what());
+				LIBSWBF2_LOG_ERROR("Aborting read process...");
 				reader.Close();
 			}
 		}
 		else
 		{
-			LOG_WARN("Could not open File {}! Non existent?", Path);
+			LIBSWBF2_LOG_WARN("Could not open File {}! Non existent?", Path);
 		}
 		{
 			m_ThreadHandling->m_CurrentReader = nullptr;
@@ -158,7 +158,7 @@ namespace LibSWBF2::Chunks
 	{
 		if (stream.GetPosition() == stream.GetFileSize())
 		{
-			LOG_WARN("Cannot skip chunk from end position: {:#x}", stream.GetPosition());
+			LIBSWBF2_LOG_WARN("Cannot skip chunk from end position: {:#x}", stream.GetPosition());
 			return false;
 		}
 
@@ -167,7 +167,7 @@ namespace LibSWBF2::Chunks
 
 		if (printWarn)
 		{
-			LOG_WARN("[{}] Unexpected Chunk found: {} at position {:#x}. Skipping {:#x} Bytes...", m_Header, head, stream.GetPosition(), alignedSize);
+			LIBSWBF2_LOG_WARN("[{}] Unexpected Chunk found: {} at position {:#x}. Skipping {:#x} Bytes...", m_Header, head, stream.GetPosition(), alignedSize);
 		}
 
 		return stream.SkipBytes(alignedSize);
@@ -182,13 +182,13 @@ namespace LibSWBF2::Chunks
 		size_t endPos = GetDataPosition() + GetAlignedSize();
 		if (currPos < endPos)
 		{
-			//LOG_WARN("[{}] We did not end up at the Chunks end position ({:#x})! Instead we are here:{:#x}! Moving Position to Chunks end position...", m_Header, endPos, stream.GetPosition());
+			//LIBSWBF2_LOG_WARN("[{}] We did not end up at the Chunks end position ({:#x})! Instead we are here:{:#x}! Moving Position to Chunks end position...", m_Header, endPos, stream.GetPosition());
 			stream.SetPosition(endPos >= stream.GetFileSize() ? stream.GetFileSize() - 1 : endPos);
 		}
 		else if (currPos > endPos)
 		{
 			// This should NEVER happen!
-			LOG_WARN("[{}] Ended up outside of current chunk (end is at: {:#x}, we are at: {:#x}! Too many bytes read: {} (File: {})", m_Header, endPos, currPos, currPos - endPos, stream.GetFileName());
+			LIBSWBF2_LOG_WARN("[{}] Ended up outside of current chunk (end is at: {:#x}, we are at: {:#x}! Too many bytes read: {} (File: {})", m_Header, endPos, currPos, currPos - endPos, stream.GetFileName());
 			ForwardToNextHeader(stream);
 		}
 	}
@@ -202,7 +202,7 @@ namespace LibSWBF2::Chunks
 			stream.SetPosition(stream.GetPosition() + 1);
 		}
 		size_t skipped = stream.GetPosition() - lastPos;
-		LOG_WARN("[{}] Forwarded to next header at {:#x}, skipped {} bytes!", m_Header, stream.GetPosition(), skipped);
+		LIBSWBF2_LOG_WARN("[{}] Forwarded to next header at {:#x}, skipped {} bytes!", m_Header, stream.GetPosition(), skipped);
 	}
 
 	float_t BaseChunk::GetReadingProgress()

@@ -50,7 +50,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (loclChunk == nullptr)
 		{
-			LOG_ERROR("Given loclChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given loclChunk was NULL!");
 			return false;
 		}
 
@@ -76,7 +76,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (path.empty())
 		{
-			LOG_WARN("Given localize path was EMPTY!");
+			LIBSWBF2_LOG_WARN("Given localize path was EMPTY!");
 			return false;
 		}
 

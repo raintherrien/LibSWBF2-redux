@@ -13,12 +13,12 @@ namespace LibSWBF2::Chunks::LVL::config
 {
     void SCOP::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SCOP::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SCOP::ReadFromStream(FileReader& stream)

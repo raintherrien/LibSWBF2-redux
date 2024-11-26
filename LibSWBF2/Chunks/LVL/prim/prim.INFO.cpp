@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::prim
 {
 	void INFO_prim::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO_prim::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO_prim::ReadFromStream(FileReader& stream)

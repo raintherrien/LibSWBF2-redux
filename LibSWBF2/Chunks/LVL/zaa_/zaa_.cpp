@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void zaa_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void zaa_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void zaa_::ReadFromStream(FileReader& stream)
@@ -27,10 +27,10 @@ namespace LibSWBF2::Chunks::LVL::animation
 		{
 			READ_CHILD(stream, p_Bin);
 		}
-		catch (const LibException &le)
+		catch (const LibSWBF2Exception &le)
 		{
 
-			LOG_ERROR("{}", le.what());
+			LIBSWBF2_LOG_ERROR("{}", le.what());
 			p_Bin = nullptr;
 		}
 
@@ -42,6 +42,6 @@ namespace LibSWBF2::Chunks::LVL::animation
 		return fmt::format(
 			"Name: {}\n\n",
 			p_Name->m_Text
-		).c_str();
+		);
 	}
 }

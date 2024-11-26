@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::skel
 {
     void skel::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void skel::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void skel::ReadFromStream(FileReader& stream)
@@ -52,7 +52,7 @@ namespace LibSWBF2::Chunks::LVL::skel
             p_Info->m_BoneCount != p_BoneTransforms->m_BoneRotations.size() || 
             p_Info->m_BoneCount != p_BoneTransforms->m_BonePositions.size())
         {
-            LOG_WARN("Skeleton buffer sizes don't match up! Info Bone Count: {}, Bone Names: {}, Bone Parents (-1): {}, Bone Rotations: {}, Bone Positions: {} - Chunk Position: {}",
+            LIBSWBF2_LOG_WARN("Skeleton buffer sizes don't match up! Info Bone Count: {}, Bone Names: {}, Bone Parents (-1): {}, Bone Rotations: {}, Bone Positions: {} - Chunk Position: {}",
                 p_Info->m_BoneCount,
                 p_BoneNames->m_Texts.size(),
                 p_BoneParents->m_Texts.size(),

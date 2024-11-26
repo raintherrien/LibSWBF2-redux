@@ -27,7 +27,7 @@ namespace LibSWBF2
 
 		if (!success)
 		{
-			LOG_WARN("File '{}' could not be found / opened!", File);
+			LIBSWBF2_LOG_WARN("File '{}' could not be found / opened!", File);
 			m_Reader.close();
 			return false;
 		}
@@ -36,7 +36,7 @@ namespace LibSWBF2
 		m_FileSize = (size_t)m_Reader.tellg();
 		m_Reader.seekg(0);
 
-		LOG_INFO("File '{}' ({} bytes) successfully opened.", m_FileName, m_FileSize);
+		LIBSWBF2_LOG_INFO("File '{}' ({} bytes) successfully opened.", m_FileName, m_FileSize);
 		return true;
 	}
 
@@ -161,7 +161,7 @@ namespace LibSWBF2
 		{
 			if (i >= 1024)
 			{
-				LOG_WARN("Reading null terminated string exceeded buffer size!");
+				LIBSWBF2_LOG_WARN("Reading null terminated string exceeded buffer size!");
 				break;
 			}
 			current = ReadByte();
@@ -174,7 +174,7 @@ namespace LibSWBF2
 	{
 		if (!m_Reader.is_open())
 		{
-			THROW("Nothing has been opened yet!");
+			LIBSWBF2_THROW("Nothing has been opened yet!");
 		}
 
 		m_FileName = "";
@@ -190,7 +190,7 @@ namespace LibSWBF2
 	{
 		if (NewPosition > m_FileSize)
 		{
-			LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
+			LIBSWBF2_LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
 			return;
 		}
 
@@ -206,7 +206,7 @@ namespace LibSWBF2
 	{
 		if (!m_Reader.is_open())
 		{
-			THROW("Error during read process! File '{}' is not open!", m_FileName);
+			LIBSWBF2_THROW("Error during read process! File '{}' is not open!", m_FileName);
 		}
 
 		if (!m_Reader.good())
@@ -224,13 +224,13 @@ namespace LibSWBF2
 			{
 				reason += " Reading Error on I/O operation!";
 			}
-			THROW("Error during read process in '{}'! Reason: {}", m_FileName, reason);
+			LIBSWBF2_THROW("Error during read process in '{}'! Reason: {}", m_FileName, reason);
 		}
 
 		size_t current = (size_t)m_Reader.tellg();
 		if (current + ReadSize > m_FileSize)
 		{
-			THROW("Reading {:#x} bytes will end up out of file!  Current position: {:#x}  FileSize: {:#x}", ReadSize, current, m_FileSize);
+			LIBSWBF2_THROW("Reading {:#x} bytes will end up out of file!  Current position: {:#x}  FileSize: {:#x}", ReadSize, current, m_FileSize);
 		}
 
 		return true;

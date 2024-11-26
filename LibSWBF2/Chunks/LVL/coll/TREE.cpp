@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::coll
 {
 	void TREE::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TREE::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TREE::ReadFromStream(FileReader& stream)
@@ -48,7 +48,7 @@ namespace LibSWBF2::Chunks::LVL::coll
         	}
         	else
         	{
-                LOG_WARN("Irregular TREE child: {}", nextHeader.ToString());
+                LIBSWBF2_LOG_WARN("Irregular TREE child: {}", nextHeader.ToString());
         		READ_CHILD_GENERIC(stream);
         	}
         }

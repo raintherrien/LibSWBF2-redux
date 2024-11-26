@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 {
     void SIZE::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SIZE::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void SIZE::ReadFromStream(FileReader& stream)

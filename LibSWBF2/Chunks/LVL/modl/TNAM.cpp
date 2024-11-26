@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::modl
 {
     void TNAM::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void TNAM::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void TNAM::ReadFromStream(FileReader& stream)

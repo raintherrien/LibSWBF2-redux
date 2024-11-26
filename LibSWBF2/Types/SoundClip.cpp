@@ -81,7 +81,7 @@ namespace LibSWBF2::Types
 
 		if (m_Alias !=0 && (m_DataLength == 0 || m_SampleCount == 0))
 		{
-			LOG_WARN("Found empty sound clip? Data length: {:#x}, Sample count: {} at pos: {:#x} (file: {})", m_DataLength, m_SampleCount, m_HeaderPosition, stream.GetFileName());
+			LIBSWBF2_LOG_WARN("Found empty sound clip? Data length: {:#x}, Sample count: {} at pos: {:#x} (file: {})", m_DataLength, m_SampleCount, m_HeaderPosition, stream.GetFileName());
 		}
 
 		return stream.GetPosition() - m_HeaderPosition;
@@ -91,7 +91,7 @@ namespace LibSWBF2::Types
 	{
 		if (m_DataLength == 0)
 		{
-			LOG_ERROR("Sound Clip ({:#x}) data length is 0! Forgot to call 'ReadHeaderFromStream' first? (File: {})", m_NameHash, stream.GetFileName());
+			LIBSWBF2_LOG_ERROR("Sound Clip ({:#x}) data length is 0! Forgot to call 'ReadHeaderFromStream' first? (File: {})", m_NameHash, stream.GetFileName());
 			return;
 		}
 

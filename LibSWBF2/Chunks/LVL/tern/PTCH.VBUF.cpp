@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
 {
     void VBUF::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void VBUF::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void VBUF::ReadFromStream(FileReader& stream)
@@ -27,17 +27,17 @@ namespace LibSWBF2::Chunks::LVL::terrain
         m_ElementSize = stream.ReadUInt32();
         m_BufferType = (ETerrainBufferType)stream.ReadUInt32();
 
-        //LOG_WARN("On vbuf: numElements: {}, elementSize: {}", m_ElementCount, m_ElementSize);
+        //LIBSWBF2_LOG_WARN("On vbuf: numElements: {}, elementSize: {}", m_ElementCount, m_ElementSize);
 
         if (m_BufferType == ETerrainBufferType::Geometry)
         {
             //if (m_ElementCount != 81)
             //{
-            //    LOG_WARN("Invalid geometry VBUF terrain chunk found with ElementCount: {}", m_ElementCount);
+            //    LIBSWBF2_LOG_WARN("Invalid geometry VBUF terrain chunk found with ElementCount: {}", m_ElementCount);
             //}
             //else if (m_ElementSize != 28 && m_ElementSize != 16)
             //{
-            //    LOG_WARN("Invalid geometry VBUF terrain chunk found with ElementSize: {}", m_ElementSize);
+            //    LIBSWBF2_LOG_WARN("Invalid geometry VBUF terrain chunk found with ElementSize: {}", m_ElementSize);
             //}
             //else
             //{
@@ -81,7 +81,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
         }
         else
         {
-            LOG_INFO("Skip yet unsupported Terrain Buffer Type: {}", TerrainBufferTypeToString(m_BufferType));
+            LIBSWBF2_LOG_INFO("Skip yet unsupported Terrain Buffer Type: {}", TerrainBufferTypeToString(m_BufferType));
         }
 
         BaseChunk::EnsureEnd(stream);

@@ -74,7 +74,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (classChunk == nullptr)
 		{
-			LOG_ERROR("Given classChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given classChunk was NULL!");
 			return false;
 		}
 
@@ -99,7 +99,7 @@ namespace LibSWBF2::Wrappers
 		}
 		else
 		{
-			LOG_ERROR("Invalid EntityClass Type: {}", typeid(classChunk).name());
+			LIBSWBF2_LOG_ERROR("Invalid EntityClass Type: {}", typeid(classChunk).name());
 			return false;
 		}
 

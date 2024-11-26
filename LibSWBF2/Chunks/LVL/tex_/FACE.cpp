@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::texture
 {
 	void FACE::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void FACE::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void FACE::ReadFromStream(FileReader& stream)

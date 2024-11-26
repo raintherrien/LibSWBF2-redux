@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 {
     void anmg::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void anmg::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void anmg::ReadFromStream(FileReader& stream)

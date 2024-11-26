@@ -9,12 +9,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void ZAF_BIN_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void ZAF_BIN_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void ZAF_BIN_::ReadFromStream(FileReader& stream)
@@ -32,7 +32,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 				m_Version = stream.ReadUInt32();
 				if (m_Version != 8)
 				{
-					LOG_WARN("Encountered zaf_(ZAF_BIN_) chunk with unusual (not 8) version: {}...", m_Version);
+					LIBSWBF2_LOG_WARN("Encountered zaf_(ZAF_BIN_) chunk with unusual (not 8) version: {}...", m_Version);
 				}
 			}
 			else if (next == "LEKS"_h)

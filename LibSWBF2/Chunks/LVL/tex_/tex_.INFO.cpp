@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::texture
 {
 	void INFO::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO::ReadFromStream(FileReader& stream)

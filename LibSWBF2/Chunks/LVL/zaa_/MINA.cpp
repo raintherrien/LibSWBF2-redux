@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void MINA::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void MINA::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void MINA::ReadFromStream(FileReader& stream)

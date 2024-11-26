@@ -11,7 +11,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (instanceChunk == nullptr)
 		{
-			LOG_ERROR("Given instanceChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given instanceChunk was NULL!");
 			return false;
 		}
 

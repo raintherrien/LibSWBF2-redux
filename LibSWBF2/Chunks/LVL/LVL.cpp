@@ -83,9 +83,9 @@ namespace LibSWBF2::Chunks::LVL
 						BaseChunk::SkipChunk(stream,false);
 					}
 				}
-				catch (const LibException &e)
+				catch (const LibSWBF2Exception &e)
 				{
-					LOG_WARN("{}", e.what());
+					LIBSWBF2_LOG_WARN("{}", e.what());
 					return false;
 				}
 			}
@@ -148,14 +148,14 @@ namespace LibSWBF2::Chunks::LVL
 		// Debug purposes only. Should be removed at some point
 		if (params.size() > 1)
 		{
-			LOG_WARN("LVL Path contains more than one parameter! This is not expected... Research is needed!");
+			LIBSWBF2_LOG_WARN("LVL Path contains more than one parameter! This is not expected... Research is needed!");
 
 			std::string str;
 			for (std::string param : params)
 			{
 				str += "\t" + param + "\n";
 			}
-			LOG_WARN("LVL Path parameters are: \n{}", str);
+			LIBSWBF2_LOG_WARN("LVL Path parameters are: \n{}", str);
 		}
 
 		bool success = BaseChunk::ReadFromFile(Path);

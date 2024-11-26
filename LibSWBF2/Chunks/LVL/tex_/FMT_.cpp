@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::texture
 {
 	void FMT_::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void FMT_::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void FMT_::ReadFromStream(FileReader& stream)

@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 {
     void XFRM::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void XFRM::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void XFRM::ReadFromStream(FileReader& stream)

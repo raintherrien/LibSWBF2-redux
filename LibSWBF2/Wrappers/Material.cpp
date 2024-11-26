@@ -21,12 +21,12 @@ namespace LibSWBF2::Wrappers
 	{
 		if (mainContainer == nullptr)
 		{
-			LOG_ERROR("Given mainContainer was NULL!");
+			LIBSWBF2_LOG_ERROR("Given mainContainer was NULL!");
 			return false;
 		}
 		if (materialChunk == nullptr)
 		{
-			LOG_ERROR("Given materialChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given materialChunk was NULL!");
 			return false;
 		}
 
@@ -76,13 +76,13 @@ namespace LibSWBF2::Wrappers
 		segm* segment = dynamic_cast<segm*>(p_Material->GetParent());
 		if (segment == nullptr)
 		{
-			LOG_ERROR("Parent of MTRL is not segm!");
+			LIBSWBF2_LOG_ERROR("Parent of MTRL is not segm!");
 			return false;
 		}
 
 		if (index >= segment->m_Textures.size())
 		{
-			LOG_WARN("Texture index '{}' is out of bounds ({})!", index, segment->m_Textures.size());
+			LIBSWBF2_LOG_WARN("Texture index '{}' is out of bounds ({})!", index, segment->m_Textures.size());
 			return false;
 		}
 		outName = segment->m_Textures[index]->m_Name;

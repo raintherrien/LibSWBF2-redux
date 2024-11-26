@@ -12,12 +12,12 @@ namespace LibSWBF2::Chunks::LVL::coll
 {
 	void INFO_coll::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO_coll::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void INFO_coll::ReadFromStream(FileReader& stream)

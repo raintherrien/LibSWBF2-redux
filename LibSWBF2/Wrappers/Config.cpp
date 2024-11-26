@@ -70,7 +70,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 		
-		LOG_WARN("Could not get field float value at index {0} in DATA chunk '{1}'!", index, GetName());
+		LIBSWBF2_LOG_WARN("Could not get field float value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return 0.0f;
 	}
 	
@@ -83,7 +83,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 		
-		LOG_WARN("Could not get field uint32 value at index {0} in DATA chunk '{1}'!", index, GetName());
+		LIBSWBF2_LOG_WARN("Could not get field uint32 value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return 0;
 	}	
 
@@ -96,7 +96,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector2 value in DATA chunk '{0}'!", GetName());
+		LIBSWBF2_LOG_WARN("Could not get field Vector2 value in DATA chunk '{0}'!", GetName());
 		return Vector2();
 	}
 
@@ -109,7 +109,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector3 value in DATA chunk '{0}'!", GetName());
+		LIBSWBF2_LOG_WARN("Could not get field Vector3 value in DATA chunk '{0}'!", GetName());
 		return Vector3();
 	}
 
@@ -122,7 +122,7 @@ namespace LibSWBF2::Wrappers
 			return out;
 		}
 
-		LOG_WARN("Could not get field Vector4 value in DATA chunk '{0}'!", GetName());
+		LIBSWBF2_LOG_WARN("Could not get field Vector4 value in DATA chunk '{0}'!", GetName());
 		return Vector4();
 	}
 
@@ -135,7 +135,7 @@ namespace LibSWBF2::Wrappers
 			return strOut;
 		}
 	
-		LOG_WARN("Could not get field string value at index {0} in DATA chunk '{1}'!", index, GetName());
+		LIBSWBF2_LOG_WARN("Could not get field string value at index {0} in DATA chunk '{1}'!", index, GetName());
 		return "";
 	}
 
@@ -319,7 +319,7 @@ namespace LibSWBF2::Wrappers
 		}
 		else 
 		{
-			LOG_ERROR("Couldn't wrap unhandled config chunk...");
+			LIBSWBF2_LOG_ERROR("Couldn't wrap unhandled config chunk...");
 			return false;
 		}
 

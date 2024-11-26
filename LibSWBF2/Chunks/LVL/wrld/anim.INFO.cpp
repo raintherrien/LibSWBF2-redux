@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 {
     void anim_INFO::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void anim_INFO::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void anim_INFO::ReadFromStream(FileReader& stream)

@@ -15,12 +15,12 @@ namespace LibSWBF2::Chunks::LVL::modl
 {
     void VBUF::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void VBUF::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void VBUF::ReadFromStream(FileReader& stream)
@@ -36,7 +36,7 @@ namespace LibSWBF2::Chunks::LVL::modl
         if (model == nullptr)
         {
             // should never happen
-            LOG_ERROR("Parent modl is NULL!");
+            LIBSWBF2_LOG_ERROR("Parent modl is NULL!");
             BaseChunk::EnsureEnd(stream);
             return;
         }
@@ -113,16 +113,16 @@ namespace LibSWBF2::Chunks::LVL::modl
                 if ((m_Flags & EVBUFFlags::PositionCompressed) != 0)
                 {
                     m_Bones.emplace_back().ReadFromStream(stream);
-                    LOG_WARN("Weight?: {}", stream.ReadFloat());
+                    LIBSWBF2_LOG_WARN("Weight?: {}", stream.ReadFloat());
 
                     uint16_t data2[2];
                     data2[0] = *(uint16_t*)&data[0];
                     data2[1] = *(uint16_t*)&data[2];
                     uint32_t data3 = *(uint32_t*)&data[0];
-                    LOG_WARN("[{}] = {}-{}-{}-{} / {} - {} / {}", i, data[0], data[1], data[2], data[3], data2[0], data2[1], data3);
+                    LIBSWBF2_LOG_WARN("[{}] = {}-{}-{}-{} / {} - {} / {}", i, data[0], data[1], data[2], data[3], data2[0], data2[1], data3);
 
                     std::string hash = lookup_fnv_hash(data3);
-                    LOG_WARN("Hash: {}", hash);
+                    LIBSWBF2_LOG_WARN("Hash: {}", hash);
                 }
                 */
             }

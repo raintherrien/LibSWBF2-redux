@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::modl
 {
     void MTRL::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void MTRL::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void MTRL::ReadFromStream(FileReader& stream)

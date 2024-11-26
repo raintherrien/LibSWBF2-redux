@@ -108,12 +108,15 @@ struct fmt::formatter<LibSWBF2::Chunks::BaseChunk> {
 		return format_to(ctx.out(), "{}", chunk.GetHeader());
 	}
 };
+#ifdef WIN32
+#define LIBSWBF2_DIRDELIM '\\'
+#else
+#define LIBSWBF2_DIRDELIM '/'
+#endif
+#define LIBSWBF2_FILENAME (strrchr(__FILE__, LIBSWBF2_DIRDELIM) ? strrchr(__FILE__, LIBSWBF2_DIRDELIM) + 1 : __FILE__)
+#define LIBSWBF2_LOG_DEBUG(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Debug, __LINE__, LIBSWBF2_FILENAME, __func__)
+#define LIBSWBF2_LOG_INFO(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Info, __LINE__, LIBSWBF2_FILENAME, __func__)
+#define LIBSWBF2_LOG_WARN(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Warning, __LINE__, LIBSWBF2_FILENAME, __func__)
+#define LIBSWBF2_LOG_ERROR(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, LIBSWBF2_FILENAME, __func__)
 
-#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-#define LOG_DEBUG(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Debug, __LINE__, __FILENAME__)
-#define LOG_INFO(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Info, __LINE__, __FILENAME__)
-#define LOG_WARN(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Warning, __LINE__, __FILENAME__)
-#define LOG_ERROR(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, __FILENAME__)
-
-#define THROW(...) throw LibException(fmt::format("{} - IN {} {}", fmt::format(__VA_ARGS__), __LINE__, __FILENAME__))
-#define LOG_THROW(...) throw LibException(fmt::format("{} - IN {} {}", fmt::format(__VA_ARGS__), __LINE__, __FILENAME__)); LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, __FILENAME__)
+#define LIBSWBF2_THROW(...) throw LibSWBF2Exception(fmt::format("{}:{}:{} ", __LINE__, LIBSWBF2_FILENAME, __LINE__, __func__, fmt::format(__VA_ARGS__)))

@@ -9,12 +9,12 @@ namespace LibSWBF2::Chunks::LVL::config
 {
 	void DATA_CONFIG::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 	
 	void DATA_CONFIG::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void DATA_CONFIG::ReadFromStream(FileReader& stream)
@@ -53,7 +53,7 @@ namespace LibSWBF2::Chunks::LVL::config
 
 		if (m_Size < 5)
 		{
-			LOG_WARN("Encountered DATA chunk with size {0} < 5!", m_Size);
+			LIBSWBF2_LOG_WARN("Encountered DATA chunk with size {0} < 5!", m_Size);
 		}
 		else
 		{
@@ -137,7 +137,7 @@ namespace LibSWBF2::Chunks::LVL::config
 		uint32_t concatStringsLength = *((uint32_t*) (p_Data + 4 * m_NumValues));
 		if (concatStringsLength == 0 || strOffset >= (m_ContentSize - 1))
 		{
-			LOG_ERROR("GetString failed! No string present at index {0}!", index);
+			LIBSWBF2_LOG_ERROR("GetString failed! No string present at index {0}!", index);
 			stringOut = "ERROR";
 			return false;
 		}

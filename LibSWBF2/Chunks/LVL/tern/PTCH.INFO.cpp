@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
 {
     void PTCH_INFO::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PTCH_INFO::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void PTCH_INFO::ReadFromStream(FileReader& stream)

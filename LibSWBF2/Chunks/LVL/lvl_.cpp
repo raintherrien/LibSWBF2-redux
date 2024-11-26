@@ -9,12 +9,12 @@ namespace LibSWBF2::Chunks::LVL
 {
     void lvl_::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void lvl_::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void lvl_::ReadFromStream(FileReader& stream)
@@ -39,7 +39,7 @@ namespace LibSWBF2::Chunks::LVL
         LVL* root = dynamic_cast<LVL*>(last);
         if (root == nullptr)
         {
-            LOG_WARN("Could not find outermost LVL root parent?!");
+            LIBSWBF2_LOG_WARN("Could not find outermost LVL root parent?!");
         }
         else
         {
@@ -50,7 +50,7 @@ namespace LibSWBF2::Chunks::LVL
             }
             else
             {
-                LOG_INFO("Skipping unspecified sub LVL '{}'", m_NameHash);
+                LIBSWBF2_LOG_INFO("Skipping unspecified sub LVL '{}'", m_NameHash);
                 SkipChunk(stream, false);
             }
         }

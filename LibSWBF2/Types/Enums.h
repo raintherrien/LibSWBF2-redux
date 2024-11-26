@@ -228,6 +228,7 @@ namespace LibSWBF2 {
 	};
 
 #ifdef __cplusplus
+	std::string LIBSWBF2_API ConfigTypeToString(EConfigType type);
 	std::string LIBSWBF2_API LogTypeToString(ELogType type);
 	std::string LIBSWBF2_API TopologyToString(ETopology topology);
 	std::string LIBSWBF2_API MaterialFlagsToString(EMaterialFlags flags);

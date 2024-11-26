@@ -9,13 +9,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	template<uint32_t Header>
 	void WorldAnimKeyChunk<Header>::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>
 	void WorldAnimKeyChunk<Header>::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	template<uint32_t Header>

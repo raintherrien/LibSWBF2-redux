@@ -12,12 +12,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void Hint_TYPE::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint_TYPE::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint_TYPE::ReadFromStream(FileReader& stream)
@@ -38,12 +38,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void Hint_INFO::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint_INFO::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint_INFO::ReadFromStream(FileReader& stream)
@@ -87,12 +87,12 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     void Hint::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void Hint::ReadFromStream(FileReader& stream)

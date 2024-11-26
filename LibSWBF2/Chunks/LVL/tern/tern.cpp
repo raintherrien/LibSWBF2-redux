@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::terrain
 {
     void tern::RefreshSize()
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void tern::WriteToStream(FileWriter& stream)
     {
-        THROW("Not implemented!");
+        LIBSWBF2_THROW("Not implemented!");
     }
 
     void tern::ReadFromStream(FileReader& stream)

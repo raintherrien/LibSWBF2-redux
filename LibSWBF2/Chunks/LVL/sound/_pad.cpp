@@ -7,12 +7,12 @@ namespace LibSWBF2::Chunks::LVL::sound
 {
 	void _pad::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void _pad::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void _pad::ReadFromStream(FileReader& stream)
@@ -31,7 +31,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 
 		if (m_Unknown1 != 1538883361)
 		{
-			LOG_WARN("Found unusual m_Unknown1 value in a _pad chunk: {}", m_Unknown1);
+			LIBSWBF2_LOG_WARN("Found unusual m_Unknown1 value in a _pad chunk: {}", m_Unknown1);
 		}
 
 		m_Size = 8;

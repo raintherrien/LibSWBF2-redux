@@ -311,7 +311,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (worldChunk == nullptr)
 		{
-			LOG_ERROR("Given worldChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given worldChunk was NULL!");
 			return false;
 		}
 

@@ -30,7 +30,7 @@ namespace LibSWBF2::Types
 
 		if (m_Clips.size() != m_NumClips)
 		{
-			LOG_WARN("Expected {} sound clip headers, but read {}!", m_NumClips, m_Clips.size());
+			LIBSWBF2_LOG_WARN("Expected {} sound clip headers, but read {}!", m_NumClips, m_Clips.size());
 		}
 
 		// sample data stream starts at a multiple of 2048, depending on

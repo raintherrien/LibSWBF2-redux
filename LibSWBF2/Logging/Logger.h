@@ -19,7 +19,13 @@ namespace LibSWBF2::Logging
 
 		LIBSWBF2_API static void SetLogfileLevel(const ELogType LogfileLevel);
 
-		static void Log(const std::string &message, const ELogType level, const unsigned long line, const char* file) noexcept;
+		static void Log(
+			const std::string &message,
+			ELogType level,
+			unsigned long line,
+			const char *file,
+			const char *func
+		) noexcept;
 
 	private:
 		static Logger &GetInstance();
@@ -28,6 +34,6 @@ namespace LibSWBF2::Logging
 		static const int MAX_ENTRIES = 10000;
 
 		FileWriter* m_Writer;
-		ELogType m_LogfileLevel = ELogType::Warning;
+		ELogType m_LogfileLevel = ELogType::Info;
 	};
 }

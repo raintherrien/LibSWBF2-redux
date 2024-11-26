@@ -16,7 +16,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (terrainChunk == nullptr)
 		{
-			LOG_ERROR("Given terrainChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given terrainChunk was NULL!");
 			return false;
 		}
 		if (terrainChunk->p_Patches == nullptr || terrainChunk->p_Patches->m_Patches.size() == 0)
@@ -52,20 +52,20 @@ namespace LibSWBF2::Wrappers
 			VBUF* vertexBuffer = patches[i]->m_GeometryBuffer;
 			if (vertexBuffer == nullptr)
 			{
-				LOG_WARN("Patch with index {} does not have any vertex buffer! Skipping...", i);
+				LIBSWBF2_LOG_WARN("Patch with index {} does not have any vertex buffer! Skipping...", i);
 				continue;
 			}
 
 			if (vertexBuffer->m_ElementSize != 28)
 			{
-				LOG_WARN("Expected terrain VBUF buffer entry size of 28, but got {}! Patch index: {}", vertexBuffer->m_ElementSize, i);
+				LIBSWBF2_LOG_WARN("Expected terrain VBUF buffer entry size of 28, but got {}! Patch index: {}", vertexBuffer->m_ElementSize, i);
 				continue;
 			}
 
 			std::vector<Types::TerrainBufferEntry>& terrainBuffer = vertexBuffer->m_TerrainBuffer;
 			if (vertexBuffer->m_ElementCount != terrainBuffer.size())
 			{
-				LOG_WARN("Specified element count '{}' does not match up with actual buffer size '{}'! Patch index: {}", vertexBuffer->m_ElementCount, terrainBuffer.size(), i);
+				LIBSWBF2_LOG_WARN("Specified element count '{}' does not match up with actual buffer size '{}'! Patch index: {}", vertexBuffer->m_ElementCount, terrainBuffer.size(), i);
 				continue;
 			}
 
@@ -73,11 +73,11 @@ namespace LibSWBF2::Wrappers
 			{
 				if (vertexBuffer->m_ElementCount > numVertsPerPatch)
 				{
-					LOG_WARN("Expected {} vertices per geometry patch, but got: {}! Ignoring remaining...  Patch index: {}", numVertsPerPatch, vertexBuffer->m_ElementCount, i);
+					LIBSWBF2_LOG_WARN("Expected {} vertices per geometry patch, but got: {}! Ignoring remaining...  Patch index: {}", numVertsPerPatch, vertexBuffer->m_ElementCount, i);
 				}
 				if (vertexBuffer->m_ElementCount < numVertsPerPatch)
 				{
-					LOG_WARN("Not enough vertices! Expected {} vertices per geometry patch, but got: {}! Skipping VBUF...  Patch index: {}", numVertsPerPatch, vertexBuffer->m_ElementCount, i);
+					LIBSWBF2_LOG_WARN("Not enough vertices! Expected {} vertices per geometry patch, but got: {}! Skipping VBUF...  Patch index: {}", numVertsPerPatch, vertexBuffer->m_ElementCount, i);
 					continue;
 				}
 			}
@@ -207,7 +207,7 @@ namespace LibSWBF2::Wrappers
 			size_t numStoredPatches = p_Terrain->p_Patches->m_Patches.size();
 			if (numStoredPatches != numPatches)
 			{
-				LOG_ERROR("Expected {} patches according to info data, but found {}!", numPatches, numStoredPatches);
+				LIBSWBF2_LOG_ERROR("Expected {} patches according to info data, but found {}!", numPatches, numStoredPatches);
 				return indices;
 			}
 
@@ -262,7 +262,7 @@ namespace LibSWBF2::Wrappers
 		}
 		else
 		{
-			LOG_WARN("Requested terrain index buffer as (yet) unsupported topology '{}'!", TopologyToString(requestedTopology));
+			LIBSWBF2_LOG_WARN("Requested terrain index buffer as (yet) unsupported topology '{}'!", TopologyToString(requestedTopology));
 		}
 
 		return indices;

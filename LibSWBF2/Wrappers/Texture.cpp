@@ -14,7 +14,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (textureChunk == nullptr)
 		{
-			LOG_ERROR("Given textureChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given textureChunk was NULL!");
 			return false;
 		}
 
@@ -23,7 +23,7 @@ namespace LibSWBF2::Wrappers
 		std::vector<FMT_*>& fmts = out.p_Texture->m_FMTs;
 		if (fmts.size() == 0)
 		{
-			LOG_WARN("Texture '{}' does not contain any data!", textureChunk->GetHeader());
+			LIBSWBF2_LOG_WARN("Texture '{}' does not contain any data!", textureChunk->GetHeader());
 			return false;
 		}
 

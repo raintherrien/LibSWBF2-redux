@@ -10,12 +10,12 @@ namespace LibSWBF2::Chunks::LVL::config
 {
 	void config_NAME::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void config_NAME::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void config_NAME::ReadFromStream(FileReader& stream)

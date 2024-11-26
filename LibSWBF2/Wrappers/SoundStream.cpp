@@ -51,19 +51,19 @@ namespace LibSWBF2::Wrappers
 	{
 		if (p_StreamBuffer == nullptr)
 		{
-			LOG_ERROR("Cannot read encoded bytes, stream buffer is not set!");
+			LIBSWBF2_LOG_ERROR("Cannot read encoded bytes, stream buffer is not set!");
 			return -1;
 		}
 
 		if (p_Reader == nullptr)
 		{
-			LOG_ERROR("Cannot read encoded bytes, stream reader is not set!");
+			LIBSWBF2_LOG_ERROR("Cannot read encoded bytes, stream reader is not set!");
 			return -1;
 		}
 
 		if (p_CurrentSegment == nullptr)
 		{
-			LOG_ERROR("Cannot read encoded bytes, the segment to be read is not set!");
+			LIBSWBF2_LOG_ERROR("Cannot read encoded bytes, the segment to be read is not set!");
 			return -1;
 		}
 
@@ -177,13 +177,13 @@ namespace LibSWBF2::Wrappers
     {
     	if (p_Reader == nullptr)
     	{	
-    		LOG_ERROR("Cannot set segment, reader is unassigned!");
+    		LIBSWBF2_LOG_ERROR("Cannot set segment, reader is unassigned!");
     		return false;
     	}
 
     	if (p_StreamBuffer == nullptr)
     	{
-    		LOG_ERROR("Cannot set segment, stream buffer is unassigned!");
+    		LIBSWBF2_LOG_ERROR("Cannot set segment, stream buffer is unassigned!");
     		return false;
     	}
 
@@ -214,7 +214,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (streamChunk == nullptr)
 		{
-			LOG_ERROR("Given Stream chunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given Stream chunk was NULL!");
 			return false;
 		}
 
@@ -323,7 +323,7 @@ namespace LibSWBF2::Wrappers
 			return &m_Sounds[it->second];
 		}
 
-		//LOG_WARN("Could not find Sound '{}'!", soundHash);
+		//LIBSWBF2_LOG_WARN("Could not find Sound '{}'!", soundHash);
 		return nullptr;
 	}
 }

@@ -22,14 +22,14 @@ namespace LibSWBF2::Wrappers
 	{
 		if (segmentChunk == nullptr)
 		{
-			LOG_ERROR("Given SegmentChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given SegmentChunk was NULL!");
 			return false;
 		}
 
 		std::vector<VBUF*>& vBuffs = segmentChunk->m_VertexBuffers;
 		if (vBuffs.size() == 0)
 		{
-			LOG_WARN("Segment Chunk does not contain any data!");
+			LIBSWBF2_LOG_WARN("Segment Chunk does not contain any data!");
 			return false;
 		}
 
@@ -59,7 +59,7 @@ namespace LibSWBF2::Wrappers
 
 		if (!Material::FromChunk(mainContainer, segmentChunk->p_Material, out.m_Material))
 		{
-			LOG_WARN("Could not read Material!");
+			LIBSWBF2_LOG_WARN("Could not read Material!");
 		}
 
 		// Create weight buffer
@@ -77,7 +77,7 @@ namespace LibSWBF2::Wrappers
 			{
 				if (boneMap == nullptr)
 				{
-					LOG_ERROR("Bone map missing...");
+					LIBSWBF2_LOG_ERROR("Bone map missing...");
 					return true;			
 				}
 
@@ -93,7 +93,7 @@ namespace LibSWBF2::Wrappers
 							index1 >= boneMap->m_IndexCount ||
 							index2 >= boneMap->m_IndexCount)
 						{
-							LOG_ERROR("Softskin index ({},{},{}) is >= bone map length {}", index, index1, index2, boneMap->m_IndexCount);
+							LIBSWBF2_LOG_ERROR("Softskin index ({},{},{}) is >= bone map length {}", index, index1, index2, boneMap->m_IndexCount);
 						}
 						else 
 						{
@@ -115,7 +115,7 @@ namespace LibSWBF2::Wrappers
 
 						if (index >= boneMap->m_IndexCount)
 						{
-							LOG_ERROR("Index {} is >= bone map length {}", index, boneMap->m_IndexCount);
+							LIBSWBF2_LOG_ERROR("Index {} is >= bone map length {}", index, boneMap->m_IndexCount);
 						}
 						else 
 						{

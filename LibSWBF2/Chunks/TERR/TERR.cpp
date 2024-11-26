@@ -22,7 +22,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
 
 	void TERR::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void TERR::ReadFromStream(FileReader& stream)
@@ -31,7 +31,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
 
 		if (TerrHeader != "TERR"_h)
 		{
-			LOG_WARN("Wrong File Format!");
+			LIBSWBF2_LOG_WARN("Wrong File Format!");
 			return;
 		}
 
@@ -290,7 +290,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
 	bool TERR::WriteToFile(const std::string& Path)
 	{
 		// TODO: implement
-		LOG_WARN("Writing TERR files not implemented yet!");
+		LIBSWBF2_LOG_WARN("Writing TERR files not implemented yet!");
 		return false;
 	}
 
@@ -304,15 +304,15 @@ namespace LibSWBF2::Chunks::LVL::terrain
 				ReadFromStream(reader);
 				reader.Close();
 			}
-			catch (LibException&)
+			catch (const LibSWBF2Exception &)
 			{
-				LOG_ERROR("Aborting read process...");
+				LIBSWBF2_LOG_ERROR("Aborting read process...");
 				return false;
 			}
-			LOG_INFO("Successfully finished reading process!");
+			LIBSWBF2_LOG_INFO("Successfully finished reading process!");
 			return true;
 		}
-		LOG_WARN("Could not open File {}! Non existent?", Path);
+		LIBSWBF2_LOG_WARN("Could not open File {}! Non existent?", Path);
 		return false;
 	}
 }

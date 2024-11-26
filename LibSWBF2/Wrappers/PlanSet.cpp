@@ -12,7 +12,7 @@ namespace LibSWBF2::Wrappers
 	{
 		if (planChunk == nullptr)
 		{
-			LOG_ERROR("Given planChunk was NULL!");
+			LIBSWBF2_LOG_ERROR("Given planChunk was NULL!");
 			return false;
 		}
 

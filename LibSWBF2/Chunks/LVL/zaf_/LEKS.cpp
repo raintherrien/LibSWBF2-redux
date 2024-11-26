@@ -8,12 +8,12 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	void LEKS::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void LEKS::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void LEKS::ReadFromStream(FileReader& stream)

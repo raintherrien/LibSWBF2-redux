@@ -11,12 +11,12 @@ namespace LibSWBF2::Chunks::LVL::sound
 {
 	void SampleBankData::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void SampleBankData::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void SampleBankData::ReadFromStream(FileReader& stream)
@@ -27,14 +27,14 @@ namespace LibSWBF2::Chunks::LVL::sound
 		SampleBank *bank = dynamic_cast<SampleBank*>(GetParent());
 		if (bank == nullptr)
 		{
-			LOG_ERROR("Tried to read SampleBankData from a chunk other than SampleBank");
+			LIBSWBF2_LOG_ERROR("Tried to read SampleBankData from a chunk other than SampleBank");
 		}
 		else 
 		{
 			SampleBankInfo* info = bank -> p_Info;
 			if (info == nullptr)
 			{
-				LOG_ERROR("Tried to read SampleBankData, but parent SampleBank's Info chunk was missing!");
+				LIBSWBF2_LOG_ERROR("Tried to read SampleBankData, but parent SampleBank's Info chunk was missing!");
 			}
 			else 
 			{
@@ -45,7 +45,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 					size_t EndPos = stream.GetPosition() + currClip.m_DataLength + currClip.m_Padding;
 					if (!PositionInChunk(EndPos))
 					{
-						LOG_ERROR("Attempt to read SampleBank's SoundClip data would overshoot file,...");
+						LIBSWBF2_LOG_ERROR("Attempt to read SampleBank's SoundClip data would overshoot file,...");
 						break;
 					}
 

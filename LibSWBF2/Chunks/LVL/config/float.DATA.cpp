@@ -11,12 +11,12 @@ namespace LibSWBF2::Chunks::LVL::config
 {
 	void DATA_FLOAT::RefreshSize()
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void DATA_FLOAT::WriteToStream(FileWriter& stream)
 	{
-		THROW("Not implemented!");
+		LIBSWBF2_THROW("Not implemented!");
 	}
 
 	void DATA_FLOAT::ReadFromStream(FileReader& stream)
