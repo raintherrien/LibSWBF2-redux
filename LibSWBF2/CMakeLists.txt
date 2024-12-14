@@ -305,3 +305,8 @@ target_sources(LibSWBF2 PRIVATE
   "${PROJECT_SOURCE_DIR}/Chunks/LVL/plan/plnp.cpp"
 )
 
+option(LIBSWBF2_BUILD_TESTS "Build tests" ON)
+mark_as_advanced(FORCE LIBSWBF2_BUILD_TESTS)
+if(LIBSWBF2_BUILD_TESTS)
+	add_subdirectory(Tests)
+endif()
