@@ -49,6 +49,8 @@ namespace LibSWBF2::Chunks
 		// thread safe call
 		float_t GetReadingProgress();
 
+		std::string ToString();
+
 	protected:
 		// since these variables are critical
 		// we should keep them protected

@@ -23,7 +23,7 @@ namespace LibSWBF2::Wrappers
 		std::vector<FMT_*>& fmts = out.p_Texture->m_FMTs;
 		if (fmts.size() == 0)
 		{
-			LIBSWBF2_LOG_WARN("Texture '{}' does not contain any data!", textureChunk->GetHeader());
+			LIBSWBF2_LOG_WARN("Texture '{}' does not contain any data!", textureChunk->ToString());
 			return false;
 		}
 

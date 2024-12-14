@@ -2,11 +2,7 @@
 #include "LoggerEntry.h"
 #include "Chunks/HeaderNames.h"
 #include "Chunks/BaseChunk.h"
-
-namespace LibSWBF2
-{
-	class FileWriter;
-}
+#include "IO/FileWriter.h"
 
 namespace LibSWBF2::Logging
 {
@@ -14,10 +10,7 @@ namespace LibSWBF2::Logging
 	class Logger
 	{
 	public:
-		Logger(); // do not call anywhere else
-		~Logger();
-
-		LIBSWBF2_API static void SetLogfileLevel(const ELogType LogfileLevel);
+		LIBSWBF2_API static void SetLogfileLevel(ELogType LogfileLevel);
 
 		static void Log(
 			const std::string &message,
@@ -28,12 +21,14 @@ namespace LibSWBF2::Logging
 		) noexcept;
 
 	private:
+		Logger(); // do not call anywhere else
+		~Logger();
+
 		static Logger &GetInstance();
 
 		static constexpr char *LOG_FILE = "LibSWBF2.log";
-		static const int MAX_ENTRIES = 10000;
 
-		FileWriter* m_Writer;
+		FileWriter m_Writer;
 		ELogType m_LogfileLevel = ELogType::Info;
 	};
 }

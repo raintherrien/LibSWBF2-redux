@@ -25,14 +25,14 @@ namespace LibSWBF2
 		virtual size_t GetPosition() = 0;
 		virtual void SetPosition(size_t NewPosition) = 0;
 		virtual size_t GetFileSize() = 0;
-		virtual bool SkipBytes(const size_t& Amount) = 0;
+		virtual bool SkipBytes(size_t Amount) = 0;
 		virtual void Close() = 0;
 
 		virtual bool CheckGood(size_t ReadSize) = 0;
 
 		size_t GetLatestChunkPosition() { return m_LatestChunkPos; }
 
-		const std::string& GetFileName() { return m_FileName; }
+		std::string GetFileName() { return m_FileName; }
 
 	protected:
 

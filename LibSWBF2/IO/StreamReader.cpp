@@ -12,22 +12,25 @@ namespace LibSWBF2
 
 	StreamReader::StreamReader()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader()");
 		m_LatestChunkPos = 0;
 	}
 
 	StreamReader::~StreamReader()
 	{
+		LIBSWBF2_LOG_INFO("~StreamReader()");
 		try { Close(); } catch (...) {}
 	}
 
 	bool StreamReader::Open(const std::string &File)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::Open('{}')", File);
 		m_Reader.open(File, std::ofstream::in | std::ofstream::binary | std::ofstream::ate);
 		bool success = m_Reader.good() && m_Reader.is_open();
 
 		if (!success)
 		{
-			LIBSWBF2_LOG_WARN("File '{}' could not be found / opened!", File);
+			LIBSWBF2_LOG_WARN("File '{}' could not be opened", File);
 			m_Reader.close();
 			return false;
 		}
@@ -36,12 +39,13 @@ namespace LibSWBF2
 		m_FileSize = (size_t)m_Reader.tellg();
 		m_Reader.seekg(0);
 
-		LIBSWBF2_LOG_INFO("File '{}' ({} bytes) successfully opened.", m_FileName, m_FileSize);
+		LIBSWBF2_LOG_INFO("File '{}' ({} bytes) successfully opened", m_FileName, m_FileSize);
 		return true;
 	}
 
 	ChunkHeader StreamReader::ReadChunkHeader(bool peek)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadChunkHeader({})", peek);
 		ChunkHeader value;
 		if (CheckGood(sizeof(ChunkHeader)))
 		{
@@ -61,6 +65,7 @@ namespace LibSWBF2
 
 	ChunkSize StreamReader::ReadChunkSize()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadChunkSize()");
 		ChunkSize value = 0;
 		if (CheckGood(sizeof(ChunkSize)))
 		{
@@ -71,6 +76,7 @@ namespace LibSWBF2
 
 	uint8_t StreamReader::ReadByte()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadByte()");
 		uint8_t value = 0;
 		if (CheckGood(sizeof(uint8_t)))
 		{
@@ -81,6 +87,7 @@ namespace LibSWBF2
 
 	bool StreamReader::ReadBytes(uint8_t* data, size_t length)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadBytes()");
 		if (CheckGood(length))
 		{
 			m_Reader.read((char*)data, length);
@@ -91,6 +98,7 @@ namespace LibSWBF2
 
 	int32_t StreamReader::ReadInt32()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadInt32()");
 		int32_t value = 0;
 		if (CheckGood(sizeof(int32_t)))
 		{
@@ -101,6 +109,7 @@ namespace LibSWBF2
 
 	int16_t StreamReader::ReadInt16()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadInt16()");
 		int16_t value = 0;
 		if (CheckGood(sizeof(int16_t)))
 		{
@@ -111,6 +120,7 @@ namespace LibSWBF2
 
 	uint32_t StreamReader::ReadUInt32()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadUInt32()");
 		uint32_t value = 0;
 		if (CheckGood(sizeof(uint32_t)))
 		{
@@ -121,6 +131,7 @@ namespace LibSWBF2
 
 	uint16_t StreamReader::ReadUInt16()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadUInt16()");
 		uint16_t value = 0;
 		if (CheckGood(sizeof(uint16_t)))
 		{
@@ -131,6 +142,7 @@ namespace LibSWBF2
 
 	float_t StreamReader::ReadFloat()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadFloat()");
 		float_t value = 0.0f;
 		if (CheckGood(sizeof(float_t)))
 		{
@@ -141,6 +153,7 @@ namespace LibSWBF2
 
 	std::string StreamReader::ReadString(size_t length)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadString('{}')", length);
 		std::string value;
 		if (CheckGood(length))
 		{
@@ -155,6 +168,7 @@ namespace LibSWBF2
 
 	std::string StreamReader::ReadString()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::ReadString()");
 		char str[1024]; // should be enough
 		uint8_t current = 1;
 		for (uint16_t i = 0; CheckGood(1) && current != 0; ++i)
@@ -172,9 +186,9 @@ namespace LibSWBF2
 
 	void StreamReader::Close()
 	{
-		if (!m_Reader.is_open())
-		{
-			LIBSWBF2_THROW("Nothing has been opened yet!");
+		LIBSWBF2_LOG_INFO("StreamReader::Close()");
+		if (!m_Reader.is_open()) {
+			LIBSWBF2_THROW("Nothing has been opened yet");
 		}
 
 		m_FileName = "";
@@ -183,11 +197,13 @@ namespace LibSWBF2
 
 	size_t StreamReader::GetPosition()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::GetPosition()");
 		return (size_t)m_Reader.tellg();
 	}
 
 	void StreamReader::SetPosition(size_t NewPosition)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::SetPosition({})", NewPosition);
 		if (NewPosition > m_FileSize)
 		{
 			LIBSWBF2_LOG_WARN("Cannot set read position to {:#x} because it is out of range! Range: 0x00 - {:#x}", NewPosition, m_FileSize);
@@ -199,14 +215,16 @@ namespace LibSWBF2
 
 	size_t StreamReader::GetFileSize()
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::GetFileSize()");
 		return m_FileSize;
 	}
 
 	bool StreamReader::CheckGood(size_t ReadSize)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::CheckGood({})", ReadSize);
 		if (!m_Reader.is_open())
 		{
-			LIBSWBF2_THROW("Error during read process! File '{}' is not open!", m_FileName);
+			LIBSWBF2_THROW("Error during read process! File '{}' is not open", m_FileName);
 		}
 
 		if (!m_Reader.good())
@@ -214,15 +232,15 @@ namespace LibSWBF2
 			std::string reason = "";
 			if (m_Reader.eof())
 			{
-				reason += " End of File reached!";
+				reason += " End of File reached";
 			}
 			if (m_Reader.fail())
 			{
-				reason += " Logical Error on I/O operation!";
+				reason += " Logical Error on I/O operation";
 			}
 			if (m_Reader.bad())
 			{
-				reason += " Reading Error on I/O operation!";
+				reason += " Reading Error on I/O operation";
 			}
 			LIBSWBF2_THROW("Error during read process in '{}'! Reason: {}", m_FileName, reason);
 		}
@@ -236,8 +254,9 @@ namespace LibSWBF2
 		return true;
 	}
 
-	bool StreamReader::SkipBytes(const size_t& Amount)
+	bool StreamReader::SkipBytes(size_t Amount)
 	{
+		LIBSWBF2_LOG_INFO("StreamReader::SkipBytes({})", Amount);
 		if (CheckGood(Amount))
 		{
 			m_Reader.seekg(GetPosition() + Amount);

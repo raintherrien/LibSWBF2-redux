@@ -47,12 +47,12 @@ namespace LibSWBF2::Chunks
 		m_Size = stream.ReadChunkSize();
 
 		LIBSWBF2_LOG_DEBUG("Position: {}", m_ChunkPosition);
-		LIBSWBF2_LOG_DEBUG("Header: {}", m_Header);
+		LIBSWBF2_LOG_DEBUG("Header: {}", m_Header.ToString());
 		LIBSWBF2_LOG_DEBUG("Size: {:#x}", m_Size);
 
 		if (stream.GetPosition() + m_Size > 8 + stream.GetFileSize())
 		{
-			LIBSWBF2_THROW("Chunk is too big and will end up out of file! Chunk: '{}' Size: {:#x} At Position: {:#x} with File Size of: {:#x} (File: {})", m_Header, m_Size, stream.GetPosition() - 8, stream.GetFileSize(), stream.GetFileName());
+			LIBSWBF2_THROW("Chunk is too big and will end up out of file! Chunk: '{}' Size: {:#x} At Position: {:#x} with File Size of: {:#x} (File: {})", m_Header.ToString(), m_Size, stream.GetPosition() - 8, stream.GetFileSize(), stream.GetFileName());
 		}
 	}
 
@@ -167,7 +167,7 @@ namespace LibSWBF2::Chunks
 
 		if (printWarn)
 		{
-			LIBSWBF2_LOG_WARN("[{}] Unexpected Chunk found: {} at position {:#x}. Skipping {:#x} Bytes...", m_Header, head, stream.GetPosition(), alignedSize);
+			LIBSWBF2_LOG_WARN("[{}] Unexpected Chunk found: {} at position {:#x}. Skipping {:#x} Bytes...", m_Header.ToString(), head.ToString(), stream.GetPosition(), alignedSize);
 		}
 
 		return stream.SkipBytes(alignedSize);
@@ -188,7 +188,7 @@ namespace LibSWBF2::Chunks
 		else if (currPos > endPos)
 		{
 			// This should NEVER happen!
-			LIBSWBF2_LOG_WARN("[{}] Ended up outside of current chunk (end is at: {:#x}, we are at: {:#x}! Too many bytes read: {} (File: {})", m_Header, endPos, currPos, currPos - endPos, stream.GetFileName());
+			LIBSWBF2_LOG_WARN("[{}] Ended up outside of current chunk (end is at: {:#x}, we are at: {:#x}! Too many bytes read: {} (File: {})", m_Header.ToString(), endPos, currPos, currPos - endPos, stream.GetFileName());
 			ForwardToNextHeader(stream);
 		}
 	}
@@ -202,7 +202,7 @@ namespace LibSWBF2::Chunks
 			stream.SetPosition(stream.GetPosition() + 1);
 		}
 		size_t skipped = stream.GetPosition() - lastPos;
-		LIBSWBF2_LOG_WARN("[{}] Forwarded to next header at {:#x}, skipped {} bytes!", m_Header, stream.GetPosition(), skipped);
+		LIBSWBF2_LOG_WARN("[{}] Forwarded to next header at {:#x}, skipped {} bytes!", m_Header.ToString(), stream.GetPosition(), skipped);
 	}
 
 	float_t BaseChunk::GetReadingProgress()
@@ -213,5 +213,10 @@ namespace LibSWBF2::Chunks
 		}
 
 		return (float_t)m_ThreadHandling->m_CurrentReader->GetLatestChunkPosition() / (float_t)m_ThreadHandling->m_CurrentReader->GetFileSize();
+	}
+
+	std::string BaseChunk::ToString()
+	{
+		return GetHeader().ToString();
 	}
 }

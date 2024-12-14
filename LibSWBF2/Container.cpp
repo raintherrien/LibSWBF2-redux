@@ -47,6 +47,8 @@ namespace LibSWBF2
 
 	Level *Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
+		LIBSWBF2_LOG_INFO("Container::LoadLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
+
 		using LibSWBF2::Chunks::LVL::LVL;
 
 		LVL* lvl = nullptr;
@@ -108,16 +110,19 @@ namespace LibSWBF2
 
 	Container* Container::Create()
 	{
+		LIBSWBF2_LOG_INFO("Container::Create()");
 		return new Container();
 	}
 
-	void Container::Delete(Container* instance)
+	void Container::Delete(Container* container)
 	{
-		delete instance;
+		LIBSWBF2_LOG_INFO("Container::Delete({})", fmt::ptr(container));
+		delete container;
 	}
 
-	Level *Container::AddLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
+	Level *Container::AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
+		LIBSWBF2_LOG_INFO("Container::AddLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
 		Level *lvl = LoadLevel(path, subLVLsToLoad, bRegisterContents);
 		if (lvl) {
 			m_Levels.push_back(lvl);
@@ -127,6 +132,7 @@ namespace LibSWBF2
 
 	Level* Container::GetLevel(size_t index) const
 	{
+		LIBSWBF2_LOG_INFO("Container::GetLevel({})", index);
 		if (index >= m_Levels.size())
 		{
 			LIBSWBF2_LOG_WARN("Given Level index '{}' is illegal!", index);
@@ -138,6 +144,7 @@ namespace LibSWBF2
 
 	Level* Container::TryGetWorldLevel() const
 	{
+		LIBSWBF2_LOG_INFO("Container::TryGetWorldLevel()");
 		for (size_t i = 0; i < m_Levels.size(); ++i) {
 			if (m_Levels[i]->IsWorldLevel()) {
 				return m_Levels[i];
@@ -148,6 +155,7 @@ namespace LibSWBF2
 
 	const std::vector<const World*>& Container::GetWorlds()
 	{
+		LIBSWBF2_LOG_INFO("Container::GetWorlds()");
 		return m_Worlds;
 	}
 
@@ -156,6 +164,7 @@ namespace LibSWBF2
 	// Model
 	const Model* Container::FindModel(std::string modelName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindModel('{}')", modelName);
 		if (modelName.empty())
 		{
 			return nullptr;
@@ -166,6 +175,7 @@ namespace LibSWBF2
 
 	const Model* Container::FindModel(FNVHash modelName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindModel({})", modelName);
 		auto it = m_ModelDB.find(modelName);
 		if (it != m_ModelDB.end())
 		{
@@ -180,6 +190,7 @@ namespace LibSWBF2
 	// Texture
 	const Texture* Container::FindTexture(std::string textureName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindTexture('{}')", textureName);
 		if (textureName.empty())
 		{
 			return nullptr;
@@ -190,6 +201,7 @@ namespace LibSWBF2
 
 	const Texture* Container::FindTexture(FNVHash textureName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindTexture({})", textureName);
 		auto it = m_TextureDB.find(textureName);
 		if (it != m_TextureDB.end())
 		{
@@ -204,6 +216,7 @@ namespace LibSWBF2
 	// World
 	const World* Container::FindWorld(std::string worldName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindWorld('{}')", worldName);
 		if (worldName.empty())
 		{
 			return nullptr;
@@ -214,6 +227,7 @@ namespace LibSWBF2
 
 	const World* Container::FindWorld(FNVHash worldName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindWorld({})", worldName);
 		auto it = m_WorldDB.find(worldName);
 		if (it != m_WorldDB.end())
 		{
@@ -228,6 +242,7 @@ namespace LibSWBF2
 	// Terrain
 	const Terrain* Container::FindTerrain(std::string terrainName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindTerrain('{}')", terrainName);
 		if (terrainName.empty())
 		{
 			return nullptr;
@@ -238,6 +253,7 @@ namespace LibSWBF2
 
 	const Terrain* Container::FindTerrain(FNVHash terrainName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindTerrain({})", terrainName);
 		auto it = m_TerrainDB.find(terrainName);
 		if (it != m_TerrainDB.end())
 		{
@@ -252,6 +268,7 @@ namespace LibSWBF2
 	// Script
 	const Script* Container::FindScript(std::string scriptName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindScript('{}')", scriptName);
 		if (scriptName.empty())
 		{
 			return nullptr;
@@ -262,6 +279,7 @@ namespace LibSWBF2
 
 	const Script* Container::FindScript(FNVHash scriptName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindScript({})", scriptName);
 		auto it = m_ScriptDB.find(scriptName);
 		if (it != m_ScriptDB.end())
 		{
@@ -276,6 +294,7 @@ namespace LibSWBF2
 	// AnimationBank
 	const AnimationBank* Container::FindAnimationBank(std::string setName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindAnimationBank('{}')", setName);
 		if (setName.empty()) return nullptr;
 
 		return FindAnimationBank(FNV::Hash(setName));
@@ -283,6 +302,7 @@ namespace LibSWBF2
 
 	const AnimationBank* Container::FindAnimationBank(FNVHash setName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindAnimationBank({})", setName);
 		auto it = m_AnimationBankDB.find(setName);
 		if (it != m_AnimationBankDB.end())
 		{
@@ -297,6 +317,7 @@ namespace LibSWBF2
 	// AnimationSkeleton
 	const AnimationSkeleton* Container::FindAnimationSkeleton(std::string skelName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindAnimationSkeleton('{}')", skelName);
 		if (skelName.empty()) return nullptr;
 
 		return FindAnimationSkeleton(FNV::Hash(skelName));
@@ -304,6 +325,7 @@ namespace LibSWBF2
 
 	const AnimationSkeleton* Container::FindAnimationSkeleton(FNVHash skelName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindAnimationSkeleton({})", skelName);
 		auto it = m_AnimationSkeletonDB.find(skelName);
 		if (it != m_AnimationSkeletonDB.end())
 		{
@@ -318,6 +340,7 @@ namespace LibSWBF2
 	// Localization
 	const std::vector<const Localization*>* Container::FindLocalizations(std::string languageName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindLocalizations('{}')", languageName);
 		if (languageName.empty())
 		{
 			return nullptr;
@@ -328,6 +351,7 @@ namespace LibSWBF2
 
 	const std::vector<const Localization*>* Container::FindLocalizations(FNVHash languageName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindLocalizations({})", languageName);
 		auto it = m_LocalizationDB.find(languageName);
 		if (it != m_LocalizationDB.end())
 		{
@@ -342,6 +366,7 @@ namespace LibSWBF2
 	// EntityClass
 	const EntityClass* Container::FindEntityClass(std::string typeName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindEntityClass('{}')", typeName);
 		if (typeName.empty())
 		{
 			return nullptr;
@@ -352,6 +377,7 @@ namespace LibSWBF2
 
 	const EntityClass* Container::FindEntityClass(FNVHash typeName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindEntityClass({})", typeName);
 		auto it = m_EntityClassDB.find(typeName);
 		if (it != m_EntityClassDB.end())
 		{
@@ -366,6 +392,7 @@ namespace LibSWBF2
 	// Sound
 	const Sound* Container::FindSound(std::string soundName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindSound('{}')", soundName);
 		if (soundName.empty())
 		{
 			return nullptr;
@@ -375,6 +402,7 @@ namespace LibSWBF2
 
 	const Sound* Container::FindSound(FNVHash hashedSoundName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindSound({})", hashedSoundName);
 		auto it = m_SoundDB.find(hashedSoundName);
 		if (it != m_SoundDB.end())
 		{
@@ -388,6 +416,7 @@ namespace LibSWBF2
 	// Config
 	const Config* Container::FindConfig(EConfigType type, FNVHash hashedConfigName) const
 	{
+		LIBSWBF2_LOG_INFO("Container::FindConfig({})", hashedConfigName);
 		auto it = m_ConfigDB.find(hashedConfigName + (uint32_t) type);
 		if (it != m_ConfigDB.end())
 		{
@@ -399,6 +428,7 @@ namespace LibSWBF2
 
 	bool Container::GetLocalizedWideString(const std::string& language, const std::string& path, const wchar_t*& chars, uint32_t& count) const
 	{
+		LIBSWBF2_LOG_INFO("Container::GetLocalizedWideString('{}', '{}', {}, {})", language, path, fmt::ptr(chars), fmt::ptr(&count));
 		const std::vector<const Localization*>* locals = FindLocalizations(language);
 		if (locals == nullptr)
 		{

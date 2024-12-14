@@ -3,7 +3,7 @@
 
 namespace LibSWBF2::Logging
 {
-	LoggerEntry::LoggerEntry(const char *message, ELogType level, unsigned long line, const char *file, const char *func)
+	LoggerEntry::LoggerEntry(const std::string &message, ELogType level, unsigned long line, const char *file, const char *func)
 	{
 		this->m_Message = message;
 		this->m_Level = level;

@@ -79,35 +79,6 @@ namespace LibSWBF2
 	}
 }
 
-// adding custom fmt formatters
-// see fmt documentation
-template <>
-struct fmt::formatter<LibSWBF2::ChunkHeader> {
-	constexpr auto parse(format_parse_context& ctx)
-	{
-		return ctx.begin();
-	}
-
-	template <typename FormatContext>
-	auto format(const LibSWBF2::ChunkHeader& header, FormatContext& ctx)
-	{
-		return fmt::format_to(ctx.out(), "{}", header.ToString());
-	}
-};
-
-template <>
-struct fmt::formatter<LibSWBF2::Chunks::BaseChunk> {
-	constexpr auto parse(format_parse_context& ctx)
-	{
-		return ctx.begin();
-	}
-
-	template <typename FormatContext>
-	auto format(const LibSWBF2::Chunks::BaseChunk& chunk, FormatContext& ctx)
-	{
-		return format_to(ctx.out(), "{}", chunk.GetHeader());
-	}
-};
 #ifdef WIN32
 #define LIBSWBF2_DIRDELIM '\\'
 #else

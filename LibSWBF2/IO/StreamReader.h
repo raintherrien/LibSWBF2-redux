@@ -28,7 +28,7 @@ namespace LibSWBF2
 		size_t GetPosition();
 		void SetPosition(size_t NewPosition);
 		size_t GetFileSize();
-		bool SkipBytes(const size_t& Amount);
+		bool SkipBytes(size_t Amount);
 		void Close();
 
 		bool CheckGood(size_t ReadSize);

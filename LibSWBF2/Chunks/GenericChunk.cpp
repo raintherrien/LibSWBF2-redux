@@ -54,7 +54,7 @@ namespace LibSWBF2::Chunks
 		expected.m_Magic = Header;
 		if (Header != 0 && m_Header != expected)
 		{
-			LIBSWBF2_THROW("Expected '{}' but got '{}'", expected, m_Header);
+			LIBSWBF2_THROW("Expected '{}' but got '{}'", expected.ToString(), m_Header.ToString());
 		}
 
 		// check if current "chunk" exceeds parents data size
@@ -327,7 +327,7 @@ namespace LibSWBF2::Chunks
 						chunk = generic;
 					}
 
-					LIBSWBF2_LOG_INFO("Adding Child '{}' to '{}'", chunk->GetHeader(), m_Header);
+					LIBSWBF2_LOG_INFO("Adding Child '{}' to '{}'", chunk->ToString(), m_Header.ToString());
 				}
 				catch (const LibSWBF2Exception &e)
 				{

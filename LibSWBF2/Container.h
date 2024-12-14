@@ -59,7 +59,7 @@ namespace LibSWBF2
 		static Container* Create();
 		static void Delete(Container* instance);
 
-		Level *AddLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
+		Level *AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
 		Level *GetLevel(size_t index) const;
 
 		// will return the first encountered world LVL, if existent

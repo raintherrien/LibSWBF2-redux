@@ -317,7 +317,7 @@ namespace LibSWBF2
 		return true;
 	}
 
-	bool MemoryMappedReader::SkipBytes(const size_t& Amount)
+	bool MemoryMappedReader::SkipBytes(size_t Amount)
 	{
 		if (CheckGood(Amount))
 		{

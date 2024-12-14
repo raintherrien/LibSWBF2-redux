@@ -9,9 +9,6 @@ namespace LibSWBF2
 	class FileWriter
 	{
 	public:
-		FileWriter();
-		~FileWriter();
-
 		bool Open(const std::string& File);
 		bool Open(const std::string& File, const bool& LogFile);
 		void WriteChunkHeader(const ChunkHeader& value);

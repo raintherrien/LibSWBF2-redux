@@ -7,14 +7,12 @@ namespace LibSWBF2::Logging
 {
 	Logger::Logger()
 	{
-		m_Writer = new FileWriter();
-		m_Writer->Open(LOG_FILE, true);
+		m_Writer.Open(LOG_FILE, true);
 	}
 
 	Logger::~Logger()
 	{
-		m_Writer->Close();
-		delete m_Writer;
+		m_Writer.Close();
 	}
 
 	Logger &Logger::GetInstance()
@@ -23,7 +21,7 @@ namespace LibSWBF2::Logging
 		return singleton;
 	}
 
-	void Logger::SetLogfileLevel(const ELogType LogfileLevel)
+	void Logger::SetLogfileLevel(ELogType LogfileLevel)
 	{
 		GetInstance().m_LogfileLevel = LogfileLevel;
 	}
@@ -37,10 +35,10 @@ namespace LibSWBF2::Logging
 	) noexcept {
 		try {
 			Logger &instance = GetInstance();
-			if (message.length() > 0 && level >= instance.m_LogfileLevel)
+			if (message.size() > 0 && level >= instance.m_LogfileLevel)
 			{
-				LoggerEntry entry(message.c_str(), level, line, file, func);
-				instance.m_Writer->WriteLine(entry.ToString());
+				LoggerEntry entry(message, level, line, file, func);
+				instance.m_Writer.WriteLine(entry.ToString());
 			}
 		} catch (...) {
 			// We cannot throw!

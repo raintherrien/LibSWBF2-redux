@@ -8,15 +8,6 @@ namespace LibSWBF2
 {
 	using LibSWBF2::Logging::Logger;
 
-	FileWriter::FileWriter()
-	{
-		
-	}
-
-	FileWriter::~FileWriter()
-	{
-	}
-
 	bool FileWriter::Open(const std::string& File)
 	{
 		return Open(File, false);
@@ -150,8 +141,7 @@ namespace LibSWBF2
 	{
 		if (CheckGood())
 		{
-			std::string tmp = line + std::string("\n");
-			m_Writer.write(tmp.c_str(), tmp.size());
+			m_Writer << line << "\n";
 			m_Writer.flush();
 		}
 	}
