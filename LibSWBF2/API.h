@@ -7,6 +7,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
+#include <functional>
 #define LIBSWBF2_NOEXCEPT noexcept
 #define LIBSWBF2_DEPRECATED [[deprecated]]
 #else
@@ -68,9 +69,11 @@ struct CList {
 	void *elements;
 	size_t size;
 	size_t element_size;
+	void *_destructor; // Used to call the typed C++ destructor after type erasure
 };
 
 LIBSWBF2_API void CList_free(struct CList *) LIBSWBF2_NOEXCEPT;
+LIBSWBF2_API void *CList_get(struct CList *, size_t index) LIBSWBF2_NOEXCEPT;
 
 #ifdef __cplusplus
 }
@@ -80,24 +83,39 @@ LIBSWBF2_API void CList_free(struct CList *) LIBSWBF2_NOEXCEPT;
 
 #define LIBSWBF2_APILIST(T) TList<T>
 template<typename T>
-struct TList : CList{
-	TList() noexcept
+struct TList : CList {
+	TList(size_t size_) noexcept
 	{
-		elements = nullptr;
-		size = 0;
+		elements = malloc(size_ * sizeof(T));
+		size = size_;
 		element_size = sizeof(T);
+		// I know this is gross. Leave me alone. I'm tired.
+		_destructor = new std::function<void(void *)>([](void *this_) {
+			static_cast<TList<T> *>(this_)->~TList();
+		});
 	}
 
-	TList(void *elements_, size_t size_, size_t element_size_) noexcept
-	{
-		elements = elements_;
-		size = size_;
-		element_size = element_size_;
-	}
+	TList() noexcept : TList(0) { }
+
+	// Disallow copy, but allow move
+	TList(TList &) = delete;
+	TList(TList &&) = default;
+	TList& operator=(TList &) = delete;
+	TList& operator=(TList &&) = default;
 
 	~TList() noexcept
 	{
-		CList_free(this);
+		if (elements) {
+			if constexpr (!std::is_trivially_copyable_v<T>) {
+				for (size_t i = 0; i < size; ++ i) {
+					T *e = reinterpret_cast<T *>(reinterpret_cast<char *>(elements) + i * sizeof(T));
+					e->~T();
+				}
+			}
+			free(elements);
+			elements = nullptr;
+		}
+		delete static_cast<std::function<void(void *)> *>(_destructor);
 	}
 
 	T &operator[](size_t i)

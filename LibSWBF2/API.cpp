@@ -42,38 +42,18 @@ namespace LibSWBF2
 		}
 	}
 
-	template<typename T> TList<T> vector_to_tlist(std::vector<T> &&v)
-	{
-		static_assert(sizeof(TList<T>) == sizeof(CList));
-		static_assert(std::is_standard_layout_v<TList<T>>);
-
-		TList<T> l{nullptr, v.size(), sizeof(T)};
-		if (l.size > 0) {
-			l.elements = malloc(l.size * sizeof(T));
-			if constexpr (std::is_trivially_copyable_v<T>) {
-				std::memcpy(l.elements, v.data(), l.element_size * l.size);
-			} else {
-				for (size_t i = 0; i < l.size; ++ i) {
-					new(reinterpret_cast<T *>(reinterpret_cast<char *>(l.elements) + i * sizeof(T))) T(v[i]);
-				}
-			}
-		}
-		return l;
-	}
-
 	template<typename T> TList<T> vector_to_tlist(const std::vector<T> &v)
 	{
 		static_assert(sizeof(TList<T>) == sizeof(CList));
 		static_assert(std::is_standard_layout_v<TList<T>>);
 
-		TList<T> l{nullptr, v.size(), sizeof(T)};
+		TList<T> l{v.size()};
 		if (l.size > 0) {
-			l.elements = malloc(l.size * sizeof(T));
 			if constexpr (std::is_trivially_copyable_v<T>) {
 				std::memcpy(l.elements, v.data(), l.element_size * l.size);
 			} else {
 				for (size_t i = 0; i < l.size; ++ i) {
-					new(reinterpret_cast<T *>(reinterpret_cast<char *>(l.elements) + i * sizeof(T))) T(v[i]);
+					new(reinterpret_cast<T *>(l.elements) + i) T(v[i]);
 				}
 			}
 		}
@@ -85,7 +65,24 @@ namespace LibSWBF2
 	void CList_free(struct CList *l) noexcept
 	{
 		LIBSWBF2_LOG_INFO("CList_free({})", fmt::ptr(l));
-		free(l->elements);
+		(*static_cast<std::function<void(void *)> *>(l->_destructor))(l);
+	}
+
+	void *CList_get(struct CList *l, size_t i) noexcept
+	{
+		LIBSWBF2_LOG_INFO("CList_get({}, {})", fmt::ptr(l), i);
+		if (l == nullptr) {
+			return nullptr;
+		}
+		if (l->elements == nullptr) {
+			LIBSWBF2_LOG_ERROR("CList elements == nullptr");
+			return nullptr;
+		}
+		if (i >= l->size) {
+			LIBSWBF2_LOG_ERROR("CList element {} > size {}", i, l->size);
+			return nullptr;
+		}
+		return static_cast<void *>(reinterpret_cast<char *>(l->elements) + i * l->element_size);
 	}
 
 	// Bone //
