@@ -26,7 +26,7 @@ namespace LibSWBF2
 		try {
 			return t();
 		} catch (const std::exception &e) {
-			LIBSWBF2_LOG_ERROR("%s", e.what());
+			LIBSWBF2_LOG_ERROR("{}", e.what());
 		} catch (...) {
 			LIBSWBF2_LOG_ERROR("Unknown exception");
 		}

@@ -90,4 +90,4 @@ namespace LibSWBF2
 #define LIBSWBF2_LOG_WARN(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Warning, __LINE__, LIBSWBF2_FILENAME, __func__)
 #define LIBSWBF2_LOG_ERROR(...) LibSWBF2::Logging::Logger::Log(fmt::format(__VA_ARGS__), LibSWBF2::ELogType::Error, __LINE__, LIBSWBF2_FILENAME, __func__)
 
-#define LIBSWBF2_THROW(...) throw LibSWBF2Exception(fmt::format("{}:{}:{} ", __LINE__, LIBSWBF2_FILENAME, __LINE__, __func__, fmt::format(__VA_ARGS__)))
+#define LIBSWBF2_THROW(...) throw LibSWBF2Exception(fmt::format("{}:{}:{} {}", LIBSWBF2_FILENAME, __LINE__, __func__, fmt::format(__VA_ARGS__)))
