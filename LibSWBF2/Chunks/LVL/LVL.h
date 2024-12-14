@@ -32,10 +32,5 @@ namespace LibSWBF2::Chunks::LVL
 
 		// All sub LVLs not specified in here won't be loaded!
 		bool ReadFromFile(std::string Path, const std::vector<std::string>* subLVLsToLoad = nullptr);
-
-
-	protected:
-		LVL() = default;
-		~LVL() = default;
 	};
 }

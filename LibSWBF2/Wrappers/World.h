@@ -1,5 +1,6 @@
 #pragma once
 #include "req.h"
+#include "Instance.h"
 #include "Types/Vector3.h"
 #include "Types/Vector4.h"
 #include "Types/Enums.h"

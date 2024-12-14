@@ -14,7 +14,7 @@ namespace LibSWBF2
 		virtual ChunkHeader ReadChunkHeader(bool peek) = 0;
 		virtual ChunkSize ReadChunkSize() = 0;
 		virtual uint8_t ReadByte() = 0;
-		virtual bool ReadBytes(uint8_t* data, size_t length) = 0;
+		virtual bool ReadBytes(void *dst, size_t count) = 0;
 		virtual int32_t ReadInt32() = 0;
 		virtual int16_t ReadInt16() = 0;
 		virtual uint32_t ReadUInt32() = 0;
@@ -25,7 +25,7 @@ namespace LibSWBF2
 		virtual size_t GetPosition() = 0;
 		virtual void SetPosition(size_t NewPosition) = 0;
 		virtual size_t GetFileSize() = 0;
-		virtual bool SkipBytes(size_t Amount) = 0;
+		virtual bool SkipBytes(size_t count) = 0;
 		virtual void Close() = 0;
 
 		virtual bool CheckGood(size_t ReadSize) = 0;

@@ -19,7 +19,7 @@ namespace LibSWBF2
 		ChunkHeader ReadChunkHeader(bool peek);
 		ChunkSize ReadChunkSize();
 		uint8_t ReadByte();
-		bool ReadBytes(uint8_t* data, size_t length);
+		bool ReadBytes(void *dst, size_t count);
 		int32_t ReadInt32();
 		int16_t ReadInt16();
 		uint32_t ReadUInt32();
@@ -30,7 +30,7 @@ namespace LibSWBF2
 		size_t GetPosition();
 		void SetPosition(size_t NewPosition);
 		size_t GetFileSize();
-		bool SkipBytes(size_t Amount);
+		bool SkipBytes(size_t count);
 		void Close();
 
 		bool CheckGood(size_t ReadSize);

@@ -85,7 +85,7 @@ namespace LibSWBF2
 		return value;
 	}
 
-	bool StreamReader::ReadBytes(uint8_t* data, size_t length)
+	bool StreamReader::ReadBytes(void *data, size_t length)
 	{
 		LIBSWBF2_LOG_INFO("StreamReader::ReadBytes()");
 		if (CheckGood(length))

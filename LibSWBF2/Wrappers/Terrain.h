@@ -34,13 +34,11 @@ namespace LibSWBF2::Wrappers
 		std::vector<Vector2> m_TexCoords;
 		std::vector<Color4u8> m_Colors;
 
-		mutable float_t* p_HeightMap; //perhaps not commonly used, so lazy init
-		mutable std::vector<uint8_t> m_BlendMap;  //
+		// TODO: Please don't lazy initialize these...
+		mutable std::vector<float_t> p_HeightMap;
+		mutable std::vector<uint8_t> m_BlendMap;
 
 	public:
-		Terrain();
-		~Terrain();
-
 		static bool FromChunk(tern* terrainChunk, Terrain& out);
 
 		std::string GetName() const;

@@ -154,19 +154,15 @@ namespace LibSWBF2
 	uint8_t MemoryMappedReader::ReadByte()
 	{
 		uint8_t value = 0;
-		if (CheckGood(sizeof(uint8_t)))
-		{
-			value = *(p_ReaderHead++);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
-	bool MemoryMappedReader::ReadBytes(uint8_t* data, size_t length)
+	bool MemoryMappedReader::ReadBytes(void *dst, size_t count)
 	{
-		if (CheckGood(length))
-		{
-			memcpy(data, p_ReaderHead, length);
-			p_ReaderHead += length;
+		if (CheckGood(count)) {
+			memcpy(dst, p_ReaderHead, count);
+			p_ReaderHead += count;
 
 			return true;
 		}
@@ -176,55 +172,35 @@ namespace LibSWBF2
 	int32_t MemoryMappedReader::ReadInt32()
 	{
 		int32_t value = 0;
-		if (CheckGood(sizeof(int32_t)))
-		{
-			value = *((int32_t *) p_ReaderHead);
-			p_ReaderHead+=sizeof(int32_t);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
 	int16_t MemoryMappedReader::ReadInt16()
 	{
 		int16_t value = 0;
-		if (CheckGood(sizeof(int16_t)))
-		{
-			value = *((int16_t *) p_ReaderHead);
-			p_ReaderHead+=sizeof(int16_t);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
 	uint32_t MemoryMappedReader::ReadUInt32()
 	{
 		uint32_t value = 0;
-		if (CheckGood(sizeof(uint32_t)))
-		{
-			value = *((uint32_t *) p_ReaderHead);
-			p_ReaderHead+=sizeof(uint32_t);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
 	uint16_t MemoryMappedReader::ReadUInt16()
 	{
 		uint16_t value = 0;
-		if (CheckGood(sizeof(uint16_t)))
-		{
-			value = *((uint16_t *) p_ReaderHead);
-			p_ReaderHead+=sizeof(uint16_t);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
 	float_t MemoryMappedReader::ReadFloat()
 	{
 		float_t value = 0.0f;
-		if (CheckGood(sizeof(float_t)))
-		{
-			value = *((float_t *) p_ReaderHead);
-			p_ReaderHead+=sizeof(float_t);
-		}
+		ReadBytes(&value, sizeof(value));
 		return value;
 	}
 
@@ -317,14 +293,23 @@ namespace LibSWBF2
 		return true;
 	}
 
-	bool MemoryMappedReader::SkipBytes(size_t Amount)
+	bool MemoryMappedReader::SkipBytes(size_t count)
 	{
-		if (CheckGood(Amount))
-		{
-			p_ReaderHead += Amount;
-			return true;
+		if (p_MappingBase == nullptr) {
+			LIBSWBF2_THROW("Cant skip {:#x} bytes, memory mapping uninitialized!", count);
 		}
-		return false;
+
+		size_t offset = p_ReaderHead - p_MappingBase;
+		if (offset > m_FileSize) {
+			LIBSWBF2_THROW("Cant skip {:#x} bytes, we are already beyond the file!", count);
+		}
+		size_t desired = offset + count;
+		if (desired > m_FileSize) {
+			count -= desired - m_FileSize;
+		}
+		p_ReaderHead += count;
+
+		return true;
 	}
 }
 

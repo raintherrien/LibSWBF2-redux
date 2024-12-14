@@ -33,11 +33,11 @@ namespace LibSWBF2
 		Container() = default;
 		~Container() = default;
 
-		std::vector<Level *> m_Levels;
+		std::vector<Level> m_Levels;
 
 		// TODO: rework once we allow modifications (add / delete) in Levels
 		std::unordered_map<FNVHash, const Texture*> m_TextureDB;
-		std::unordered_map<FNVHash,	const Model*> m_ModelDB;
+		std::unordered_map<FNVHash, const Model*> m_ModelDB;
 		std::unordered_map<FNVHash, const World*> m_WorldDB;
 		std::unordered_map<FNVHash, const Terrain*> m_TerrainDB;
 		std::unordered_map<FNVHash, const Script*> m_ScriptDB;
@@ -53,17 +53,17 @@ namespace LibSWBF2
 
 		uint64_t m_OverallSize = 0;
 
-		Level *LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents);
+		std::optional<Level> LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents);
 
 	public:
 		static Container* Create();
 		static void Delete(Container* instance);
 
-		Level *AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
-		Level *GetLevel(size_t index) const;
+		const Level *AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
+		const Level *GetLevel(size_t index) const;
 
 		// will return the first encountered world LVL, if existent
-		Level* TryGetWorldLevel() const;
+		const Level* TryGetWorldLevel() const;
 
 		const std::vector<const World*>& GetWorlds();
 

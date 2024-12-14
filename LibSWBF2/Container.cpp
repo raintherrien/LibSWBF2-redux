@@ -28,7 +28,7 @@ namespace LibSWBF2
 
 	// non const version
 	template<class T1, class T2>
-	void CopyMap(std::unordered_map<T2, size_t>& levelMap, std::vector<T1>& list, std::unordered_map<T2, T1*>& containerMap)
+	void CopyMap(const std::unordered_map<T2, size_t>& levelMap, std::vector<T1>& list, std::unordered_map<T2, T1*>& containerMap)
 	{
 		for (auto& it : levelMap)
 		{
@@ -45,7 +45,7 @@ namespace LibSWBF2
 		}
 	}
 
-	Level *Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
+	std::optional<Level> Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
 		LIBSWBF2_LOG_INFO("Container::LoadLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
 
@@ -55,7 +55,7 @@ namespace LibSWBF2
 		{
 			StreamReader reader;
 			if (!reader.Open(path)) {
-				return nullptr;
+				return {};
 			}
 			reader.Close();
 
@@ -63,24 +63,24 @@ namespace LibSWBF2
 		}
 
 		if (lvl->ReadFromFile(path, subLVLsToLoad)) {
-			Level* level = Level::FromChunk(lvl, this);
-			if (level != nullptr) {
+			std::optional<Level> level = Level::FromChunk(lvl, this);
+			if (level) {
 				if (bRegisterContents) {
-					CopyMap(level->m_NameToIndexMaps->TextureNameToIndex,			level->m_Textures,			 m_TextureDB);
-					CopyMap(level->m_NameToIndexMaps->ModelNameToIndex,				level->m_Models,			 m_ModelDB);
-					CopyMap(level->m_NameToIndexMaps->WorldNameToIndex,				level->m_Worlds,			 m_WorldDB);
-					CopyMap(level->m_NameToIndexMaps->TerrainNameToIndex,			level->m_Terrains,			 m_TerrainDB);
-					CopyMap(level->m_NameToIndexMaps->ScriptNameToIndex,			level->m_Scripts,			 m_ScriptDB);
-					CopyMap(level->m_NameToIndexMaps->EntityClassTypeToIndex,		level->m_EntityClasses, 	 m_EntityClassDB);
-					CopyMap(level->m_NameToIndexMaps->AnimationBankNameToIndex,		level->m_AnimationBanks,     m_AnimationBankDB);
-					CopyMap(level->m_NameToIndexMaps->AnimationSkeletonNameToIndex,	level->m_AnimationSkeletons, m_AnimationSkeletonDB);
-					CopyMap(level->m_NameToIndexMaps->ConfigHashToIndex,			level->m_Configs, 			 m_ConfigDB);
-					CopyMap(level->m_NameToIndexMaps->SoundHashToIndex,         	level->m_Sounds,        	 m_SoundDB);
+					CopyMap(level->m_NameToIndexMaps.TextureNameToIndex, level->m_Textures, m_TextureDB);
+					CopyMap(level->m_NameToIndexMaps.ModelNameToIndex,level->m_Models, m_ModelDB);
+					CopyMap(level->m_NameToIndexMaps.WorldNameToIndex,level->m_Worlds, m_WorldDB);
+					CopyMap(level->m_NameToIndexMaps.TerrainNameToIndex,level->m_Terrains, m_TerrainDB);
+					CopyMap(level->m_NameToIndexMaps.ScriptNameToIndex,level->m_Scripts, m_ScriptDB);
+					CopyMap(level->m_NameToIndexMaps.EntityClassTypeToIndex,level->m_EntityClasses, m_EntityClassDB);
+					CopyMap(level->m_NameToIndexMaps.AnimationBankNameToIndex,level->m_AnimationBanks, m_AnimationBankDB);
+					CopyMap(level->m_NameToIndexMaps.AnimationSkeletonNameToIndex, level->m_AnimationSkeletons, m_AnimationSkeletonDB);
+					CopyMap(level->m_NameToIndexMaps.ConfigHashToIndex, level->m_Configs, m_ConfigDB);
+					CopyMap(level->m_NameToIndexMaps.SoundHashToIndex, level->m_Sounds, m_SoundDB);
 
 					CopyList(level->m_Worlds, m_Worlds);
 
 
-					for (auto& it : level->m_NameToIndexMaps->LocalizationNameToIndex)
+					for (auto& it : level->m_NameToIndexMaps.LocalizationNameToIndex)
 					{
 						auto find = m_LocalizationDB.find(it.first);
 						if (find == m_LocalizationDB.end())
@@ -100,11 +100,11 @@ namespace LibSWBF2
 				return level;
 			} else {
 				LVL::Destroy(lvl);
-				return nullptr;
+				return {};
 			}
 		} else {
 			LVL::Destroy(lvl);
-			return nullptr;
+			return {};
 		}
 	}
 
@@ -120,17 +120,18 @@ namespace LibSWBF2
 		delete container;
 	}
 
-	Level *Container::AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
+	const Level *Container::AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
 		LIBSWBF2_LOG_INFO("Container::AddLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
-		Level *lvl = LoadLevel(path, subLVLsToLoad, bRegisterContents);
+		std::optional<Level> lvl = LoadLevel(path, subLVLsToLoad, bRegisterContents);
 		if (lvl) {
-			m_Levels.push_back(lvl);
+			m_Levels.emplace_back(*lvl);
+			return &m_Levels.back();
 		}
-		return lvl;
+		return nullptr;
 	}
 
-	Level* Container::GetLevel(size_t index) const
+	const Level* Container::GetLevel(size_t index) const
 	{
 		LIBSWBF2_LOG_INFO("Container::GetLevel({})", index);
 		if (index >= m_Levels.size())
@@ -139,15 +140,15 @@ namespace LibSWBF2
 			return nullptr;
 		}
 
-		return m_Levels[index];
+		return &m_Levels[index];
 	}
 
-	Level* Container::TryGetWorldLevel() const
+	const Level* Container::TryGetWorldLevel() const
 	{
 		LIBSWBF2_LOG_INFO("Container::TryGetWorldLevel()");
 		for (size_t i = 0; i < m_Levels.size(); ++i) {
-			if (m_Levels[i]->IsWorldLevel()) {
-				return m_Levels[i];
+			if (m_Levels[i].IsWorldLevel()) {
+				return &m_Levels[i];
 			}
 		}
 		return nullptr;
