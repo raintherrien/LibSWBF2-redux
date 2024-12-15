@@ -19,7 +19,7 @@
 
 namespace LibSWBF2
 {
-#define CHECKNULL(PTR, ...) if (PTR == nullptr) { LIBSWBF2_LOG_ERROR("Given Pointer was NULL!"); return __VA_ARGS__; }
+#define CHECKNULL(PTR, ...) if (nullptr == (PTR)) { LIBSWBF2_LOG_ERROR("Given Pointer was NULL!"); return __VA_ARGS__; }
 
 	template<typename T> auto catchall(T &&t) noexcept -> decltype(t())
 	{
@@ -42,47 +42,55 @@ namespace LibSWBF2
 		}
 	}
 
-	template<typename T> TList<T> vector_to_tlist(const std::vector<T> &v)
-	{
-		static_assert(sizeof(TList<T>) == sizeof(CList));
-		static_assert(std::is_standard_layout_v<TList<T>>);
+	// API List //
 
-		TList<T> l{v.size()};
-		if (l.size > 0) {
-			if constexpr (std::is_trivially_copyable_v<T>) {
-				std::memcpy(l.elements, v.data(), l.element_size * l.size);
+	struct CList {
+		virtual ~CList() noexcept { }
+		virtual const void *get(size_t index) noexcept = 0;
+		virtual size_t size() noexcept = 0;
+	};
+
+	template<typename T>
+	struct TList : CList {
+		std::vector<T> data;
+
+		TList(std::vector<T> &&d) : data{std::forward<std::vector<T>>(d)} { }
+		TList(const std::vector<T> &d) : data{d} { }
+		~TList() noexcept { }
+
+		const void *get(size_t index) noexcept override
+		{
+			if (index < data.size()) {
+				LIBSWBF2_LOG_INFO("TList::get({}) -> {}", index, fmt::ptr(&data[index]));
+				return &data[index];
 			} else {
-				for (size_t i = 0; i < l.size; ++ i) {
-					new(reinterpret_cast<T *>(l.elements) + i) T(v[i]);
-				}
+				LIBSWBF2_LOG_INFO("TList::get({}) > size {} -> nullptr", index, data.size());
+				return nullptr;
 			}
 		}
-		return l;
-	}
 
-	// API List //
+		size_t size() noexcept override
+		{
+			return data.size();
+		}
+	};
+
+	size_t CList_size(struct CList *l) noexcept
+	{
+		LIBSWBF2_LOG_INFO("CList_size({})", fmt::ptr(l));
+		return l->size();
+	}
 
 	void CList_free(struct CList *l) noexcept
 	{
 		LIBSWBF2_LOG_INFO("CList_free({})", fmt::ptr(l));
-		(*static_cast<std::function<void(void *)> *>(l->_destructor))(l);
+		delete l;
 	}
 
-	void *CList_get(struct CList *l, size_t i) noexcept
+	const void *CList_get(struct CList *l, size_t i) noexcept
 	{
 		LIBSWBF2_LOG_INFO("CList_get({}, {})", fmt::ptr(l), i);
-		if (l == nullptr) {
-			return nullptr;
-		}
-		if (l->elements == nullptr) {
-			LIBSWBF2_LOG_ERROR("CList elements == nullptr");
-			return nullptr;
-		}
-		if (i >= l->size) {
-			LIBSWBF2_LOG_ERROR("CList element {} > size {}", i, l->size);
-			return nullptr;
-		}
-		return static_cast<void *>(reinterpret_cast<char *>(l->elements) + i * l->element_size);
+		return l->get(i);
 	}
 
 	// Bone //
@@ -129,21 +137,21 @@ namespace LibSWBF2
 
 	// Collision Mesh //
 
-	TList<uint16_t> CollisionMesh_GetIndexBuffer(const CollisionMesh *mesh) noexcept
+	CList *CollisionMesh_GetIndexBuffer(const CollisionMesh *mesh) noexcept
 	{
 		LIBSWBF2_LOG_INFO("CollisionMesh_GetIndexBuffer({})", fmt::ptr(mesh));
 		return catchall([&] {
-			CHECKNULL(mesh, TList<uint16_t>{});
-			return vector_to_tlist(mesh->GetIndexBuffer());
+			CHECKNULL(mesh, static_cast<TList<uint16_t> *>(nullptr));
+			return new TList<uint16_t>{mesh->GetIndexBuffer()};
 		});
 	}
 
-	TList<Vector3> CollisionMesh_GetVertexBuffer(const CollisionMesh *mesh) noexcept
+	CList *CollisionMesh_GetVertexBuffer(const CollisionMesh *mesh) noexcept
 	{
 		LIBSWBF2_LOG_INFO("CollisionMesh_GetVertexBuffer({})", fmt::ptr(mesh));
 		return catchall([&] {
-			CHECKNULL(mesh, TList<Vector3>{});
-			return vector_to_tlist(mesh->GetVertexBuffer());
+			CHECKNULL(mesh, static_cast<TList<Vector3> *>(nullptr));
+			return new TList<Vector3>{mesh->GetVertexBuffer()};
 		});
 	}
 
@@ -237,12 +245,12 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const Field *> Config_GetFields(const Config *cfg, uint32_t name_hash) noexcept
+	CList *Config_GetFields(const Config *cfg, uint32_t name_hash) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Config_GetFields({}, {})", fmt::ptr(cfg), name_hash);
 		return catchall([&] {
-			CHECKNULL(cfg, TList<const Field *>{});
-			return vector_to_tlist(cfg->GetFields(name_hash));
+			CHECKNULL(cfg, static_cast<TList<const Field *> *>(nullptr));
+			return new TList<const Field *>{cfg->GetFields(name_hash)};
 		});
 	}
 
@@ -324,12 +332,12 @@ namespace LibSWBF2
 			return base_name.size();
 		});
 	}
-	TList<uint32_t> EntityClass_GetAllPropertyHashes(const struct EntityClass *ec) noexcept
+	CList *EntityClass_GetAllPropertyHashes(const struct EntityClass *ec) noexcept
 	{
 		LIBSWBF2_LOG_INFO("EntityClass_GetAllPropertyHashes({})", fmt::ptr(ec));
 		return catchall([&] {
-			CHECKNULL(ec, TList<uint32_t>{});
-			return vector_to_tlist(ec->GetAllPropertyHashes());
+			CHECKNULL(ec, static_cast<TList<uint32_t> *>(nullptr));
+			return new TList<uint32_t>{ec->GetAllPropertyHashes()};
 		});
 	}
 
@@ -423,12 +431,12 @@ namespace LibSWBF2
 
 	// Level //
 
-	TList<World> Level_GetWorlds(const Level *level) noexcept
+	CList *Level_GetWorlds(const Level *level) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Level_GetWorlds({})", fmt::ptr(level));
 		return catchall([&] {
-			CHECKNULL(level, TList<World>{});
-			return vector_to_tlist(level->GetWorlds());
+			CHECKNULL(level, static_cast<TList<World> *>(nullptr));
+			return new TList<World>{level->GetWorlds()};
 		});
 	}
 
@@ -474,30 +482,30 @@ namespace LibSWBF2
 
 	// Model //
 
-	TList<Segment> Model_GetSegments(const Model *model) noexcept
+	CList *Model_GetSegments(const Model *model) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Model_GetSegments({})", fmt::ptr(model));
 		return catchall([&] {
-			CHECKNULL(model, TList<Segment>{});
-			return vector_to_tlist(model->GetSegments());
+			CHECKNULL(model, static_cast<TList<Segment> *>(nullptr));
+			return new TList<Segment>{model->GetSegments()};
 		});
 	}
 
-	TList<Bone> Model_GetBones(const Model *model) noexcept
+	CList *Model_GetBones(const Model *model) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Model_GetBones({})", fmt::ptr(model));
 		return catchall([&] {
-			CHECKNULL(model, TList<Bone>{});
-			return vector_to_tlist(model->GetBones());
+			CHECKNULL(model, static_cast<TList<Bone> *>(nullptr));
+			return new TList<Bone>{model->GetBones()};
 		});
 	}
 
-	TList<CollisionPrimitive> Model_GetCollisionPrimitives(const Model *model) noexcept
+	CList *Model_GetCollisionPrimitives(const Model *model) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Model_GetCollisionPrimitives({})", fmt::ptr(model));
 		return catchall([&] {
-			CHECKNULL(model, TList<CollisionPrimitive>{});
-			return vector_to_tlist(model->GetCollisionPrimitives());
+			CHECKNULL(model, static_cast<TList<CollisionPrimitive> *>(nullptr));
+			return new TList<CollisionPrimitive>{model->GetCollisionPrimitives()};
 		});
 	}
 
@@ -521,12 +529,12 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const Field *> Scope_GetFields(const Scope *scope, uint32_t name_hash) noexcept
+	CList *Scope_GetFields(const Scope *scope, uint32_t name_hash) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Scope_GetFields({}, {})", fmt::ptr(scope), name_hash);
 		return catchall([&] {
-			CHECKNULL(scope, TList<const Field *>{});
-			return vector_to_tlist(scope->GetFields(name_hash));
+			CHECKNULL(scope, static_cast<TList<const Field *> *>(nullptr));
+			return new TList<const Field *>{scope->GetFields(name_hash)};
 		});
 	}
 
@@ -561,94 +569,94 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint16_t> Segment_GetIndexBuffer(const Segment *seg) noexcept
+	CList *Segment_GetIndexBuffer(const Segment *seg) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Segment_GetIndexBuffer({})", fmt::ptr(seg));
 		return catchall([&] {
-			CHECKNULL(seg, TList<uint16_t>{});
-			return vector_to_tlist(seg->GetIndexBuffer());
+			CHECKNULL(seg, static_cast<TList<uint16_t> *>(nullptr));
+			return new TList<uint16_t>{seg->GetIndexBuffer()};
 		});
 	}
 
-	TList<Vector3> Segment_GetVertexBuffer(const Segment *seg) noexcept
+	CList *Segment_GetVertexBuffer(const Segment *seg) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Segment_GetVertexBuffer({})", fmt::ptr(seg));
 		return catchall([&] {
-			CHECKNULL(seg, TList<Vector3>{});
-			return vector_to_tlist(seg->GetVertexBuffer());
+			CHECKNULL(seg, static_cast<TList<Vector3> *>(nullptr));
+			return new TList<Vector3>{seg->GetVertexBuffer()};
 		});
 	}
 
-	TList<Vector2> Segment_GetUVBuffer(const Segment *seg) noexcept
+	CList *Segment_GetUVBuffer(const Segment *seg) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Segment_GetUVBuffer({})", fmt::ptr(seg));
 		return catchall([&] {
-			CHECKNULL(seg, TList<Vector2>{});
-			return vector_to_tlist(seg->GetUVBuffer());
+			CHECKNULL(seg, static_cast<TList<Vector2> *>(nullptr));
+			return new TList<Vector2>{seg->GetUVBuffer()};
 		});
 	}
 
-	TList<Vector3> Segment_GetNormalBuffer(const Segment *seg) noexcept
+	CList *Segment_GetNormalBuffer(const Segment *seg) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Segment_GetNormalBuffer({})", fmt::ptr(seg));
 		return catchall([&] {
-			CHECKNULL(seg, TList<Vector3>{});
-			return vector_to_tlist(seg->GetNormalBuffer());
+			CHECKNULL(seg, static_cast<TList<Vector3> *>(nullptr));
+			return new TList<Vector3>{seg->GetNormalBuffer()};
 		});
 	}
 
 	// Terrain //
 
-	TList<uint32_t> Terrain_GetIndexBuffer(const Terrain *terr) noexcept
+	CList *Terrain_GetIndexBuffer(const Terrain *terr) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Terrain_GetIndexBuffer({})", fmt::ptr(terr));
 		return catchall([&] {
-			CHECKNULL(terr, TList<uint32_t>{});
-			return vector_to_tlist(terr->GetIndexBuffer(ETopology::TriangleList));
+			CHECKNULL(terr, static_cast<TList<uint32_t> *>(nullptr));
+			return new TList<uint32_t>{terr->GetIndexBuffer(ETopology::TriangleList)};
 		});
 	}
 
-	TList<Vector3> Terrain_GetVertexBuffer(const Terrain *terr) noexcept
+	CList *Terrain_GetVertexBuffer(const Terrain *terr) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Terrain_GetVertexBuffer({})", fmt::ptr(terr));
 		return catchall([&] {
-			CHECKNULL(terr, TList<Vector3>{});
-			return vector_to_tlist(terr->GetVertexBuffer());
+			CHECKNULL(terr, static_cast<TList<Vector3> *>(nullptr));
+			return new TList<Vector3>{terr->GetVertexBuffer()};
 		});
 	}
 
-	TList<Vector2> Terrain_GetUVBuffer(const Terrain *terr) noexcept
+	CList *Terrain_GetUVBuffer(const Terrain *terr) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Terrain_GetUVBuffer({})", fmt::ptr(terr));
 		return catchall([&] {
-			CHECKNULL(terr, TList<Vector2>{});
-			return vector_to_tlist(terr->GetUVBuffer());
+			CHECKNULL(terr, static_cast<TList<Vector2> *>(nullptr));
+			return new TList<Vector2>{terr->GetUVBuffer()};
 		});
 	}
 
-	TList<uint8_t> Terrain_GetBlendMap(const Terrain *terr, uint32_t *out_dim, uint32_t *out_num_layers) noexcept
+	CList *Terrain_GetBlendMap(const Terrain *terr, uint32_t *out_dim, uint32_t *out_num_layers) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Terrain_GetBlendMap({}, {}, {})", fmt::ptr(terr), fmt::ptr(out_dim), fmt::ptr(out_num_layers));
 		return catchall([&] {
 			*out_dim = 0;
 			*out_num_layers = 0;
-			CHECKNULL(terr, TList<uint8_t>{});
-			return vector_to_tlist(terr->GetBlendMap(*out_dim, *out_num_layers));
+			CHECKNULL(terr, static_cast<TList<uint8_t> *>(nullptr));
+			return new TList<uint8_t>{terr->GetBlendMap(*out_dim, *out_num_layers)};
 		});
 	}
 
-	TList<Texture> Terrain_GetLayerTextures(const Terrain *terr, const Container *container) noexcept
+	CList *Terrain_GetLayerTextures(const Terrain *terr, const Container *container) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Terrain_GetLayerTextures({}, {})", fmt::ptr(terr), fmt::ptr(container));
 		return catchall([&] {
-			CHECKNULL(terr, TList<Texture>{});
-			CHECKNULL(container, TList<Texture>{});
+			CHECKNULL(terr, static_cast<TList<Texture> *>(nullptr));
+			CHECKNULL(container, static_cast<TList<Texture> *>(nullptr));
 			std::vector<std::string> layer_texture_names = terr->GetLayerTextures();
 			std::vector<Texture> layer_textures;
 			for (const std::string &texture_name : layer_texture_names) {
 				layer_textures.emplace_back(*container->FindTexture(texture_name));
 			}
-			return vector_to_tlist(layer_textures);
+			return new TList<Texture>{layer_textures};
 		});
 	}
 
@@ -665,19 +673,19 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint8_t> Texture_GetData(const Texture *tex, uint16_t *out_width, uint16_t *out_height) noexcept
+	CList *Texture_GetData(const Texture *tex, uint16_t *out_width, uint16_t *out_height) noexcept
 	{
 		LIBSWBF2_LOG_INFO("Texture_GetData({}, {}, {})", fmt::ptr(tex), fmt::ptr(out_width), fmt::ptr(out_height));
 		return catchall([&] {
 			if (tex == nullptr) {
 				*out_width = 0;
 				*out_height = 0;
-				return TList<uint8_t>{};
+				return static_cast<TList<uint8_t> *>(nullptr);
 			}
 			const uint8_t *buff = nullptr;
 			tex->GetImageData(ETextureFormat::R8_G8_B8_A8, 0, *out_width, *out_height, buff);
 			size_t len = *out_width * *out_height * 4;
-			return vector_to_tlist(std::vector<uint8_t>{buff, buff + len});
+			return new TList<uint8_t>{std::vector<uint8_t>{buff, buff + len}};
 		});
 	}
 
@@ -705,12 +713,12 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<Instance> World_GetInstances(const World *world) noexcept
+	CList *World_GetInstances(const World *world) noexcept
 	{
 		LIBSWBF2_LOG_INFO("World_GetInstance({})", fmt::ptr(world));
 		return catchall([&] {
-			CHECKNULL(world, TList<Instance>{});
-			return vector_to_tlist(world->GetInstances());
+			CHECKNULL(world, static_cast<TList<Instance> *>(nullptr));
+			return new TList<Instance>{world->GetInstances()};
 		});
 	}
 

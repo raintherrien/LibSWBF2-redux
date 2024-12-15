@@ -65,74 +65,13 @@ using namespace Wrappers;
 #ifdef __cplusplus
 extern "C" {
 #endif
-struct CList {
-	void *elements;
-	size_t size;
-	size_t element_size;
-	void *_destructor; // Used to call the typed C++ destructor after type erasure
-};
-
+struct CList;
+LIBSWBF2_API size_t CList_size(struct CList *) LIBSWBF2_NOEXCEPT;
+LIBSWBF2_API const void *CList_get(struct CList *, size_t index) LIBSWBF2_NOEXCEPT;
 LIBSWBF2_API void CList_free(struct CList *) LIBSWBF2_NOEXCEPT;
-LIBSWBF2_API void *CList_get(struct CList *, size_t index) LIBSWBF2_NOEXCEPT;
 
 #ifdef __cplusplus
 }
-#endif
-
-#ifdef __cplusplus
-
-#define LIBSWBF2_APILIST(T) TList<T>
-template<typename T>
-struct TList : CList {
-	TList(size_t size_) noexcept
-	{
-		elements = malloc(size_ * sizeof(T));
-		size = size_;
-		element_size = sizeof(T);
-		// I know this is gross. Leave me alone. I'm tired.
-		_destructor = new std::function<void(void *)>([](void *this_) {
-			static_cast<TList<T> *>(this_)->~TList();
-		});
-	}
-
-	TList() noexcept : TList(0) { }
-
-	// Disallow copy, but allow move
-	TList(TList &) = delete;
-	TList(TList &&) = default;
-	TList& operator=(TList &) = delete;
-	TList& operator=(TList &&) = default;
-
-	~TList() noexcept
-	{
-		if (elements) {
-			if constexpr (!std::is_trivially_copyable_v<T>) {
-				for (size_t i = 0; i < size; ++ i) {
-					T *e = reinterpret_cast<T *>(reinterpret_cast<char *>(elements) + i * sizeof(T));
-					e->~T();
-				}
-			}
-			free(elements);
-			elements = nullptr;
-		}
-		delete static_cast<std::function<void(void *)> *>(_destructor);
-	}
-
-	T &operator[](size_t i)
-	{
-		return *reinterpret_cast<T *>(reinterpret_cast<char *>(elements) + i * element_size);
-	}
-
-	const T &operator[](size_t i) const
-	{
-		return *reinterpret_cast<T *>(reinterpret_cast<char *>(elements) + i * element_size);
-	}
-};
-
-#else
-
-#define LIBSWBF2_APILIST(T) struct CList
-
 #endif
 
 // C API which will never throw an exception and does its damndest to not return
@@ -153,8 +92,8 @@ extern "C" {
 	LIBSWBF2_API size_t Bone_GetParentName(const struct Bone *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 
 	// CollisionMesh //
-	LIBSWBF2_API LIBSWBF2_APILIST(uint16_t) CollisionMesh_GetIndexBuffer(const struct CollisionMesh *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector3) CollisionMesh_GetVertexBuffer(const struct CollisionMesh *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint16_t */ CollisionMesh_GetIndexBuffer(const struct CollisionMesh *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* Vector3 */ CollisionMesh_GetVertexBuffer(const struct CollisionMesh *) LIBSWBF2_NOEXCEPT;
 
 	// CollisionPrimitive //
 	LIBSWBF2_API struct Vector3 CollisionPrimitive_GetPosition(const struct CollisionPrimitive *) LIBSWBF2_NOEXCEPT;
@@ -167,7 +106,7 @@ extern "C" {
 
 	// Config //
 	LIBSWBF2_API const struct Field *Config_GetField(const struct Config *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(const Field *) Config_GetFields(const struct Config *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Field * */ Config_GetFields(const struct Config *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
 
 	// Container //
 	LIBSWBF2_API struct Container *Container_Create() LIBSWBF2_NOEXCEPT;
@@ -180,7 +119,7 @@ extern "C" {
 
 	// EntityClass //
 	LIBSWBF2_API size_t EntityClass_GetBaseName(const struct EntityClass *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(uint32_t) EntityClass_GetAllPropertyHashes(const struct EntityClass *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint32_t */ EntityClass_GetAllPropertyHashes(const struct EntityClass *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t EntityClass_GetPropertyValue(const struct EntityClass *, uint32_t name_hash, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 
 	// Field //
@@ -197,7 +136,7 @@ extern "C" {
 	LIBSWBF2_API struct Vector4 Instance_GetRotation(const struct Instance *) LIBSWBF2_NOEXCEPT;
 
 	// Level //
-	LIBSWBF2_API LIBSWBF2_APILIST(World) Level_GetWorlds(const struct Level *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct World */ Level_GetWorlds(const struct Level *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API bool Level_IsWorldLevel(const struct Level *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t Level_GetName(const struct Level *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 
@@ -206,39 +145,39 @@ extern "C" {
 	LIBSWBF2_API enum EMaterialFlags Material_GetFlags(const struct Material *) LIBSWBF2_NOEXCEPT;
 
 	// Model //
-	LIBSWBF2_API LIBSWBF2_APILIST(Segment) Model_GetSegments(const struct Model *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Bone) Model_GetBones(const struct Model *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(CollisionPrimitive) Model_GetCollisionPrimitives(const struct Model *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Segment */ Model_GetSegments(const struct Model *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Bone */ Model_GetBones(const struct Model *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct CollisionPrimitive */ Model_GetCollisionPrimitives(const struct Model *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const struct CollisionMesh *Model_GetCollisionMesh(const struct Model *) LIBSWBF2_NOEXCEPT;
 
 	// Scope //
 	LIBSWBF2_API const struct Field *Scope_GetField(const struct Scope *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(const Field *) Scope_GetFields(const struct Scope *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Field * */ Scope_GetFields(const struct Scope *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
 
 	// Segment //
 	LIBSWBF2_API enum ETopology Segment_GetTopology(const struct Segment *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t Segment_GetBoneName(const struct Segment *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const struct Material *Segment_GetMaterial(const struct Segment *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(uint16_t) Segment_GetIndexBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector3) Segment_GetVertexBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector2) Segment_GetUVBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector3) Segment_GetNormalBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint16_t */ Segment_GetIndexBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Vector3 */ Segment_GetVertexBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Vector2 */ Segment_GetUVBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Vector3 */ Segment_GetNormalBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
 
 	// Terrain //
-	LIBSWBF2_API LIBSWBF2_APILIST(uint32_t) Terrain_GetIndexBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector3) Terrain_GetVertexBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Vector2) Terrain_GetUVBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(uint8_t) Terrain_GetBlendMap(const struct Terrain *, uint32_t *out_width, uint32_t *out_num_layers) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Texture) Terrain_GetLayerTextures(const struct Terrain *, const struct Container *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint32_t */ Terrain_GetIndexBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Vector3 */ Terrain_GetVertexBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Vector2 */ Terrain_GetUVBuffer(const struct Terrain *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint8_t */ Terrain_GetBlendMap(const struct Terrain *, uint32_t *out_width, uint32_t *out_num_layers) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /*const struct Texture */ Terrain_GetLayerTextures(const struct Terrain *, const struct Container *) LIBSWBF2_NOEXCEPT;
 
 	// Texture //
 	LIBSWBF2_API size_t Texture_GetName(const struct Texture *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(uint8_t) Texture_GetData(const struct Texture *, uint16_t *out_width, uint16_t *out_height) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* uint8_t */ Texture_GetData(const struct Texture *, uint16_t *out_width, uint16_t *out_height) LIBSWBF2_NOEXCEPT;
 
 	// World //
 	LIBSWBF2_API size_t World_GetName(const struct World *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t World_GetSkyName(const struct World *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
-	LIBSWBF2_API LIBSWBF2_APILIST(Instance) World_GetInstances(const struct World *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API struct CList * /* const struct Instance */ World_GetInstances(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API const struct Terrain *World_GetTerrain(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t World_GetTerrainName(const struct World *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 
