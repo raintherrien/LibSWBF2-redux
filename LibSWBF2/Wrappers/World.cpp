@@ -318,13 +318,9 @@ namespace LibSWBF2::Wrappers
 		out.p_World = worldChunk;
 		out.m_MainContainer = mainContainer;
 
-		std::vector<inst*>& instances = worldChunk->m_Instances;
-		for (size_t i = 0; i < instances.size(); ++i)
-		{
-			Instance instance;
-			if (Instance::FromChunk(mainContainer, instances[i], instance))
-			{
-				out.m_Instances.push_back(instance);
+		for (const std::shared_ptr<inst> &ic : worldChunk->m_Instances) {
+			if (std::optional<Instance> instance = Instance::FromChunk(mainContainer, ic)) {
+				out.m_Instances.push_back(*instance);
 			}
 		}
 

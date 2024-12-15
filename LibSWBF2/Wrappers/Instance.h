@@ -30,11 +30,11 @@ namespace LibSWBF2::Wrappers
 
 	private:
 		Container* p_MainContainer;
-		inst* p_Instance;
+		std::shared_ptr<inst> p_Instance;
 		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
 
 	public:
-		static bool FromChunk(Container* mainContainer, inst* instanceChunk, Instance& out);
+		static std::optional<Instance> FromChunk(Container *mainContainer, std::shared_ptr<inst> chunk);
 
 		std::string GetEntityClassName() const;
 		std::string GetName() const;

@@ -176,9 +176,6 @@ namespace LibSWBF2::Wrappers
 
 
 	public:
-		World() = default;
-		~World() = default;
-
 		static bool FromChunk(Container* mainContainer, wrld* worldChunk, World& out);
 
 		std::string GetName() const;

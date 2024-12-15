@@ -7,21 +7,22 @@
 
 namespace LibSWBF2::Wrappers
 {
-	bool Instance::FromChunk(Container* mainContainer, inst* instanceChunk, Instance& out)
+	std::optional<Instance> Instance::FromChunk(Container *mainContainer, std::shared_ptr<inst> chunk)
 	{
-		if (instanceChunk == nullptr)
+		Instance out;
+		if (!chunk)
 		{
-			LIBSWBF2_LOG_ERROR("Given instanceChunk was NULL!");
-			return false;
+			LIBSWBF2_LOG_ERROR("Invalid instance chunk");
+			return {};
 		}
 
 		out.p_MainContainer = mainContainer;
-		out.p_Instance = instanceChunk;
+		out.p_Instance = chunk;
 
 		out.m_HashToIndices.clear();
-		for (size_t i = 0; i < instanceChunk->m_OverrideProperties.size(); ++i)
+		for (size_t i = 0; i < chunk->m_OverrideProperties.size(); ++i)
 		{
-			FNVHash hashedName = instanceChunk->m_OverrideProperties[i]->m_PropertyName;
+			FNVHash hashedName = chunk->m_OverrideProperties[i]->m_PropertyName;
 
 			auto it = out.m_HashToIndices.find(hashedName);
 			if (it != out.m_HashToIndices.end())
@@ -34,7 +35,7 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 	std::string Instance::GetEntityClassName() const
