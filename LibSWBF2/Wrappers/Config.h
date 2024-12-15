@@ -12,7 +12,6 @@ namespace LibSWBF2::Chunks
 	namespace LVL::config
 	{
 		struct SCOP;
-		struct ConfigChunkNC;
 		struct DATA_CONFIG;
 	}
 }
@@ -95,7 +94,6 @@ namespace LibSWBF2::Wrappers
 	class LIBSWBF2_API Config
 	{
 
-	typedef LibSWBF2::Chunks::LVL::config::ConfigChunkNC ConfigChunkNC;
 	typedef LibSWBF2::Chunks::GenericBaseChunk GenericBaseChunk;
 
 	friend class Level;
