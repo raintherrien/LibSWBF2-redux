@@ -307,7 +307,10 @@ namespace LibSWBF2
 	{
 		LIBSWBF2_LOG_INFO("Container_Create()");
 		return catchall([&] {
-			return new Container_Owned{std::make_shared<LibSWBF2::Container>()};
+			if (auto c = std::make_shared<LibSWBF2::Container>()) {
+				return new Container_Owned{c};
+			}
+			return static_cast<Container_Owned *>(nullptr);
 		});
 	}
 
@@ -326,7 +329,10 @@ namespace LibSWBF2
 		LIBSWBF2_LOG_INFO("Container_AddLevel({}, '{}')", fmt::ptr(container), lvl_path);
 		return catchall([&] {
 			CHECKNULL(container, static_cast<Level_Owned *>(nullptr))
-			return new Level_Owned{container->ptr->AddLevel(lvl_path)};
+			if (auto l = container->ptr->AddLevel(lvl_path)) {
+				return new Level_Owned{l};
+			}
+			return static_cast<Level_Owned *>(nullptr);
 		});
 	}
 
