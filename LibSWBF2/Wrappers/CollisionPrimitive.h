@@ -24,22 +24,28 @@ namespace LibSWBF2::Wrappers
 
 	private:
 		
-		DATA_PRIM *p_FieldsChunk;
-		XFRM *p_TransformChunk;
-		STR<"NAME"_m> *p_NameChunk;
-		MASK *p_MaskChunk;
-		STR<"PRNT"_m> *p_ParentChunk;
+		std::shared_ptr<DATA_PRIM> p_FieldsChunk;
+		std::shared_ptr<XFRM> p_TransformChunk;
+		std::shared_ptr<STR<"NAME"_m>> p_NameChunk;
+		std::shared_ptr<MASK> p_MaskChunk;
+		std::shared_ptr<STR<"PRNT"_m>> p_ParentChunk;
 
 		
-		static bool FromChunks(STR<"NAME"_m> *name, MASK *mask,
-                           STR<"PRNT"_m> *parent, XFRM *transform,
-                           DATA_PRIM *fields, CollisionPrimitive& out);
+		static std::optional<CollisionPrimitive> FromChunks(
+			std::shared_ptr<STR<"NAME"_m>> name,
+			std::shared_ptr<MASK> mask,
+			std::shared_ptr<STR<"PRNT"_m>> parent,
+			std::shared_ptr<XFRM> transform,
+			std::shared_ptr<DATA_PRIM> fields
+		);
 	public:
-		CollisionPrimitive(STR<"NAME"_m> *name, MASK *mask,
-                           STR<"PRNT"_m> *parent, XFRM *transform,
-                           DATA_PRIM *fields);
-
-		CollisionPrimitive() = default;
+		CollisionPrimitive(
+			std::shared_ptr<STR<"NAME"_m>> name,
+			std::shared_ptr<MASK> mask,
+			std::shared_ptr<STR<"PRNT"_m>> parent,
+			std::shared_ptr<XFRM> transform,
+			std::shared_ptr<DATA_PRIM> fields
+		);
 		
 		std::string GetName() const;
 		std::string GetParentName() const;

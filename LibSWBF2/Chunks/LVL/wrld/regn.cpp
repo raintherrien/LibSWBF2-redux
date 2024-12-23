@@ -21,22 +21,22 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+                p_Info = ReadChild<INFO>(stream);
             }
             else if (next == "PROP"_h)
             {
-                READ_CHILD(stream, m_Props.emplace_back());
+                m_Props.emplace_back(ReadChild<PROP>(stream));
             }
             else 
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }
@@ -44,7 +44,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 
     std::string regn::ToString() const
     {
-	    std::string rep = fmt::format("Name: {}\nType: {}\n",
+        std::string rep = fmt::format("Name: {}\nType: {}\n",
                                 p_Info -> p_Name -> m_Text,
                                 p_Info -> p_Type -> m_Text);
         return rep;

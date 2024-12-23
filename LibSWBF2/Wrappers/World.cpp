@@ -15,18 +15,20 @@ namespace LibSWBF2::Wrappers
 
 	// HintNode
 
-	bool HintNode::FromChunk(Hint* chunk, HintNode& hintOut)
+	std::optional<HintNode> HintNode::FromChunk(std::shared_ptr<Hint> chunk)
 	{
+		HintNode hintOut;
+
 		if (chunk -> p_Info == nullptr ||
 			chunk -> p_Info -> p_Name == nullptr ||
 			chunk -> p_Info -> p_Type == nullptr ||
 			chunk -> p_Info -> p_Transform == nullptr)
 		{
-			return false;
+			return {};
 		}
 
 		hintOut.p_HintNode = chunk;
-		return true;
+		return hintOut;
 	}
 
 	const std::string& HintNode::GetName() const
@@ -54,7 +56,7 @@ namespace LibSWBF2::Wrappers
 		outHashes.clear();
 		outValues.clear();
 
-		std::vector<PROP*>& properties = p_HintNode->m_Properties;
+		std::vector<std::shared_ptr<PROP>>& properties = p_HintNode->m_Properties;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			outHashes.push_back(properties[i]->m_PropertyName);
@@ -68,19 +70,21 @@ namespace LibSWBF2::Wrappers
 
 	// Barrier
 
-	bool Barrier::FromChunk(BARR* chunk, Barrier& barrOut)
+	std::optional<Barrier> Barrier::FromChunk(std::shared_ptr<BARR> chunk)
 	{
+		Barrier barrOut;
+
 		if (chunk -> p_Info == nullptr ||
 			chunk -> p_Info -> p_Name == nullptr ||
 			chunk -> p_Info -> p_Flag == nullptr ||
 			chunk -> p_Info -> p_Size == nullptr ||
 			chunk -> p_Info -> p_Transform == nullptr)
 		{
-			return false;
+			return {};
 		}
 
 		barrOut.p_Barrier = chunk;
-		return true;
+		return barrOut;
 	}
 
 	const std::string& Barrier::GetName() const
@@ -112,19 +116,21 @@ namespace LibSWBF2::Wrappers
 
 	// Region
 
-	bool Region::FromChunk(regn* chunk, Region& regOut)
+	std::optional<Region> Region::FromChunk(std::shared_ptr<regn> chunk)
 	{
+		Region regOut;
+
 		if (chunk -> p_Info == nullptr ||
 			chunk -> p_Info -> p_Name == nullptr ||
 			chunk -> p_Info -> p_Type == nullptr ||
 			chunk -> p_Info -> p_SIZE == nullptr ||
 			chunk -> p_Info -> p_XFRM == nullptr)
 		{
-			return false;
+			return {};
 		}
 
 		regOut.p_Region = chunk;
-		return true;
+		return regOut;
 	}
 
 	const std::string& Region::GetName() const
@@ -157,7 +163,7 @@ namespace LibSWBF2::Wrappers
 		outHashes.clear();
 		outValues.clear();
 
-		std::vector<PROP*>& properties = p_Region->m_Props;
+		std::vector<std::shared_ptr<PROP>>& properties = p_Region->m_Props;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			outHashes.push_back(properties[i]->m_PropertyName);
@@ -169,15 +175,17 @@ namespace LibSWBF2::Wrappers
 
 	// World Animation
 
-	bool WorldAnimation::FromChunk(anim* chunk, WorldAnimation& animOut)
+	std::optional<WorldAnimation> WorldAnimation::FromChunk(std::shared_ptr<anim> chunk)
 	{
+		WorldAnimation animOut;
+
 		if (chunk -> p_Info == nullptr)
 		{
-			return false;
+			return {};
 		}
 
 		animOut.p_WorldAnimation = chunk;
-		return true;
+		return animOut;
 	}
 
 	const std::string& WorldAnimation::GetName() const
@@ -206,7 +214,7 @@ namespace LibSWBF2::Wrappers
 		std::vector<WorldAnimationKey> AnimKeys;
 		for (int i = 0; i < p_WorldAnimation -> m_RotationKeys.size(); i++)
 		{
-			ROTK *currKey = p_WorldAnimation -> m_RotationKeys[i];
+			std::shared_ptr<ROTK> currKey = p_WorldAnimation -> m_RotationKeys[i];
 			AnimKeys.push_back(currKey -> m_Key);
 		}	
 		return AnimKeys;	
@@ -217,7 +225,7 @@ namespace LibSWBF2::Wrappers
 		std::vector<WorldAnimationKey> AnimKeys;
 		for (int i = 0; i < p_WorldAnimation -> m_PositionKeys.size(); i++)
 		{
-			POSK *currKey = p_WorldAnimation -> m_PositionKeys[i];
+			std::shared_ptr<POSK> currKey = p_WorldAnimation -> m_PositionKeys[i];
 			AnimKeys.push_back(currKey -> m_Key);
 		}		
 		return AnimKeys;
@@ -227,15 +235,17 @@ namespace LibSWBF2::Wrappers
 
 	// World Animation Group
 
-	bool WorldAnimationGroup::FromChunk(anmg* chunk, WorldAnimationGroup& groupOut)
+	std::optional<WorldAnimationGroup> WorldAnimationGroup::FromChunk(std::shared_ptr<anmg> chunk)
 	{
+		WorldAnimationGroup groupOut;
+
 		if (chunk -> p_Info == nullptr)
 		{
-			return false;
+			return {};
 		}
 
 		groupOut.p_WorldAnimationGroup = chunk;
-		return true;
+		return groupOut;
 	}
 
 	const std::string& WorldAnimationGroup::GetName() const
@@ -282,15 +292,16 @@ namespace LibSWBF2::Wrappers
 
 	// World Animation Hierarchy
 
-	bool WorldAnimationHierarchy::FromChunk(anmh* chunk, WorldAnimationHierarchy& hierOut)
+	std::optional<WorldAnimationHierarchy> WorldAnimationHierarchy::FromChunk(std::shared_ptr<anmh> chunk)
 	{
+		WorldAnimationHierarchy hierOut;
 		if (chunk -> p_Info == nullptr || chunk -> p_Info -> m_NumStrings == 0)
 		{
-			return false;
+			return {};
 		}
 
 		hierOut.p_WorldAnimationHierarchy = chunk;
-		return true;
+		return hierOut;
 	}
 
 	const std::string& WorldAnimationHierarchy::GetRootName() const
@@ -307,12 +318,14 @@ namespace LibSWBF2::Wrappers
 
 	// World
 
-	bool World::FromChunk(Container* mainContainer, wrld* worldChunk, World& out)
+	std::optional<World> World::FromChunk(std::shared_ptr<Container> mainContainer, std::shared_ptr<wrld> worldChunk)
 	{
+		World out;
+
 		if (worldChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given worldChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_World = worldChunk;
@@ -324,67 +337,61 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		std::vector<regn *>& regions = worldChunk -> m_Regions;
+		std::vector<std::shared_ptr<regn>>& regions = worldChunk -> m_Regions;
 		for (size_t i = 0; i < regions.size(); ++i)
 		{
-			Region region;
-			if (Region::FromChunk(regions[i], region))
+			if (std::optional<Region> region = Region::FromChunk(regions[i]))
 			{
-				out.m_Regions.push_back(region);
+				out.m_Regions.push_back(*region);
 			}
 		}
 
-		std::vector<BARR *>& barriers = worldChunk -> m_Barriers;
+		std::vector<std::shared_ptr<BARR>>& barriers = worldChunk -> m_Barriers;
 		for (size_t i = 0; i < barriers.size(); ++i)
 		{
-			Barrier barrier;
-			if (Barrier::FromChunk(barriers[i], barrier))
+			if (std::optional<Barrier> barrier = Barrier::FromChunk(barriers[i]))
 			{
-				out.m_Barriers.push_back(barrier);
+				out.m_Barriers.push_back(*barrier);
 			}
 		}
 
-		std::vector<Hint *>& hintNodes = worldChunk -> m_HintNodes;
+		std::vector<std::shared_ptr<Hint>>& hintNodes = worldChunk -> m_HintNodes;
 		for (size_t i = 0; i < hintNodes.size(); ++i)
 		{
-			HintNode hintNode;
-			if (HintNode::FromChunk(hintNodes[i], hintNode))
+			if (std::optional<HintNode> hintNode = HintNode::FromChunk(hintNodes[i]))
 			{
-				out.m_HintNodes.push_back(hintNode);
+				out.m_HintNodes.push_back(*hintNode);
 			}
 		}
 
-		std::vector<anim *>& animations = worldChunk -> m_Animations;
+		std::vector<std::shared_ptr<anim>>& animations = worldChunk -> m_Animations;
 		for (size_t i = 0; i < animations.size(); ++i)
 		{
-			WorldAnimation anim;
-			if (WorldAnimation::FromChunk(animations[i], anim))
+			if (std::optional<WorldAnimation> anim = WorldAnimation::FromChunk(animations[i]))
 			{
-				out.m_Animations.push_back(anim);
+				out.m_Animations.push_back(*anim);
 			}
 		}
 
-		std::vector<anmg *>& animationGroups = worldChunk -> m_AnimationGroups;
+		std::vector<std::shared_ptr<anmg>>& animationGroups = worldChunk -> m_AnimationGroups;
 		for (size_t i = 0; i < animationGroups.size(); ++i)
 		{
-			WorldAnimationGroup group;
-			if (WorldAnimationGroup::FromChunk(animationGroups[i], group))
+			if (std::optional<WorldAnimationGroup> group = WorldAnimationGroup::FromChunk(animationGroups[i]))
 			{
-				out.m_AnimationGroups.push_back(group);
+				out.m_AnimationGroups.push_back(*group);
 			}
 		}		
 
-		std::vector<anmh *>& animationHiers = worldChunk -> m_AnimationHierarchies;
+		std::vector<std::shared_ptr<anmh>>& animationHiers = worldChunk -> m_AnimationHierarchies;
 		for (size_t i = 0; i < animationHiers.size(); ++i)
 		{
-			WorldAnimationHierarchy hier;
-			if (WorldAnimationHierarchy::FromChunk(animationHiers[i], hier))
+			if (std::optional<WorldAnimationHierarchy> hier = WorldAnimationHierarchy::FromChunk(animationHiers[i]))
 			{
-				out.m_AnimationHierarchies.push_back(hier);
+				out.m_AnimationHierarchies.push_back(*hier);
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 	std::string World::GetName() const
@@ -419,11 +426,12 @@ namespace LibSWBF2::Wrappers
 
 	const Terrain* World::GetTerrain() const
 	{
-		if (m_MainContainer == nullptr || p_World->p_TerrainName == nullptr)
-		{
-			return nullptr;
+		if (auto container = m_MainContainer.lock()) {
+			if (p_World->p_TerrainName != nullptr) {
+				return container->FindTerrain(p_World->p_TerrainName->m_Text);
+			}
 		}
-		return m_MainContainer->FindTerrain(p_World->p_TerrainName->m_Text);
+		return nullptr;
 	}
 	
 	std::string World::GetSkyName() const

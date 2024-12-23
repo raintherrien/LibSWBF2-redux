@@ -24,26 +24,26 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+		p_Info = ReadChild<anim_INFO>(stream);
             }
             else if (next == "POSK"_h)
             {
-                READ_CHILD(stream, m_PositionKeys.emplace_back());
+		m_PositionKeys.emplace_back(ReadChild<POSK>(stream));
             }
             else if (next == "ROTK"_h)
             {
-                READ_CHILD(stream, m_RotationKeys.emplace_back());
+		m_RotationKeys.emplace_back(ReadChild<ROTK>(stream));
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }

@@ -4,7 +4,7 @@
 
 namespace LibSWBF2::Chunks::LVL::common
 {
-	struct LIBSWBF2_API PROP : public GenericChunk<"PROP"_m>
+	struct LIBSWBF2_API PROP : public GenericChunk
 	{
 	public:
 		FNVHash m_PropertyName;
@@ -16,5 +16,7 @@ namespace LibSWBF2::Chunks::LVL::common
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "PROP"_m; }
 	};
 }

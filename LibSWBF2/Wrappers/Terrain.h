@@ -26,7 +26,7 @@ namespace LibSWBF2::Wrappers
 		friend Level;
 
 	private:
-		tern* p_Terrain;
+		std::shared_ptr<tern> p_Terrain;
 
 		// the whole terrain, stiched together from all the patches
 		std::vector<Vector3> m_Positions;
@@ -39,7 +39,7 @@ namespace LibSWBF2::Wrappers
 		mutable std::vector<uint8_t> m_BlendMap;
 
 	public:
-		static bool FromChunk(tern* terrainChunk, Terrain& out);
+		static std::optional<Terrain> FromChunk(std::shared_ptr<tern> terrainChunk);
 
 		std::string GetName() const;
 

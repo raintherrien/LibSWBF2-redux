@@ -28,15 +28,12 @@ namespace LibSWBF2::Wrappers
 		friend Level;
 		friend Segment;
 
-		Material() = default;
-		~Material() = default;
-
 	private:
-		Level* m_MainContainer = nullptr;
-		MTRL* p_Material = nullptr;
+		std::weak_ptr<Level> m_MainContainer;
+		std::shared_ptr<MTRL> p_Material;
 
 	public:
-		static bool FromChunk(Level* mainContainer, MTRL* materialChunk, Material& out);
+		static std::optional<Material> FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<MTRL> materialChunk);
 
 		EMaterialFlags GetFlags() const;
 		const Color4u8& GetDiffuseColor() const;

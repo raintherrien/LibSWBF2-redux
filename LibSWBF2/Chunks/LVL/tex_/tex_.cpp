@@ -20,14 +20,11 @@ namespace LibSWBF2::Chunks::LVL::texture
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		READ_CHILD(stream, p_Name);
-		READ_CHILD(stream, p_Info);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
+		p_Info = ReadChild<texture::INFO>(stream);
 
-		while (ThereIsAnother(stream))
-		{
-			FMT_* fmt;
-			READ_CHILD(stream, fmt);
-			m_FMTs.push_back(fmt);
+		while (ThereIsAnother(stream)) {
+			m_FMTs.emplace_back(ReadChild<FMT_>(stream));
 		}
 
 		BaseChunk::EnsureEnd(stream);

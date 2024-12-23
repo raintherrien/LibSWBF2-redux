@@ -7,7 +7,7 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API VBUF : public GenericChunk<"VBUF"_m>
+	struct LIBSWBF2_API VBUF : public GenericChunk
 	{
 	public:
 		uint32_t m_ElementCount;
@@ -23,5 +23,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "VBUF"_m; }
 	};
 }

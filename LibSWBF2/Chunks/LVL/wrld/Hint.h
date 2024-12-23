@@ -11,7 +11,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	using common::PROP;
 
 
-	struct LIBSWBF2_API Hint_TYPE : public GenericChunk<"TYPE"_m>
+	struct LIBSWBF2_API Hint_TYPE : public GenericChunk
 	{
 		uint16_t m_Type;
 
@@ -20,33 +20,35 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;		
+		uint32_t GetHeader() override { return "TYPE"_m; }
 	};
 
 
-	struct LIBSWBF2_API Hint_INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API Hint_INFO : public GenericChunk
 	{
-		Hint_TYPE * p_Type;
-		STR<"NAME"_m> * p_Name;
-		XFRM * p_Transform;
+		std::shared_ptr<Hint_TYPE> p_Type;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<XFRM> p_Transform;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 		
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 
 
-	struct LIBSWBF2_API Hint : public GenericChunk<"Hint"_m>
+	struct LIBSWBF2_API Hint : public GenericChunk
 	{
-		Hint_INFO* p_Info;
-
-		std::vector<PROP*> m_Properties;
+		std::shared_ptr<Hint_INFO> p_Info;
+		std::vector<std::shared_ptr<PROP>> m_Properties;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "Hint"_m; }
 	};
 }

@@ -47,8 +47,8 @@ namespace LibSWBF2::Wrappers
 	{
 		friend Level;
 	private:
-		modl* p_Model;
-		skel* p_Skeleton;
+		std::shared_ptr<modl> p_Model;
+		std::shared_ptr<skel> p_Skeleton;
 		std::vector<Segment> m_Segments;
 
 		CollisionMesh m_CollisionMesh;
@@ -59,7 +59,7 @@ namespace LibSWBF2::Wrappers
 		Model() = default;
 		~Model() = default;
 
-		static bool FromChunk(Level* mainContainer, modl* modelChunk, Model& out);
+		static std::optional<Model> FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<modl> modelChunk);
 
 		std::string GetName() const;
 		std::vector<Segment> GetSegments() const;

@@ -32,8 +32,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "VBUF"_h)
             {
-                VBUF* bufferChunk;
-                READ_CHILD(stream, bufferChunk);
+                std::shared_ptr<VBUF> bufferChunk = ReadChild<VBUF>(stream);
                 
                 switch (bufferChunk->m_BufferType)
                 {
@@ -54,8 +53,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             }
             else if (next == "IBUF"_h)
             {
-                IBUF* bufferChunk;
-                READ_CHILD(stream, bufferChunk);
+                std::shared_ptr<IBUF> bufferChunk = ReadChild<IBUF>(stream);
 
                 switch (lastVBUFType)
                 {
@@ -75,11 +73,11 @@ namespace LibSWBF2::Chunks::LVL::terrain
             }
             else if (next == "INFO"_h)
             {
-            	READ_CHILD(stream, p_PatchInfo);
+		p_PatchInfo = ReadChild<PTCH_INFO>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
         }
 

@@ -19,32 +19,30 @@ namespace LibSWBF2::Chunks::LVL::coll
 	}
 
 	void coll::ReadFromStream(FileReader& stream)
-	{       
-        BaseChunk::ReadFromStream(stream);
-        Check(stream);
+	{	   
+		BaseChunk::ReadFromStream(stream);
+		Check(stream);
 
-        READ_CHILD(stream, p_ChunkName);
+		p_ChunkName = ReadChild<STR<"NAME"_m>>(stream);
 
-        prim::MASK *tempMASK = nullptr;
-        if (stream.ReadChunkHeader(true) == "MASK"_h)
-        {
-            READ_CHILD(stream, tempMASK);
-        }
+		if (stream.ReadChunkHeader(true) == "MASK"_h) {
+			p_Mask = ReadChild<prim::MASK>(stream);
+		} else {
+			p_Mask = {};
+		}
 
-        p_Mask = tempMASK;
-
-        READ_CHILD(stream, p_NodeName);
-        READ_CHILD(stream, p_Info);
-        READ_CHILD(stream, p_Verts);
-        READ_CHILD(stream, p_Tree);
+		p_NodeName = ReadChild<STR<"NODE"_m>>(stream);
+		p_Info = ReadChild<INFO_coll>(stream);
+		p_Verts = ReadChild<POSI>(stream);
+		p_Tree = ReadChild<TREE>(stream);
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
 	std::string coll::ToString() const
-    {
-        return p_Tree -> ToString()  +
-               " Name: " + p_ChunkName -> ToString() +
-        		fmt::format(" Num verts: {}", p_Verts -> m_Verts.size());
-    }
+	{
+		return p_Tree -> ToString()  +
+			   " Name: " + p_ChunkName -> ToString() +
+				fmt::format(" Num verts: {}", p_Verts -> m_Verts.size());
+	}
 }

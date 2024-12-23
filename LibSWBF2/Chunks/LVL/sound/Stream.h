@@ -8,10 +8,10 @@ namespace LibSWBF2::Chunks::LVL::sound
 	struct StreamInfo;
 	struct StreamData;
 
-	struct LIBSWBF2_API Stream : public GenericChunk<"Stream"_fnv>
+	struct LIBSWBF2_API Stream : public GenericChunk
 	{
-		StreamInfo *p_Info = nullptr;
-		StreamData *p_Data = nullptr;
+		std::shared_ptr<StreamInfo> p_Info;
+		std::shared_ptr<StreamData> p_Data;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
@@ -20,5 +20,6 @@ namespace LibSWBF2::Chunks::LVL::sound
 		static FNVHash PeekStreamName(FileReader& stream);
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "Stream"_fnv; }
 	};
 }

@@ -16,11 +16,13 @@ namespace LibSWBF2::Wrappers
 {
 	using namespace Chunks::LVL::animation;
 
-	bool AnimationSkeleton::FromChunk(zaf_ *chunk, AnimationSkeleton &skelOut)
+	std::optional<AnimationSkeleton> AnimationSkeleton::FromChunk(std::shared_ptr<zaf_> chunk)
 	{
+		AnimationSkeleton skelOut;
+
 		if (chunk == nullptr)
 		{
-			return false;
+			return {};
 		}
 		else 
 		{
@@ -28,13 +30,13 @@ namespace LibSWBF2::Wrappers
 				(chunk -> p_Bin -> p_Skeleton == nullptr) ||
 				(chunk -> p_Name == nullptr))
 			{
-				return false;
+				return {};
 			}
 		}
 
 		skelOut.p_AnimSkeleton = chunk;
 
-		return true;
+		return skelOut;
 	}
 
 
@@ -58,10 +60,10 @@ namespace LibSWBF2::Wrappers
 		{
 			jointsOut.clear();
 
-			std::vector<TNOJ *>& jointChunks = p_AnimSkeleton -> p_Bin -> p_Skeleton -> m_Joints;
+			std::vector<std::shared_ptr<TNOJ>>& jointChunks = p_AnimSkeleton -> p_Bin -> p_Skeleton -> m_Joints;
 			for (int i = 0; i < jointChunks.size(); i++)
 			{
-				TNOJ *jC = jointChunks[i];
+				std::shared_ptr<TNOJ> jC = jointChunks[i];
 				jointsOut.push_back({jC -> m_BoneCRC, jC -> m_BaseRotation, jC -> m_BasePosition, jC -> m_ParentBoneCRC});
 			}
 

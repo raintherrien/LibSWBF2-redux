@@ -7,14 +7,15 @@ namespace LibSWBF2::Chunks::LVL::texture
 {
 	using LVL_texture::LVL_;
 
-	struct LIBSWBF2_API FACE : public GenericChunk<"FACE"_m>
+	struct LIBSWBF2_API FACE : public GenericChunk
 	{
 	public:
-		std::vector<LVL_*> m_LVLs;
+		std::vector<std::shared_ptr<LVL_>> m_LVLs;
 
 	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "FACE"_m; }
 	};
 }

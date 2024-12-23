@@ -20,7 +20,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		MINA *animData = dynamic_cast<BIN_*>(GetParent()) -> p_AnimsMetadata;
+		std::shared_ptr<MINA> animData = dynamic_cast<BIN_*>(GetParent()) -> p_AnimsMetadata;
 
 		if (animData == nullptr)
 		{
@@ -61,7 +61,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 		if (parent != nullptr)
 		{
-			MINA *metadata = parent -> p_AnimsMetadata;
+			std::shared_ptr<MINA> metadata = parent -> p_AnimsMetadata;
 			if (metadata != nullptr)
 			{
 				//Detailed summary

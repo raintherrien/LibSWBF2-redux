@@ -45,26 +45,25 @@ namespace LibSWBF2
 		}
 	}
 
-	std::optional<Level> Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
+	std::shared_ptr<Level> Container::LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
 	{
 		LIBSWBF2_LOG_INFO("Container::LoadLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
 
 		using LibSWBF2::Chunks::LVL::LVL;
 
-		LVL* lvl = nullptr;
 		{
 			StreamReader reader;
 			if (!reader.Open(path)) {
-				return {};
+				return nullptr;
 			}
 			reader.Close();
-
-			lvl = LVL::Create();
 		}
+		std::shared_ptr<LVL> lvl = std::make_shared<LVL>();
 
-		if (lvl->ReadFromFile(path, subLVLsToLoad)) {
-			std::optional<Level> level = Level::FromChunk(lvl, this);
+		if (lvl->ReadFile(path, subLVLsToLoad)) {
+			std::shared_ptr<Level> level = Level::FromChunk(lvl, shared_from_this());
 			if (level) {
+				m_Levels.emplace_back(level);
 				if (bRegisterContents) {
 					CopyMap(level->m_NameToIndexMaps.TextureNameToIndex, level->m_Textures, m_TextureDB);
 					CopyMap(level->m_NameToIndexMaps.ModelNameToIndex,level->m_Models, m_ModelDB);
@@ -98,40 +97,19 @@ namespace LibSWBF2
 
 				level->m_FullPath = path;
 				return level;
-			} else {
-				LVL::Destroy(lvl);
-				return {};
 			}
-		} else {
-			LVL::Destroy(lvl);
-			return {};
 		}
-	}
 
-	Container* Container::Create()
-	{
-		LIBSWBF2_LOG_INFO("Container::Create()");
-		return new Container();
-	}
-
-	void Container::Delete(Container* container)
-	{
-		LIBSWBF2_LOG_INFO("Container::Delete({})", fmt::ptr(container));
-		delete container;
-	}
-
-	const Level *Container::AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
-	{
-		LIBSWBF2_LOG_INFO("Container::AddLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
-		std::optional<Level> lvl = LoadLevel(path, subLVLsToLoad, bRegisterContents);
-		if (lvl) {
-			m_Levels.emplace_back(*lvl);
-			return &m_Levels.back();
-		}
 		return nullptr;
 	}
 
-	const Level* Container::GetLevel(size_t index) const
+	std::shared_ptr<Level> Container::AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents)
+	{
+		LIBSWBF2_LOG_INFO("Container::AddLevel('{}', {}, {})", path, fmt::ptr(subLVLsToLoad), bRegisterContents);
+		return LoadLevel(path, subLVLsToLoad, bRegisterContents);
+	}
+
+	std::shared_ptr<Level> Container::GetLevel(size_t index) const
 	{
 		LIBSWBF2_LOG_INFO("Container::GetLevel({})", index);
 		if (index >= m_Levels.size())
@@ -140,15 +118,15 @@ namespace LibSWBF2
 			return nullptr;
 		}
 
-		return &m_Levels[index];
+		return m_Levels[index];
 	}
 
-	const Level* Container::TryGetWorldLevel() const
+	std::shared_ptr<Level> Container::TryGetWorldLevel() const
 	{
 		LIBSWBF2_LOG_INFO("Container::TryGetWorldLevel()");
 		for (size_t i = 0; i < m_Levels.size(); ++i) {
-			if (m_Levels[i].IsWorldLevel()) {
-				return &m_Levels[i];
+			if (m_Levels[i]->IsWorldLevel()) {
+				return m_Levels[i];
 			}
 		}
 		return nullptr;

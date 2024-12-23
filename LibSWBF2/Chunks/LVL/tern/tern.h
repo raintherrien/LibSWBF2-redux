@@ -9,21 +9,20 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API tern : public GenericChunk<"tern"_m>
+	struct LIBSWBF2_API tern : public GenericChunk
 	{
-	public:
-		STR<"NAME"_m>* p_Name;
-		STR<"DTLX"_m>* p_DetailTexture;
-		INFO* p_Info;
-		LTEX* p_LayerTextures;
-		DTEX* p_LayerDetailTextures;
-		PCHS* p_Patches;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<STR<"DTLX"_m>> p_DetailTexture;
+		std::shared_ptr<INFO> p_Info;
+		std::shared_ptr<LTEX> p_LayerTextures;
+		std::shared_ptr<DTEX> p_LayerDetailTextures;
+		std::shared_ptr<PCHS> p_Patches;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "tern"_m; }
 	};
 }

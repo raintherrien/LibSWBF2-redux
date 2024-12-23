@@ -10,21 +10,23 @@ namespace LibSWBF2::Wrappers
 {
 	using Chunks::LVL::LVL_texture::LVL_;
 
-	bool Texture::FromChunk(tex_* textureChunk, Texture& out)
+	std::optional<Texture> Texture::FromChunk(std::shared_ptr<tex_> textureChunk)
 	{
+		Texture out;
+
 		if (textureChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given textureChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_Texture = textureChunk;
 
-		std::vector<FMT_*>& fmts = out.p_Texture->m_FMTs;
+		std::vector<std::shared_ptr<FMT_>>& fmts = out.p_Texture->m_FMTs;
 		if (fmts.size() == 0)
 		{
 			LIBSWBF2_LOG_WARN("Texture '{}' does not contain any data!", textureChunk->ToString());
-			return false;
+			return {};
 		}
 
 		// Grab FMT chunk with the least amount of compression
@@ -49,7 +51,7 @@ namespace LibSWBF2::Wrappers
 			out.p_FMT = fmts[0];
 		}
 
-		return true;
+		return out;
 	}
 
 	std::string Texture::GetName() const
@@ -64,7 +66,7 @@ namespace LibSWBF2::Wrappers
 
 	bool Texture::GetImageData(ETextureFormat format, uint8_t mipLevel, uint16_t& width, uint16_t& height, const uint8_t*& data) const
 	{
-		std::vector<LVL_*>& mipChunks = p_FMT->p_Face->m_LVLs;
+		std::vector<std::shared_ptr<LVL_>>& mipChunks = p_FMT->p_Face->m_LVLs;
 		for (size_t i = 0; i < mipChunks.size(); ++i)
 		{
 			if (mipChunks[i]->p_Info->m_MipLevel == mipLevel)

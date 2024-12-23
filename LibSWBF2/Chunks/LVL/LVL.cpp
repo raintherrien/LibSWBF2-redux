@@ -15,48 +15,24 @@ namespace LibSWBF2::Chunks::LVL
 {
 	using LibSWBF2::Chunks::LVL::sound::Stream;
 
-
-	LVL* LVL::Create()
-	{
-		return new LVL();
-	}
-
-	void LVL::Destroy(LVL* lvl)
-	{
-		delete lvl;
-	}
-
-
-	void LVL::SetLazy(bool Lazy)
-	{
-		m_Lazy = true;
-	}
-
-
 	void LVL::ReadFromStream(FileReader& stream)
 	{
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
-		if (!m_Lazy)
-		{
-			ReadGenerics(stream);
-		}
+		ReadGenerics(stream);
 		BaseChunk::EnsureEnd(stream);
 	}
 
 
-	bool LVL::FindAndReadSoundStream(FileReader& stream, FNVHash StreamName, Stream *& streamChunk)
+	std::shared_ptr<Stream> LVL::FindAndReadSoundStream(FileReader& stream, FNVHash soundStreamName)
 	{
 		// First check if we already loaded the stream...
-		const std::vector<GenericBaseChunk*>& children = GetChildren();
+		const std::vector<std::shared_ptr<GenericBaseChunk>>& children = GetChildren();
 		for (int i = 0; i < children.size(); i++)
 		{
-			streamChunk = dynamic_cast<Stream*>(children[i]);
-			if (streamChunk != nullptr && 
-				streamChunk -> p_Info != nullptr &&
-				streamChunk -> p_Info -> m_Name == StreamName)
-			{
-				return true;
+			std::shared_ptr<Stream> streamChunk = std::dynamic_pointer_cast<Stream>(children[i]);
+			if (streamChunk && streamChunk->p_Info != nullptr && streamChunk->p_Info->m_Name == soundStreamName) {
+				return streamChunk;
 			}
 		}
 
@@ -67,27 +43,26 @@ namespace LibSWBF2::Chunks::LVL
 			ChunkHeader nextHead = stream.ReadChunkHeader(true);
 			if (IsKnownHeader(nextHead))
 			{
-				try
-				{
+				//try
+				//{
 					if (nextHead == "StreamList"_fnvh || nextHead == "lvl_"_h || nextHead == "_pad"_h)
 					{
 						stream.SkipBytes(8);
 					}
-					else if (nextHead == "Stream"_fnvh && Stream::PeekStreamName(stream) == StreamName)
+					else if (nextHead == "Stream"_fnvh && Stream::PeekStreamName(stream) == soundStreamName)
 					{
-						READ_CHILD(stream, streamChunk);
-						return true;
+						return ReadChild<Stream>(stream);
 					}
 					else 
 					{
 						BaseChunk::SkipChunk(stream,false);
 					}
-				}
-				catch (const LibSWBF2Exception &e)
-				{
-					LIBSWBF2_LOG_WARN("{}", e.what());
-					return false;
-				}
+				//}
+				//catch (const LibSWBF2Exception &e)
+				//{
+				//	LIBSWBF2_LOG_WARN("{}", e.what());
+				//	return {};
+				//}
 			}
 			else 
 			{
@@ -95,13 +70,13 @@ namespace LibSWBF2::Chunks::LVL
 			}
 		}
 
-		return false;
+		return {};
 	}
 
 
 
 
-	bool LVL::ReadFromFile(std::string Path, const std::vector<std::string>* subLVLsToLoad)
+	bool LVL::ReadFile(std::string Path, const std::vector<std::string>* subLVLsToLoad)
 	{
 		m_SubLVLsToLoad.clear();
 

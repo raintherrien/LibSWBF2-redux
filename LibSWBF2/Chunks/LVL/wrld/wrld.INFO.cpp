@@ -20,13 +20,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-        READ_CHILD(stream, p_Type);
-        READ_CHILD(stream, p_Name);
-        READ_CHILD(stream, p_XFRM);
+        p_Type = ReadChild<STR<"TYPE"_m>>(stream);
+        p_Name = ReadChild<STR<"NAME"_m>>(stream);
+        p_XFRM = ReadChild<XFRM>(stream);
 
         if (ThereIsAnother(stream))
         {
-            READ_CHILD(stream, p_SIZE);
+            p_SIZE = ReadChild<SIZE>(stream);
         }
 
         BaseChunk::EnsureEnd(stream);

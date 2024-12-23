@@ -12,17 +12,19 @@ namespace LibSWBF2::Wrappers
 	using Chunks::LVL::terrain::IBUF;
 	using Chunks::LVL::terrain::tern;
 
-	bool Terrain::FromChunk(tern* terrainChunk, Terrain& out)
+	std::optional<Terrain> Terrain::FromChunk(std::shared_ptr<tern> terrainChunk)
 	{
+		Terrain out;
+
 		if (terrainChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given terrainChunk was NULL!");
-			return false;
+			return {};
 		}
 		if (terrainChunk->p_Patches == nullptr || terrainChunk->p_Patches->m_Patches.size() == 0)
 		{
 			// there's simply no terrain data present
-			return false;
+			return {};
 		}
 
 		out.p_Terrain = terrainChunk;
@@ -46,10 +48,10 @@ namespace LibSWBF2::Wrappers
 		// For some reason, terrain seems to be offset by gridUnitSize in Z direction...
 		glm::vec3 patchOffset = { 0.0f, 0.0f, -distToCenter + gridUnitSize };
 
-		std::vector<PTCH*>& patches = out.p_Terrain->p_Patches->m_Patches;
+		std::vector<std::shared_ptr<PTCH>>& patches = out.p_Terrain->p_Patches->m_Patches;
 		for (size_t i = 0; i < patches.size(); ++i)
 		{
-			VBUF* vertexBuffer = patches[i]->m_GeometryBuffer;
+			std::shared_ptr<VBUF> vertexBuffer = patches[i]->m_GeometryBuffer;
 			if (vertexBuffer == nullptr)
 			{
 				LIBSWBF2_LOG_WARN("Patch with index {} does not have any vertex buffer! Skipping...", i);
@@ -114,12 +116,12 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 	std::vector<uint8_t> Terrain::GetBlendMap(uint32_t& dim, uint32_t& numTexLayers) const
 	{
-		auto *info = p_Terrain -> p_Info;
+		std::shared_ptr<LibSWBF2::Chunks::LVL::terrain::INFO> info = p_Terrain -> p_Info;
 		dim = (uint32_t) info -> m_GridSize;
 		numTexLayers = (uint32_t) info -> m_TextureCount;
 
@@ -132,13 +134,13 @@ namespace LibSWBF2::Wrappers
 			uint32_t dataLength = dim * dim * numTexLayers;
 			m_BlendMap.resize(dataLength);
 
-			std::vector<PTCH*>& patches = p_Terrain->p_Patches->m_Patches;
+			std::vector<std::shared_ptr<PTCH>>& patches = p_Terrain->p_Patches->m_Patches;
 
 			for (uint32_t i = 0; i < (uint32_t)patches.size(); i++)
 			{	
-				auto *curPatch = patches[i];
-				auto *patchInfo = curPatch -> p_PatchInfo;
-				auto *patchSplatChunk = curPatch -> m_TextureBuffer;
+				auto curPatch = patches[i];
+				auto patchInfo = curPatch -> p_PatchInfo;
+				auto patchSplatChunk = curPatch -> m_TextureBuffer;
 				const std::vector<uint8_t>& curPatchBlendMap = patchSplatChunk -> m_BlendMapData;
 
 				std::vector<uint32_t>& slotsList = patchInfo -> m_TextureSlotsUsed;
@@ -206,8 +208,8 @@ namespace LibSWBF2::Wrappers
 				// geometry index buffer is optional, most patches don't have them.
 				// this is most likely only for patches with baked in terrain cuts.
 				// if no custom index buffer is specified, we build the index buffer ourselfs
-				IBUF* indexBuffer = p_Terrain->p_Patches->m_Patches[i]->m_GeometryIndexBuffer;
-				VBUF* vertexBuffer = p_Terrain->p_Patches->m_Patches[i]->m_GeometryBuffer;
+				std::shared_ptr<IBUF> indexBuffer = p_Terrain->p_Patches->m_Patches[i]->m_GeometryIndexBuffer;
+				std::shared_ptr<VBUF> vertexBuffer = p_Terrain->p_Patches->m_Patches[i]->m_GeometryBuffer;
 				if (indexBuffer != nullptr)
 				{
 					std::vector<uint32_t> triangleList = TriangleStripToTriangleList<uint32_t>(indexBuffer->m_IndexBuffer, vertexOffset);

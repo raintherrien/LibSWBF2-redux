@@ -37,7 +37,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 			}
 			else if (next == "LEKS"_h)
 			{
-				READ_CHILD(stream, p_Skeleton);
+				p_Skeleton = ReadChild<LEKS>(stream);
 			}
 			// Idk what any of these mean or why their implied meanings
 			// would be relevant in this context.  They are probably just
@@ -46,7 +46,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 			//			    materials          joint sets          skins  
 			else if (next == "SLTM"_h || next == "STSJ"_h || next == "SNKS"_h)
 			{
-				READ_CHILD_GENERIC(stream);
+				ReadChild<GenericChunk>(stream);
 			}
 			else 
 			{

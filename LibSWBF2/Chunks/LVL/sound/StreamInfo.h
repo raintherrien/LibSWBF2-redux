@@ -6,7 +6,7 @@
 
 namespace LibSWBF2::Chunks::LVL::sound
 {
-	struct LIBSWBF2_API StreamInfo : public GenericChunk<"Info"_fnv>
+	struct LIBSWBF2_API StreamInfo : public GenericChunk
 	{
 		FNVHash m_Name;
 		ESoundFormat m_Format;
@@ -28,5 +28,6 @@ namespace LibSWBF2::Chunks::LVL::sound
 		std::string ToString() const override;
 		std::string HeaderToString() const;
 		std::string SegmentInfoToString() const;
+		uint32_t GetHeader() override { return "Info"_fnv; }
 	};
 }

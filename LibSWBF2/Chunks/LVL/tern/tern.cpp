@@ -26,31 +26,31 @@ namespace LibSWBF2::Chunks::LVL::terrain
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "NAME"_h)
             {
-                READ_CHILD(stream, p_Name);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
             }
             else if (next == "DTLX"_h)
             {
-                READ_CHILD(stream, p_DetailTexture);
+		p_DetailTexture = ReadChild<STR<"DTLX"_m>>(stream);
             }
             else if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+		p_Info = ReadChild<INFO>(stream);
             }
             else if (next == "LTEX"_h)
             {
-                READ_CHILD(stream, p_LayerTextures);
+		p_LayerTextures = ReadChild<LTEX>(stream);
             }
             else if (next == "DTEX"_h)
             {
-                READ_CHILD(stream, p_LayerDetailTextures);
+		p_LayerDetailTextures = ReadChild<DTEX>(stream);
             }
             else if (next == "PCHS"_h)
             {
-                READ_CHILD(stream, p_Patches);
+                p_Patches = ReadChild<PCHS>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                (void) ReadChild<GenericChunk>(stream);
             }
         }
 

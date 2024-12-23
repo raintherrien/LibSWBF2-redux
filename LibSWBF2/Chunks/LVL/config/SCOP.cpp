@@ -32,17 +32,15 @@ namespace LibSWBF2::Chunks::LVL::config
 
             if (next == "DATA"_h)
             {
-                DATA_CONFIG* data;
-                READ_CHILD(stream, data);
+                ReadChild<DATA_CONFIG>(stream);
             }
             else if (next == "SCOP"_h)
             {
-                SCOP* scop;
-                READ_CHILD(stream, scop);
+                ReadChild<SCOP>(stream);
             }
             else 
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
         }
 

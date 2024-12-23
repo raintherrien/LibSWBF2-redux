@@ -1,6 +1,7 @@
 #pragma once
 #include "req.h"
 #include "Types/Enums.h"
+#include "InternalHelpers.h"
 #include "Sound.h"
 #include <string>
 #include <vector>
@@ -25,15 +26,12 @@ namespace LibSWBF2::Wrappers
 		friend Level;
 
 	private:
-		SampleBank* p_soundBank;
+		std::shared_ptr<SampleBank> p_soundBank;
 		std::vector<Sound> m_Sounds;
-		class SoundMapsWrapper* m_NameToIndexMaps;
+		SoundMapsWrapper m_NameToIndexMaps;
 
 	public:
-		SoundBank() = default;
-		~SoundBank() = default;
-
-		static bool FromChunk(SampleBank* stream, SoundBank& out);
+		static std::optional<SoundBank> FromChunk(std::shared_ptr<SampleBank> stream);
 
 		bool HasData() const;
 

@@ -25,13 +25,13 @@ namespace LibSWBF2::Chunks::LVL::wrld
     {
         BaseChunk::ReadFromStream(stream);
         Check(stream);
-		m_Flag = stream.ReadUInt32();
+        m_Flag = stream.ReadUInt32();
         BaseChunk::EnsureEnd(stream);
     }
 
     std::string BARR_FLAG::ToString() const
     {
-    	return fmt::format("{0}", m_Flag);
+        return fmt::format("{0}", m_Flag);
     }
 
 
@@ -52,30 +52,30 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "NAME"_h)
             {
-                READ_CHILD(stream, p_Name);
+                p_Name = ReadChild<STR<"NAME"_m>>(stream);
             }
             else if (next == "XFRM"_h)
             {
-                READ_CHILD(stream, p_Transform);
+                p_Transform = ReadChild<XFRM>(stream);
             }
             else if (next == "SIZE"_h)
             {
-                READ_CHILD(stream, p_Size);
+                p_Size = ReadChild<SIZE>(stream);
             }
             else if (next == "FLAG"_h)
             {
-                READ_CHILD(stream, p_Flag);
+                p_Flag = ReadChild<BARR_FLAG>(stream);
             }
             else 
             {
-                READ_CHILD_GENERIC(stream);
+                (void) ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }
@@ -105,18 +105,18 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+                p_Info = ReadChild<BARR_INFO>(stream);
             }
             else 
             {
-                READ_CHILD_GENERIC(stream);
+                (void) ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }

@@ -7,17 +7,19 @@
 
 namespace LibSWBF2::Wrappers
 {
-	bool Script::FromChunk(scr_* scriptChunk, Script& out)
+	std::optional<Script> Script::FromChunk(std::shared_ptr<scr_> scriptChunk)
 	{
+		Script out;
+
 		if (scriptChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given scriptChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_Script = scriptChunk;
 
-		return true;
+		return out;
 	}
 
 	std::string Script::GetName() const

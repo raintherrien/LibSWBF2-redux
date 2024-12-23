@@ -8,17 +8,19 @@
 
 namespace LibSWBF2::Wrappers
 {
-	bool PlanSet::FromChunk(plan* planChunk, PlanSet& out)
+	std::optional<PlanSet> PlanSet::FromChunk(std::shared_ptr<plan> planChunk)
 	{
+		PlanSet out;
+
 		if (planChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given planChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_Plan = planChunk;
 
-		return true;
+		return out;
 	}
 
 	const std::vector<Hub>& PlanSet::GetHubs() const

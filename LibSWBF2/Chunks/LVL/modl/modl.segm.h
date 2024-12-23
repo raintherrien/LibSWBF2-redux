@@ -13,24 +13,23 @@ namespace LibSWBF2::Chunks::LVL::modl
 	struct TNAM;
 	struct VBUF;
 
-	struct LIBSWBF2_API segm : public GenericChunk<"segm"_m>
+	struct LIBSWBF2_API segm : public GenericChunk
 	{
-	public:
-		segment::INFO* p_Info;
-		MTRL* p_Material;
-		STR<"RTYP"_m>* p_RenderType;	// string seems to represent an enum
-		IBUF* p_IndexBuffer;
-		STR<"BNAM"_m>* p_Parent;
-		STR<"MNAM"_m>* p_Tag; 			// Still don't know MNAM this means, ModelName???
-		SKIN* p_Skin;					// OPTIONAL
-		BMAP* p_BoneMap;				// OPTIONAL. This mapper seems unnecessary to me...
+		std::shared_ptr<segment::INFO> p_Info;
+		std::shared_ptr<MTRL> p_Material;
+		std::shared_ptr<STR<"RTYP"_m>> p_RenderType;	// string seems to represent an enum
+		std::shared_ptr<IBUF> p_IndexBuffer;
+		std::shared_ptr<STR<"BNAM"_m>> p_Parent;
+		std::shared_ptr<STR<"MNAM"_m>> p_Tag; 			// Still don't know MNAM this means, ModelName???
+		std::shared_ptr<SKIN> p_Skin;					// OPTIONAL
+		std::shared_ptr<BMAP> p_BoneMap;				// OPTIONAL. This mapper seems unnecessary to me...
 
-		std::vector<VBUF*> m_VertexBuffers;
-		std::vector<TNAM*> m_Textures;
+		std::vector<std::shared_ptr<VBUF>> m_VertexBuffers;
+		std::vector<std::shared_ptr<TNAM>> m_Textures;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "segm"_m; }
 	};
 }

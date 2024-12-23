@@ -6,7 +6,7 @@
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
-	struct LIBSWBF2_API MTRL : public GenericChunk<"MTRL"_m>
+	struct LIBSWBF2_API MTRL : public GenericChunk
 	{
 	public:
 		EMaterialFlags m_Flags;
@@ -22,5 +22,6 @@ namespace LibSWBF2::Chunks::LVL::modl
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "MTRL"_m; }
 	};
 }

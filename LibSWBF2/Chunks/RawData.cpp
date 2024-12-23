@@ -42,7 +42,7 @@ namespace LibSWBF2::Chunks
 	void RawData<Header>::ReadFromStream(FileReader& stream)
 	{
 		BaseChunk::ReadFromStream(stream);
-		GenericChunk<Header>::Check(stream);
+		Check(stream);
 
 		size_t dataSize = BaseChunk::GetDataSize();
 		p_Data = new uint8_t[dataSize];

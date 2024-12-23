@@ -6,17 +6,16 @@
 
 namespace LibSWBF2::Chunks::LVL::skel
 {
-	struct LIBSWBF2_API INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API INFO : public GenericChunk
 	{
-	public:
 		std::string m_ModelName;
 		uint32_t m_BoneCount;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

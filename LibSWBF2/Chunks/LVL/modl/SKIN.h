@@ -9,7 +9,7 @@ namespace LibSWBF2::Chunks::LVL::modl
 	// in the skeleton (skel chunk), but to an index in the Bone Map
 	// (BMAP) chunk. The resulting index from BMAP then points to the
 	// actual Bone indexy in the skeleton (skel chunk)
-	struct LIBSWBF2_API SKIN : public GenericChunk<"SKIN"_m>
+	struct LIBSWBF2_API SKIN : public GenericChunk
 	{
 	public:
 		uint32_t m_VertexCount;
@@ -25,5 +25,6 @@ namespace LibSWBF2::Chunks::LVL::modl
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "SKIN"_m; }
 	};
 }

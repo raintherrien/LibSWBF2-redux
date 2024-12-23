@@ -18,19 +18,21 @@ namespace LibSWBF2::Wrappers
 	using LibSWBF2::Chunks::LVL::skel::skel;
 
 
-	bool Segment::FromChunk(Level* mainContainer, segm* segmentChunk, Segment& out)
+	std::optional<Segment> Segment::FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<segm> segmentChunk)
 	{
+		Segment out;
+
 		if (segmentChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given SegmentChunk was NULL!");
-			return false;
+			return {};
 		}
 
-		std::vector<VBUF*>& vBuffs = segmentChunk->m_VertexBuffers;
+		std::vector<std::shared_ptr<VBUF>>& vBuffs = segmentChunk->m_VertexBuffers;
 		if (vBuffs.size() == 0)
 		{
 			LIBSWBF2_LOG_WARN("Segment Chunk does not contain any data!");
-			return false;
+			return {};
 		}
 
 		out.p_Segment = segmentChunk;
@@ -57,18 +59,19 @@ namespace LibSWBF2::Wrappers
 			out.p_VertexBuffer = vBuffs[0];
 		}
 
-		if (!Material::FromChunk(mainContainer, segmentChunk->p_Material, out.m_Material))
-		{
+		if (std::optional<Material> mat = Material::FromChunk(mainContainer, segmentChunk->p_Material)) {
+			out.m_Material = *mat;
+		} else {
 			LIBSWBF2_LOG_WARN("Could not read Material!");
 		}
 
 		// Create weight buffer
 		modl* parent = dynamic_cast<modl*>(out.p_Segment->GetParent());
-		skel* skeleton = mainContainer->FindSkeleton(parent->p_Name->m_Text);
+		std::shared_ptr<skel> skeleton = mainContainer->FindSkeleton(parent->p_Name->m_Text);
 		if (skeleton != nullptr)
 		{
-			SKIN* skin = out.p_Segment->p_Skin;
-			BMAP* boneMap = out.p_Segment->p_BoneMap;
+			// std::shared_ptr<SKIN> skin = out.p_Segment->p_Skin;
+			std::shared_ptr<BMAP> boneMap = out.p_Segment->p_BoneMap;
 
 			auto& boneIndicies = out.p_VertexBuffer -> m_BoneIndicies;
 			auto& boneWeights  = out.p_VertexBuffer -> m_Weights;
@@ -78,7 +81,7 @@ namespace LibSWBF2::Wrappers
 				if (boneMap == nullptr)
 				{
 					LIBSWBF2_LOG_ERROR("Bone map missing...");
-					return true;			
+					return out;			
 				}
 
 				if (boneWeights.size() != 0)
@@ -128,7 +131,7 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 	ETopology Segment::GetTopology() const

@@ -7,14 +7,13 @@
 
 namespace LibSWBF2::Chunks::LVL::common
 {
-	template<uint32_t Header>
-	struct LIBSWBF2_API GenericClass : public GenericChunk<Header>
+	struct LIBSWBF2_API GenericClass : public GenericChunk
 	{
 	public:
-		STR<"BASE"_m>* p_Base;
-		STR<"TYPE"_m>* p_Type;
+		std::shared_ptr<STR<"BASE"_m>> p_Base;
+		std::shared_ptr<STR<"TYPE"_m>> p_Type;
 
-		std::vector<PROP*> m_Properties;
+		std::vector<std::shared_ptr<PROP>> m_Properties;
 
 	public:
 		void RefreshSize() override;
@@ -24,9 +23,23 @@ namespace LibSWBF2::Chunks::LVL::common
 		std::string ToString() const override;
 	};
 
-	struct LIBSWBF2_API GenericClassNC : public GenericClass<0> {};
-	struct LIBSWBF2_API entc : public GenericClass<"entc"_m> {};
-	struct LIBSWBF2_API ordc : public GenericClass<"ordc"_m> {};
-	struct LIBSWBF2_API wpnc : public GenericClass<"wpnc"_m> {};
-	struct LIBSWBF2_API expc : public GenericClass<"expc"_m> {};
+	struct LIBSWBF2_API entc : public GenericClass
+	{
+		uint32_t GetHeader() override { return "entc"_m; }
+	};
+
+	struct LIBSWBF2_API ordc : public GenericClass
+	{
+		uint32_t GetHeader() override { return "ordc"_m; }
+	};
+
+	struct LIBSWBF2_API wpnc : public GenericClass
+	{
+		uint32_t GetHeader() override { return "wpnc"_m; }
+	};
+
+	struct LIBSWBF2_API expc : public GenericClass
+	{
+		uint32_t GetHeader() override { return "expc"_m; }
+	};
 } 

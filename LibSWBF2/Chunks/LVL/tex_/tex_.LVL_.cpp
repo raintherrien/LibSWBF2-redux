@@ -20,8 +20,8 @@ namespace LibSWBF2::Chunks::LVL::LVL_texture
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		READ_CHILD(stream, p_Info);
-		READ_CHILD(stream, p_Body);
+		p_Info = ReadChild<INFO>(stream);
+		p_Body = ReadChild<BODY>(stream);
 
 		BaseChunk::EnsureEnd(stream);
 	}

@@ -13,10 +13,10 @@ namespace LibSWBF2::Chunks::LVL::config
 namespace LibSWBF2::Chunks::LVL::config
 {
 	template<uint32_t Header>
-	struct LIBSWBF2_API ConfigChunk : public GenericChunk<Header>
+	struct LIBSWBF2_API ConfigChunk : public GenericChunk
 	{
 	public:
-		config_NAME *p_Hash = nullptr;
+		std::shared_ptr<config_NAME> p_Hash;
 
 	public:
 		void RefreshSize() override;
@@ -24,9 +24,10 @@ namespace LibSWBF2::Chunks::LVL::config
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return Header; }
 	};
 
-	struct LIBSWBF2_API ConfigChunkNC : public ConfigChunk<0> {};
 	struct LIBSWBF2_API lght : public ConfigChunk<"lght"_m> {};
 	struct LIBSWBF2_API fx__ : public ConfigChunk<"fx__"_m> {};
 	struct LIBSWBF2_API sky_ : public ConfigChunk<"sky_"_m> {};

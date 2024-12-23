@@ -44,10 +44,10 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		Hint * p_HintNode;
+		std::shared_ptr<Hint> p_HintNode;
 		HintNode() = default;
 
-		static bool FromChunk(Hint* chunk, HintNode& hintOut);
+		static std::optional<HintNode> FromChunk(std::shared_ptr<Hint> chunk);
 
 	public:
 		const std::string& GetName() const;
@@ -65,10 +65,10 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		BARR * p_Barrier;
+		std::shared_ptr<BARR> p_Barrier;
 		Barrier() = default;
 
-		static bool FromChunk(BARR* chunk, Barrier& barrOut);
+		static std::optional<Barrier> FromChunk(std::shared_ptr<BARR> chunk);
 
 	public:
 		const std::string& GetName() const;
@@ -85,9 +85,9 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		regn* p_Region;
+		std::shared_ptr<regn> p_Region;
 		Region() = default;
-		static bool FromChunk(regn* chunk, Region& regOut);
+		static std::optional<Region> FromChunk(std::shared_ptr<regn> chunk);
 
 	public:
 		const std::string& GetName() const;
@@ -106,9 +106,9 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		anim* p_WorldAnimation;
+		std::shared_ptr<anim> p_WorldAnimation;
 		WorldAnimation() = default;
-		static bool FromChunk(anim* chunk, WorldAnimation& animOut);		
+		static std::optional<WorldAnimation> FromChunk(std::shared_ptr<anim> chunk);
 
 	public:
 		const std::string& GetName() const;
@@ -126,9 +126,9 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		anmg* p_WorldAnimationGroup;
+		std::shared_ptr<anmg> p_WorldAnimationGroup;
 		WorldAnimationGroup() = default;
-		static bool FromChunk(anmg* chunk, WorldAnimationGroup& groupOut);		
+		static std::optional<WorldAnimationGroup> FromChunk(std::shared_ptr<anmg> chunk);
 
 	public:
 		const std::string& GetName() const;
@@ -145,9 +145,9 @@ namespace LibSWBF2::Wrappers
 
 		friend World;
 
-		anmh* p_WorldAnimationHierarchy;
+		std::shared_ptr<anmh> p_WorldAnimationHierarchy;
 		WorldAnimationHierarchy() = default;
-		static bool FromChunk(anmh* chunk, WorldAnimationHierarchy& heirOut);		
+		static std::optional<WorldAnimationHierarchy> FromChunk(std::shared_ptr<anmh> chunk);
 
 	public:
 		const std::string& GetRootName() const;
@@ -162,7 +162,7 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 
-		Container* m_MainContainer = nullptr;
+		std::weak_ptr<Container> m_MainContainer;
 
 		std::vector<Instance> m_Instances;
 		std::vector<Region> m_Regions;
@@ -172,11 +172,11 @@ namespace LibSWBF2::Wrappers
 		std::vector<WorldAnimationGroup> m_AnimationGroups;
 		std::vector<WorldAnimationHierarchy> m_AnimationHierarchies;
 
-		wrld* p_World;
+		std::shared_ptr<wrld> p_World;
 
 
 	public:
-		static bool FromChunk(Container* mainContainer, wrld* worldChunk, World& out);
+		static std::optional<World> FromChunk(std::shared_ptr<Container> mainContainer, std::shared_ptr<wrld> worldChunk);
 
 		std::string GetName() const;
 		std::vector<Instance> GetInstances() const;

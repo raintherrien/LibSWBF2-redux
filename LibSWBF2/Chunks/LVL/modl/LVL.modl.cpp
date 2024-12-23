@@ -25,25 +25,23 @@ namespace LibSWBF2::Chunks::LVL::modl
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "NAME"_h)
             {
-                READ_CHILD(stream, p_Name);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
             }
             else if (next == "NODE"_h)
             {
-                READ_CHILD(stream, p_Node);
+		p_Node = ReadChild<STR<"NODE"_m>>(stream);
             }
             else if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+		p_Info = ReadChild<INFO>(stream);
             }
             else if (next == "segm"_h)
             {
-                segm* segment;
-                READ_CHILD(stream, segment);
-                m_Segments.push_back(segment);
+		m_Segments.emplace_back(ReadChild<segm>(stream));
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                (void) ReadChild<GenericChunk>(stream);
             }
         }
 

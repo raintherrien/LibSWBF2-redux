@@ -7,20 +7,19 @@
 
 namespace LibSWBF2::Chunks::LVL::script
 {
-	struct LIBSWBF2_API scr_ : public GenericChunk<"scr_"_m>
+	struct LIBSWBF2_API scr_ : public GenericChunk
 	{
-	public:
-		STR<"NAME"_m>* p_Name;
-		INFO* p_Info;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<INFO> p_Info;
 
 		// TODO: are there cases with multiple bodies?
-		RawData<"BODY"_m>* p_Body;
+		std::shared_ptr<RawData<"BODY"_m>> p_Body;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "scr_"_m; }
 	};
 }

@@ -21,12 +21,12 @@ namespace LibSWBF2::Chunks
     void STRMULT<Header>::ReadFromStream(FileReader& stream)
     {
         BaseChunk::ReadFromStream(stream);
-        GenericChunk<Header>::Check(stream);
+        Check(stream);
 
         m_Texts.clear();
         while (BaseChunk::PositionInChunk(stream.GetPosition()))
         {
-		std::string next = stream.ReadString();
+            std::string next = stream.ReadString();
             if (!next.empty())
             {
                 m_Texts.push_back(next);

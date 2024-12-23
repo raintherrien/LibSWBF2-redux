@@ -18,12 +18,12 @@ namespace LibSWBF2::Wrappers
 		
 	private:
 
-		static bool FromChunk(coll *fieldsChunk, CollisionMesh& out);
+		static std::optional<CollisionMesh> FromChunk(std::shared_ptr<coll> fieldsChunk);
 		
-		CollisionMesh(coll *fieldsChunk);
+		CollisionMesh(std::shared_ptr<coll> fieldsChunk);
 		CollisionMesh(); 
 
-		coll *p_CollisionChunk = nullptr;
+		std::shared_ptr<coll> p_CollisionChunk;
 		mutable std::vector<uint16_t> m_Indicies;
 
 

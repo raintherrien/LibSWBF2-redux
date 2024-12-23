@@ -6,7 +6,7 @@
 namespace LibSWBF2::Chunks::LVL::wrld
 {
 	template<uint32_t Header>
-	struct LIBSWBF2_API WorldAnimKeyChunk : public GenericChunk<Header>
+	struct LIBSWBF2_API WorldAnimKeyChunk : public GenericChunk
 	{
 		Types::WorldAnimationKey m_Key;
 
@@ -15,9 +15,10 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return Header; }
 	};
 
-	struct LIBSWBF2_API WorldAnimKeyChunkNC : public WorldAnimKeyChunk<0> {};
 	struct LIBSWBF2_API POSK : public WorldAnimKeyChunk<"POSK"_m> {};
 	struct LIBSWBF2_API ROTK : public WorldAnimKeyChunk<"ROTK"_m> {};
 }

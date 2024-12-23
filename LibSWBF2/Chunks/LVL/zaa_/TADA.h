@@ -6,7 +6,7 @@
 namespace LibSWBF2::Chunks::LVL::animation
 {
 
-	struct LIBSWBF2_API TADA : public GenericChunk<"TADA"_m>
+	struct LIBSWBF2_API TADA : public GenericChunk
 	{
 
 	public:
@@ -20,5 +20,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 		uint8_t *p_DataBuffer = nullptr;
 		size_t m_DataBufferLength = 0;
+
+		uint32_t GetHeader() override { return "TADA"_m; }
 	};
 }

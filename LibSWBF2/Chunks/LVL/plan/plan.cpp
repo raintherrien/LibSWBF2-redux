@@ -41,21 +41,21 @@ void LibSWBF2::Chunks::plan::plan::ReadFromStream(FileReader& stream)
 
         if (nextHeader == "INFO"_h)
         {
-            READ_CHILD(stream, m_pInfo);
+            m_pInfo = ReadChild<PLAN_INFO>(stream);
         }
         else if (nextHeader == "NODE"_h)
         {
-            m_pNode = new NODE(m_pInfo->m_iHubCount);
+            m_pNode = std::make_shared<NODE>(m_pInfo->m_iHubCount);
             ReadExplicitNoCtor(this, stream, m_pNode);
         }
         else if (nextHeader == "ARCS"_h)
         {
-            m_pArcs = new ARCS(m_pInfo->m_iConnectionCount);
+            m_pArcs = std::make_shared<ARCS>(m_pInfo->m_iConnectionCount);
             ReadExplicitNoCtor(this, stream, m_pArcs);
         }
         else
         {
-            READ_CHILD_GENERIC(stream);
+            ReadChild<GenericChunk>(stream);
         }
     }
 

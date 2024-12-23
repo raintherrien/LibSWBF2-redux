@@ -30,11 +30,11 @@ namespace LibSWBF2::Chunks::LVL::sound
 			ChunkHeader next = stream.ReadChunkHeader(true);
 			if (next == "Info"_fnvh)
 			{
-				READ_CHILD(stream, p_Info);
+				p_Info = ReadChild<SampleBankInfo>(stream);
 			}
 			else if (next == "Data"_fnvh)
 			{
-				READ_CHILD(stream, p_Data);
+				p_Data = ReadChild<SampleBankData>(stream);
 			}
 			else 
 			{

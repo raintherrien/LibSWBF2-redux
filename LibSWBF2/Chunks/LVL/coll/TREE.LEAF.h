@@ -6,7 +6,7 @@
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
-    struct LIBSWBF2_API TREE_LEAF : public GenericChunk<"LEAF"_m>
+    struct LIBSWBF2_API TREE_LEAF : public GenericChunk
     {
 
     friend struct TREE;
@@ -18,6 +18,7 @@ namespace LibSWBF2::Chunks::LVL::coll
 	    void ReadFromStream(FileReader& stream) override;
 
 	    std::string ToString() const override;
+	    uint32_t GetHeader() override { return "LEAF"_m; }
 
         uint32_t m_FlattenedTreeIndex;
 	std::vector<uint16_t> m_Indicies;

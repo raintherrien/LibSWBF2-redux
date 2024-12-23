@@ -9,18 +9,17 @@
 
 namespace LibSWBF2::Chunks::LVL::texture
 {
-	struct LIBSWBF2_API tex_ : public GenericChunk<"tex_"_m>
+	struct LIBSWBF2_API tex_ : public GenericChunk
 	{
-	public:
-		STR<"NAME"_m>* p_Name;
-		texture::INFO* p_Info;
-		std::vector<FMT_*> m_FMTs;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<texture::INFO> p_Info;
+		std::vector<std::shared_ptr<FMT_>> m_FMTs;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "tex_"_m; }
 	};
 }

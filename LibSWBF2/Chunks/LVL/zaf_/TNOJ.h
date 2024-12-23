@@ -6,7 +6,7 @@
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
-	struct LIBSWBF2_API TNOJ : public GenericChunk<"TNOJ"_m>
+	struct LIBSWBF2_API TNOJ : public GenericChunk
 	{
 	public:
 
@@ -26,5 +26,6 @@ namespace LibSWBF2::Chunks::LVL::animation
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "TNOJ"_m; }
 	};
 }

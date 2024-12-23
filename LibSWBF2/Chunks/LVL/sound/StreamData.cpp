@@ -31,7 +31,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 		}
 		else 
 		{
-			StreamInfo* info = soundStream -> p_Info;
+			std::shared_ptr<StreamInfo> info = soundStream -> p_Info;
 			if (info == nullptr)
 			{
 				LIBSWBF2_LOG_ERROR("Tried to read StreamData, but parent Stream's Info chunk was missing!");

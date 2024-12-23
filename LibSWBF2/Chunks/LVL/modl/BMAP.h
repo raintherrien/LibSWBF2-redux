@@ -12,20 +12,19 @@ namespace LibSWBF2::Chunks::LVL::modl
 	// indices directly into the SKIN chunk and get rid of this mapper
 	// entirely...
 
-	struct LIBSWBF2_API BMAP : public GenericChunk<"BMAP"_m>
+	struct LIBSWBF2_API BMAP : public GenericChunk
 	{
-	public:
 		uint32_t m_IndexCount;
 
 		// maps local bone indices from SKIN to bones
 		// indices in the skeleton (skel) chunk
 		std::vector<uint8_t> m_IndexMap;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "BMAP"_m; }
 	};
 }

@@ -10,159 +10,17 @@
 
 namespace LibSWBF2::Wrappers
 {
-	// AnimDecompressor
-
-	class AnimDecompressor
-	{
-
-	public:
-
-		AnimDecompressor(void * buf, size_t len) : p_Buffer((int8_t *) buf), m_Length(len){}
-		AnimDecompressor() : p_Buffer(nullptr), m_Length(0) {}
-
-		void SetDecompressionParams(float_t mult = 1.0f / 2047.0f, float_t offset = 0.0) const
-		{
-			m_Bias = offset;
-			m_Multiplier = mult;
-		}
-
-		bool DecompressFromOffset(size_t offset, uint16_t num_frames, 
-								std::vector<uint16_t> &frame_indicies, 
-								std::vector<float_t> &frame_values) const
-		{
-			std::vector<uint16_t> indicies;
-			std::vector<float_t> values;
-
-			m_ReadHead = offset;
-
-			uint16_t frame_counter = 0;
-
-			int16_t shortVal;
-			int8_t byteVal;
-			uint8_t holdDuration;
-
-			float accum = 0.0f;
-			
-			while (frame_counter < num_frames)
-			{
-				if (!ReadInt16(shortVal)) return false;
-
-				accum = m_Bias + m_Multiplier * (float) shortVal;
-
-				indicies.push_back(frame_counter);
-				values.push_back(accum);
-
-				frame_counter++;
-
-
-				while (frame_counter < num_frames)
-				{
-					if (!ReadInt8(byteVal)) return false;
-
-					// Signals to hold accumulator for x frames,
-					// x specified by the next (unsigned) byte.
-					if (byteVal == -0x80)
-					{
-						if (!ReadUInt8(holdDuration)) return false;
-
-					#ifndef _ANIM_DEBUG
-						frame_counter += holdDuration;
-					#else
-						for (int i = 0; i < holdDuration; i++)
-						{
-							indicies.push_back(frame_counter);
-							values.push_back(accum);
-
-							frame_counter++;
-						}
-					#endif
-					}
-
-					// Signals to reset the accumulator to the value
-					// of the next decompressed short.
-					else if (byteVal == -0x7f)
-					{
-						break;
-					}
-
-					// Increment the accumulator by the value
-					// of the next decompressed byte.  Decomp here
-					// does not apply the offset, only the multiplier.
-					else 
-					{
-						accum += m_Multiplier * (float) byteVal;
-
-						indicies.push_back(frame_counter);
-						values.push_back(accum);
-
-						frame_counter++;
-					}
-				}
-			}
-
-			frame_indicies = std::move(indicies);
-			frame_values   = std::move(values); 
-
-			return true;
-		}
-
-		AnimDecompressor(const AnimDecompressor &) = default;	
-
-
-	private:
-
-		int8_t *p_Buffer;
-		size_t m_Length;
-
-		mutable size_t m_ReadHead;
-		mutable float_t m_Bias, m_Multiplier;
-
-		inline bool ReadInt16(int16_t &val) const
-		{
-			if (m_ReadHead < m_Length - 1)
-			{
-				val = *((int16_t *) (m_ReadHead + p_Buffer));
-				m_ReadHead += 2;
-				return true;
-			}
-			return false;
-		}
-
-		inline bool ReadInt8(int8_t &val) const
-		{
-			if (m_ReadHead < m_Length)
-			{
-				val = *(m_ReadHead + p_Buffer);
-				m_ReadHead++;
-				return true;
-			}
-			return false;
-		}
-
-		inline bool ReadUInt8(uint8_t &val) const
-		{
-			if (m_ReadHead < m_Length)
-			{
-				val = *((uint8_t *) (m_ReadHead + p_Buffer));
-				m_ReadHead++;
-				return true;
-			}
-			return false;
-		}
-	};
-
-
-		
-
 	// AnimationBank
 
 	using namespace Chunks::LVL::animation;
 
-	bool AnimationBank::FromChunk(zaa_ *chunk, AnimationBank &setOut)
+	std::optional<AnimationBank> AnimationBank::FromChunk(std::shared_ptr<zaa_> chunk)
 	{
+		AnimationBank setOut;
+
 		if (chunk == nullptr)
 		{
-			return false;
+			return {};
 		}
 		else 
 		{
@@ -172,33 +30,18 @@ namespace LibSWBF2::Wrappers
 				(chunk -> p_Bin -> p_AnimsMetadata == nullptr) ||
 				(chunk -> p_Name == nullptr))
 			{
-				return false;
+				return {};
 			}
 		}
 
 		setOut.p_AnimChunk = chunk;
-		setOut.p_Decompressor = new AnimDecompressor(
+		setOut.p_Decompressor = std::make_unique<AnimDecompressor>(
 								(void *) chunk -> p_Bin -> p_CompressedAnimData -> p_DataBuffer,
 								chunk -> p_Bin -> p_CompressedAnimData -> m_DataBufferLength
 							);
 
-		return true;
+		return setOut;
 	}
-
-
-	AnimationBank& AnimationBank::operator=(const AnimationBank& other)
-	{
-		p_AnimChunk = other.p_AnimChunk;
-		p_Decompressor = new AnimDecompressor(*other.p_Decompressor);		
-		return *this;
-	}
-
-
-	AnimationBank::~AnimationBank()
-	{
-		delete p_Decompressor;
-	}
-
 
 	std::string AnimationBank::GetName() const
 	{
@@ -221,7 +64,7 @@ namespace LibSWBF2::Wrappers
 
 	bool AnimationBank::GetAnimationMetadata(CRCChecksum animCRC, uint32_t &numFrames, uint32_t &numBones) const
 	{
-		MINA *metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
+		std::shared_ptr<MINA> metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
 
 		std::vector<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
 
@@ -243,8 +86,8 @@ namespace LibSWBF2::Wrappers
 	{
 		std::vector<CRCChecksum> boneHashes;
 
-		TNJA *index = p_AnimChunk -> p_Bin -> p_JointAddresses;
-		MINA *metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
+		std::shared_ptr<TNJA> index = p_AnimChunk -> p_Bin -> p_JointAddresses;
+		std::shared_ptr<MINA> metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
 
 
 		std::vector<CRCChecksum> &animCRCs = metadata -> m_AnimNameHashes;	
@@ -288,9 +131,9 @@ namespace LibSWBF2::Wrappers
 	bool AnimationBank::GetCurve(CRCChecksum animName, CRCChecksum boneName, uint16_t component,
 										std::vector<uint16_t> &frame_indices, std::vector<float_t> &frame_values) const
 	{
-		TNJA *index = p_AnimChunk -> p_Bin -> p_JointAddresses;
-		TADA *data = p_AnimChunk -> p_Bin -> p_CompressedAnimData;
-		MINA *metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
+		std::shared_ptr<TNJA> index = p_AnimChunk -> p_Bin -> p_JointAddresses;
+		std::shared_ptr<TADA> data = p_AnimChunk -> p_Bin -> p_CompressedAnimData;
+		std::shared_ptr<MINA> metadata = p_AnimChunk -> p_Bin -> p_AnimsMetadata;	
 
 		bool decompStatus = false;
 

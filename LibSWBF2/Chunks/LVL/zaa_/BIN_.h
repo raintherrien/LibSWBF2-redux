@@ -7,9 +7,8 @@
 
 namespace LibSWBF2::Chunks::LVL::animation
 {
-	struct LIBSWBF2_API BIN_ : public GenericChunk<"BIN_"_m>
+	struct LIBSWBF2_API BIN_ : public GenericChunk
 	{
-	public:
 
 		//Always 8 for SWBF2 lvls, will abort read if a
 		//diferent one is encountered.  Confirmed by 
@@ -28,15 +27,15 @@ namespace LibSWBF2::Chunks::LVL::animation
 		//Will abort if not 0.
 		uint16_t m_DebugLevel;
 
-		MINA *p_AnimsMetadata;
-		TNJA *p_JointAddresses;
-		TADA *p_CompressedAnimData;
+		std::shared_ptr<MINA> p_AnimsMetadata;
+		std::shared_ptr<TNJA> p_JointAddresses;
+		std::shared_ptr<TADA> p_CompressedAnimData;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "BIN_"_m; }
 	};
 }

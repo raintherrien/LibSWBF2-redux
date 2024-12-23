@@ -5,7 +5,7 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API INFO : public GenericChunk
 	{
 	public:
 		float_t m_GridUnitSize;
@@ -25,5 +25,6 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

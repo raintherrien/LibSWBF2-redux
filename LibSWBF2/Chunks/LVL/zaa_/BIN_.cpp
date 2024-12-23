@@ -36,14 +36,14 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 			while (ThereIsAnother(stream))
 			{
-				READ_CHILD_GENERIC(stream);
+				ReadChild<GenericChunk>(stream);
 			}			
 		}
 		else
 		{
-			READ_CHILD(stream, p_AnimsMetadata);
-			READ_CHILD(stream, p_JointAddresses);
-			READ_CHILD(stream, p_CompressedAnimData);
+			p_AnimsMetadata = ReadChild<MINA>(stream);
+			p_JointAddresses = ReadChild<TNJA>(stream);
+			p_CompressedAnimData = ReadChild<TADA>(stream);
 		}
 
 		BaseChunk::EnsureEnd(stream);

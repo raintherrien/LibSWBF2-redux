@@ -29,7 +29,7 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 
-		Stream* p_StreamChunk;
+		std::shared_ptr<Stream> p_StreamChunk;
 
 		std::vector<Sound> m_Sounds;
 
@@ -101,7 +101,7 @@ namespace LibSWBF2::Wrappers
 
 
 
-		static bool FromChunk(Stream* stream, SoundStream& out);
+		static std::optional<SoundStream> FromChunk(std::shared_ptr<Stream> stream);
 
 
 		FNVHash GetHashedName() const;

@@ -25,13 +25,11 @@ namespace LibSWBF2::Chunks::LVL::terrain
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "PTCH"_h)
             {
-                PTCH* patch;
-                READ_CHILD(stream, patch);
-                m_Patches.push_back(patch);
+                m_Patches.emplace_back(ReadChild<PTCH>(stream));
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
         }
 

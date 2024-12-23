@@ -10,24 +10,6 @@
 
 namespace LibSWBF2::Chunks
 {
-	class MultiThreadHandling
-	{
-	public:
-		FileReader* m_CurrentReader = nullptr;
-	};
-
-
-	BaseChunk::BaseChunk()
-	{
-		m_ThreadHandling = new MultiThreadHandling();
-	}
-
-	BaseChunk::~BaseChunk()
-	{
-		delete m_ThreadHandling;
-		m_ThreadHandling = nullptr;
-	}
-
 	void BaseChunk::RefreshSize()
 	{
 		// must be overwritten by inheriting classes!
@@ -70,7 +52,7 @@ namespace LibSWBF2::Chunks
 			{
 				LIBSWBF2_LOG_ERROR("{}", e.what());
 				LIBSWBF2_LOG_ERROR("Aborting write process...");
-				return false;
+				throw;
 			}
 			LIBSWBF2_LOG_INFO("Successfully finished writing process!");
 			return true;
@@ -82,10 +64,6 @@ namespace LibSWBF2::Chunks
 	bool BaseChunk::ReadFromFile(const std::string &Path)
 	{
 		MemoryMappedReader reader;
-		{
-			m_ThreadHandling->m_CurrentReader = &reader;
-		}
-		bool bSuccess = false;
 		if (reader.Open(Path))
 		{
 			try
@@ -93,24 +71,22 @@ namespace LibSWBF2::Chunks
 				ReadFromStream(reader);
 				reader.Close();
 				LIBSWBF2_LOG_INFO("Successfully finished reading process!");
-				bSuccess = true;
+				return true;
 			}
 			catch (const LibSWBF2Exception &e)
 			{
 				LIBSWBF2_LOG_ERROR("{}", e.what());
 				LIBSWBF2_LOG_ERROR("Aborting read process...");
 				reader.Close();
+				throw;
 			}
 		}
 		else
 		{
-			LIBSWBF2_LOG_WARN("Could not open File {}! Non existent?", Path);
-		}
-		{
-			m_ThreadHandling->m_CurrentReader = nullptr;
+			LIBSWBF2_LOG_ERROR("Could not open File {}! Non existent?", Path);
 		}
 
-		return bSuccess;
+		return false;
 	}
 
 	ChunkHeader BaseChunk::GetHeader() const
@@ -203,16 +179,6 @@ namespace LibSWBF2::Chunks
 		}
 		size_t skipped = stream.GetPosition() - lastPos;
 		LIBSWBF2_LOG_WARN("[{}] Forwarded to next header at {:#x}, skipped {} bytes!", m_Header.ToString(), stream.GetPosition(), skipped);
-	}
-
-	float_t BaseChunk::GetReadingProgress()
-	{
-		if (m_ThreadHandling->m_CurrentReader == nullptr)
-		{
-			return 1.0f;
-		}
-
-		return (float_t)m_ThreadHandling->m_CurrentReader->GetLatestChunkPosition() / (float_t)m_ThreadHandling->m_CurrentReader->GetFileSize();
 	}
 
 	std::string BaseChunk::ToString()

@@ -6,16 +6,15 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API PCHS : public GenericChunk<"PCHS"_m>
+	struct LIBSWBF2_API PCHS : public GenericChunk
 	{
-	public:
-		std::vector<PTCH*> m_Patches;
+		std::vector<std::shared_ptr<PTCH>> m_Patches;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "PCHS"_m; }
 	};
 }

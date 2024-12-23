@@ -20,11 +20,8 @@ namespace LibSWBF2::Chunks::LVL::texture
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
-			LVL_* lvl;
-			READ_CHILD(stream, lvl);
-			m_LVLs.push_back(lvl);
+		while (ThereIsAnother(stream)) {
+			m_LVLs.emplace_back(ReadChild<LVL_>(stream));
 		}
 
 		BaseChunk::EnsureEnd(stream);

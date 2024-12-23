@@ -6,22 +6,22 @@
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
-    void wrld::RefreshSize()
-    {
-        LIBSWBF2_THROW("Not implemented!");
-    }
+	void wrld::RefreshSize()
+	{
+		LIBSWBF2_THROW("Not implemented!");
+	}
 
-    void wrld::WriteToStream(FileWriter& stream)
-    {
-        LIBSWBF2_THROW("Not implemented!");
-    }
+	void wrld::WriteToStream(FileWriter& stream)
+	{
+		LIBSWBF2_THROW("Not implemented!");
+	}
 
-    void wrld::ReadFromStream(FileReader& stream)
-    {
-        BaseChunk::ReadFromStream(stream);
-        Check(stream);
+	void wrld::ReadFromStream(FileReader& stream)
+	{
+		BaseChunk::ReadFromStream(stream);
+		Check(stream);
 
-        READ_CHILD(stream, p_Name);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
 
 		// since in wrld, some chunks are optional, we have to crawl dynamically
 		while (ThereIsAnother(stream))
@@ -29,54 +29,50 @@ namespace LibSWBF2::Chunks::LVL::wrld
 			ChunkHeader nextHead = stream.ReadChunkHeader(true);
 			if (nextHead == "TNAM"_h)
 			{
-				READ_CHILD(stream, p_TerrainName);
+				p_TerrainName = ReadChild<STR<"TNAM"_m>>(stream);
 			}
 			else if (nextHead == "SNAM"_h)
 			{
-				READ_CHILD(stream, p_SkyName);
+				p_SkyName = ReadChild<STR<"SNAM"_m>>(stream);
 			}
 			else if (nextHead == "inst"_h)
 			{
-				inst* instance;
-				READ_CHILD(stream, instance);
-				m_Instances.push_back(instance);
+				m_Instances.emplace_back(ReadChild<inst>(stream));
 			}
 			else if (nextHead == "regn"_h)
 			{
-				regn* region;
-				READ_CHILD(stream, region);
-				m_Regions.push_back(region);
+				m_Regions.emplace_back(ReadChild<regn>(stream));
 			}
 			else if (nextHead == "anim"_h)
 			{
-				READ_CHILD(stream, m_Animations.emplace_back());
+				m_Animations.emplace_back(ReadChild<anim>(stream));
 			}
 			else if (nextHead == "anmg"_h)
 			{
-				READ_CHILD(stream, m_AnimationGroups.emplace_back());
+				m_AnimationGroups.emplace_back(ReadChild<anmg>(stream));
 			}
 			else if (nextHead == "anmh"_h)
 			{
-				READ_CHILD(stream, m_AnimationHierarchies.emplace_back());
+				m_AnimationHierarchies.emplace_back(ReadChild<anmh>(stream));
 			}
 			else if (nextHead == "BARR"_h)
 			{
-				READ_CHILD(stream, m_Barriers.emplace_back());
+				m_Barriers.emplace_back(ReadChild<BARR>(stream));
 			}
 			else if (nextHead == "Hint"_h)
 			{
-				READ_CHILD(stream, m_HintNodes.emplace_back());
+				m_HintNodes.emplace_back(ReadChild<Hint>(stream));
 			}
 			else
 			{
-				READ_CHILD_GENERIC(stream);
+				(void) ReadChild<GenericChunk>(stream);
 			}
 		}
 
-        BaseChunk::EnsureEnd(stream);
-    }
+		BaseChunk::EnsureEnd(stream);
+	}
 
-    std::string wrld::ToString() const
+	std::string wrld::ToString() const
 	{
 		return fmt::format(
 			"World Name: {}\n\n"

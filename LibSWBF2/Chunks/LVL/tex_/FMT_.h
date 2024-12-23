@@ -5,17 +5,17 @@
 
 namespace LibSWBF2::Chunks::LVL::texture
 {
-	struct LIBSWBF2_API FMT_ : public GenericChunk<"FMT_"_m>
+	struct LIBSWBF2_API FMT_ : public GenericChunk
 	{
-	public:
-		FMT::INFO* p_Info = nullptr;
+		std::shared_ptr<FMT::INFO> p_Info = nullptr;
 
 		// TODO: can there be multiple faces?
-		FACE* p_Face = nullptr;
+		std::shared_ptr<FACE> p_Face = nullptr;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+
+		uint32_t GetHeader() override { return "FMT_"_m; }
 	};
 }

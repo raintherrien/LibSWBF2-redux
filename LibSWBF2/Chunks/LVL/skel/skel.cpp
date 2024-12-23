@@ -25,23 +25,23 @@ namespace LibSWBF2::Chunks::LVL::skel
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+		p_Info = ReadChild<INFO>(stream);
             }
             else if (next == "NAME"_h)
             {
-                READ_CHILD(stream, p_BoneNames);
+		p_BoneNames = ReadChild<STRMULT<"NAME"_m>>(stream);
             }
             else if (next == "PRNT"_h)
             {
-                READ_CHILD(stream, p_BoneParents);
+		p_BoneParents = ReadChild<STRMULT<"PRNT"_m>>(stream);
             }
             else if (next == "XFRM"_h)
             {
-                READ_CHILD(stream, p_BoneTransforms);
+		p_BoneTransforms = ReadChild<XFRM>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
         }
 

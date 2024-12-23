@@ -13,7 +13,6 @@
 #include "Texture.h"
 #include "World.h"
 
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -48,7 +47,7 @@ namespace LibSWBF2::Wrappers
 	 * directly if you want. This is just to make access to desired data more
 	 * straight forward.
 	 */
-	class LIBSWBF2_API Level
+	class LIBSWBF2_API Level : public std::enable_shared_from_this<Level>
 	{
 
 	typedef LibSWBF2::Chunks::LVL::LVL LVL;
@@ -61,7 +60,7 @@ namespace LibSWBF2::Wrappers
 		friend Container;
 
 		std::shared_ptr<LVL> p_lvl;
-		Container* p_MainContainer;	// can be NULL
+		std::weak_ptr<Container> p_MainContainer;
 		std::string m_FullPath;
 
 		std::vector<Model> m_Models;
@@ -82,20 +81,20 @@ namespace LibSWBF2::Wrappers
 
 		class MapsWrapper m_NameToIndexMaps;
 
-		SoundStream * WrapStreamChunk(Stream* streamChunk);
+		SoundStream * WrapStreamChunk(std::shared_ptr<Stream> streamChunk);
 
 	public:
 		friend class Model;
 		friend class Segment;
 
 		Level() = default;
-		Level(LVL* lvl, Container* mainContainer);
+		Level(std::shared_ptr<LVL> lvl, std::shared_ptr<Container> mainContainer);
 
 		// subLVLsToLoad doesn't need to be persistent, can be a stack value.
 		// contents will be copied and hashed.
-		static std::optional<Level> FromFile(const std::string& path, const std::vector<std::string>* subLVLsToLoad = nullptr);
-		static std::optional<Level> FromChunk(LVL* lvl, Container* mainContainer);
-		static std::optional<Level> FromStream(FileReader& Stream);
+		static std::shared_ptr<Level> FromFile(const std::string& path, const std::vector<std::string>* subLVLsToLoad = nullptr);
+		static std::shared_ptr<Level> FromChunk(std::shared_ptr<LVL> lvl, std::shared_ptr<Container> mainContainer);
+		static std::shared_ptr<Level> FromStream(FileReader& Stream);
 
 		const std::string& GetLevelPath() const;
 		std::string GetLevelName() const;
@@ -151,8 +150,8 @@ namespace LibSWBF2::Wrappers
 
 
 	private:
-		void ExploreChildrenRecursive(GenericBaseChunk* root);
-		skel* FindSkeleton(const std::string& skeletonName) const;
-		skel* FindSkeleton(FNVHash skeletonName) const;
+		void ExploreChildrenRecursive(std::shared_ptr<GenericBaseChunk> root);
+		std::shared_ptr<skel> FindSkeleton(const std::string& skeletonName) const;
+		std::shared_ptr<skel> FindSkeleton(FNVHash skeletonName) const;
 	};
 }

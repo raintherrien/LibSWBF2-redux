@@ -7,23 +7,22 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API PTCH : public GenericChunk<"PTCH"_m>
+	struct LIBSWBF2_API PTCH : public GenericChunk
 	{
-	public:
-		VBUF* m_TextureBuffer;
-		VBUF* m_GeometryBuffer;
-		VBUF* m_TextureExtraBuffer;
+		std::shared_ptr<VBUF> m_TextureBuffer;
+		std::shared_ptr<VBUF> m_GeometryBuffer;
+		std::shared_ptr<VBUF> m_TextureExtraBuffer;
 
-		IBUF* m_GeometryIndexBuffer;
-		IBUF* m_TextureExtraIndexBuffer;
+		std::shared_ptr<IBUF> m_GeometryIndexBuffer;
+		std::shared_ptr<IBUF> m_TextureExtraIndexBuffer;
 
-		PTCH_INFO* p_PatchInfo;
+		std::shared_ptr<PTCH_INFO> p_PatchInfo;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "PTCH"_m; }
 	};
 }

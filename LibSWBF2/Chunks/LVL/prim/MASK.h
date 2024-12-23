@@ -7,12 +7,12 @@
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
-	struct LIBSWBF2_API MASK : public GenericChunk<"MASK"_m>
+	struct LIBSWBF2_API MASK : public GenericChunk
 	{
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "MASK"_m; }
 
 		std::string ToString() const override;
 

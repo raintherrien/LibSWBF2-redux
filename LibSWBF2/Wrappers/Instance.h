@@ -29,12 +29,12 @@ namespace LibSWBF2::Wrappers
 		friend World;
 
 	private:
-		Container* p_MainContainer;
+		std::weak_ptr<Container> p_MainContainer;
 		std::shared_ptr<inst> p_Instance;
 		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
 
 	public:
-		static std::optional<Instance> FromChunk(Container *mainContainer, std::shared_ptr<inst> chunk);
+		static std::optional<Instance> FromChunk(std::shared_ptr<Container> mainContainer, std::shared_ptr<inst> chunk);
 
 		std::string GetEntityClassName() const;
 		std::string GetName() const;

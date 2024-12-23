@@ -46,12 +46,14 @@ namespace LibSWBF2::Wrappers
 		return *this;
 	}
 
-	bool Localization::FromChunk(Locl* loclChunk, Localization& out)
+	std::optional<Localization> Localization::FromChunk(std::shared_ptr<Locl> loclChunk)
 	{
+		Localization out;
+
 		if (loclChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given loclChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_Locl = loclChunk;
@@ -64,7 +66,7 @@ namespace LibSWBF2::Wrappers
 			);
 		}
 
-		return true;
+		return out;
 	}
 
 	const std::string& Localization::GetName() const

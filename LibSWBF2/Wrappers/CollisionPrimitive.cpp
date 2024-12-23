@@ -8,23 +8,26 @@
 
 namespace LibSWBF2::Wrappers
 {
-    bool CollisionPrimitive::FromChunks(STR<"NAME"_m> *name, MASK *mask,
-                           STR<"PRNT"_m> *parent, XFRM *transform,
-                           DATA_PRIM *fields, CollisionPrimitive& out)
-    {
-        if (transform == nullptr || name == nullptr || fields == nullptr)
-        {
-            return false;
+    std::optional<CollisionPrimitive> CollisionPrimitive::FromChunks(
+        std::shared_ptr<STR<"NAME"_m>> name,
+        std::shared_ptr<MASK> mask,
+        std::shared_ptr<STR<"PRNT"_m>> parent,
+        std::shared_ptr<XFRM> transform,
+        std::shared_ptr<DATA_PRIM> fields
+    ) {
+        if (!transform || !name || !fields) {
+            return {};
         }
-        out = CollisionPrimitive(name, mask, parent, transform, fields);
-        return true;
+        return CollisionPrimitive(name, mask, parent, transform, fields);
     }
 
     CollisionPrimitive::CollisionPrimitive(
-                STR<"NAME"_m> *name, MASK *mask,
-                STR<"PRNT"_m> *parent, XFRM *transform,
-                DATA_PRIM *fields)
-	    : p_FieldsChunk(fields), p_TransformChunk(transform), p_NameChunk(name), p_MaskChunk(mask), p_ParentChunk(parent) {}
+        std::shared_ptr<STR<"NAME"_m>> name,
+        std::shared_ptr<MASK> mask,
+        std::shared_ptr<STR<"PRNT"_m>> parent,
+        std::shared_ptr<XFRM> transform,
+        std::shared_ptr<DATA_PRIM> fields
+    ) : p_FieldsChunk(fields), p_TransformChunk(transform), p_NameChunk(name), p_MaskChunk(mask), p_ParentChunk(parent) {}
 
 
     Vector4 CollisionPrimitive::GetRotation() const
@@ -48,8 +51,8 @@ namespace LibSWBF2::Wrappers
     }
 
     ECollisionPrimitiveType CollisionPrimitive::GetPrimitiveType() const
-    {	
-	    return p_FieldsChunk -> m_PrimitiveType;
+    {    
+        return p_FieldsChunk -> m_PrimitiveType;
     }
 
     ECollisionMaskFlags CollisionPrimitive::GetMaskFlags() const

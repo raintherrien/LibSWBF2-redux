@@ -6,17 +6,16 @@
 
 namespace LibSWBF2::Wrappers
 {
-    bool CollisionMesh::FromChunk(coll *collChunk, CollisionMesh& out)
+    std::optional<CollisionMesh> CollisionMesh::FromChunk(std::shared_ptr<coll> collChunk)
     {
         if (collChunk == nullptr)
         {
-            return false;
+            return {};
         }
-        out = CollisionMesh(collChunk);
-        return true;
+        return CollisionMesh(collChunk);
     }
     
-    CollisionMesh::CollisionMesh(coll *collChunk) : p_CollisionChunk(collChunk) {}
+    CollisionMesh::CollisionMesh(std::shared_ptr<coll> collChunk) : p_CollisionChunk(collChunk) {}
 
     CollisionMesh::CollisionMesh() : p_CollisionChunk(nullptr) {}
 
@@ -54,7 +53,7 @@ namespace LibSWBF2::Wrappers
     {
         if (p_CollisionChunk != nullptr && m_Indicies.size() == 0) //lazy load
         {
-		std::vector<TREE_LEAF *>& leaves = p_CollisionChunk -> p_Tree -> m_Leaves;
+		std::vector<std::shared_ptr<TREE_LEAF>>& leaves = p_CollisionChunk -> p_Tree -> m_Leaves;
             
 		for (int i = 0; i < leaves.size(); i++) {
 			std::vector<uint16_t>& leaf_fan = leaves[i] -> m_Indicies;

@@ -20,9 +20,9 @@ namespace LibSWBF2::Chunks::LVL::script
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		READ_CHILD(stream, p_Name);
-		READ_CHILD(stream, p_Info);
-		READ_CHILD(stream, p_Body);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
+		p_Info = ReadChild<INFO>(stream);
+		p_Body = ReadChild<RawData<"BODY"_m>>(stream);
 
 		BaseChunk::EnsureEnd(stream);
 	}

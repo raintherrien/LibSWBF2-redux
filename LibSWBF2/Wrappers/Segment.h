@@ -34,17 +34,14 @@ namespace LibSWBF2::Wrappers
 		friend Model;
 
 	private:
-		segm* p_Segment;
-		VBUF* p_VertexBuffer;
+		std::shared_ptr<segm> p_Segment;
+		std::shared_ptr<VBUF> p_VertexBuffer;
 
 		Material m_Material;
 		std::vector<VertexWeight> m_VertexWeights;
 
 	public:
-		Segment() = default;
-		~Segment() = default;
-
-		static bool FromChunk(Level* mainContainer, segm* segmentChunk, Segment& out);
+		static std::optional<Segment> FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<segm> segmentChunk);
 
 		ETopology GetTopology() const;
 		bool ContainsWeights() const;

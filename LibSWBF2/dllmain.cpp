@@ -10,7 +10,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	return TRUE;
 }
 
-#elif !defined(NDEBUG) && defined(__GNUC__)
+// Before refactoring, I ran into segfaults quite often with this library.
+// For now this has been disabled. Oh, and I know it's bad. Don't tell me.
+#elif 0 && !defined(NDEBUG) && defined(__GNUC__)
 
 // Yeah this is awful. It's not my fault this library segfaults!
 static void sigsegv_handler(int sig)

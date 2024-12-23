@@ -23,14 +23,10 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 
-		plan* p_Plan;
-
+		std::shared_ptr<plan> p_Plan;
 
 	public:
-		PlanSet() = default;
-		~PlanSet() = default;
-
-		static bool FromChunk(plan* planChunk, PlanSet& out);
+		static std::optional<PlanSet> FromChunk(std::shared_ptr<plan> planChunk);
 
 		const std::vector<Hub>& GetHubs() const;
 		const std::vector<Connection>& GetConnections() const;

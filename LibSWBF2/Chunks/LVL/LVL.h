@@ -11,26 +11,22 @@ namespace LibSWBF2::Chunks::LVL
 		struct Stream;
 	}
 
-	struct LIBSWBF2_API LVL : public GenericChunk<"ucfb"_m>
+	struct LIBSWBF2_API LVL : public GenericChunk
 	{
 	private:
 		std::vector<FNVHash> m_SubLVLsToLoad;
-		bool m_Lazy = false;
 
 	public:
 		friend struct lvl_;
 
-		static LVL* Create();
-		static void Destroy(LVL* lvl);
-
-		void SetLazy(bool Lazy = true);
-
 		void ReadFromStream(FileReader& stream) override;
 
-		bool FindAndReadSoundStream(FileReader& stream, FNVHash soundStreamName, sound::Stream *& streamChunk);
+		std::shared_ptr<sound::Stream> FindAndReadSoundStream(FileReader& stream, FNVHash soundStreamName);
 
 
 		// All sub LVLs not specified in here won't be loaded!
-		bool ReadFromFile(std::string Path, const std::vector<std::string>* subLVLsToLoad = nullptr);
+		bool ReadFile(std::string Path, const std::vector<std::string>* subLVLsToLoad = nullptr);
+
+		uint32_t GetHeader() override { return "ucfb"_m; }
 	};
 }

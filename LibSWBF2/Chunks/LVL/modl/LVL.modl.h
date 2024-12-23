@@ -8,20 +8,19 @@
 
 namespace LibSWBF2::Chunks::LVL::modl
 {
-	struct LIBSWBF2_API modl : public GenericChunk<"modl"_m>
+	struct LIBSWBF2_API modl : public GenericChunk
 	{
-	public:
-		STR<"NAME"_m>* p_Name;
-		STR<"NODE"_m>* p_Node;	// parent class?
-		INFO* p_Info;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<STR<"NODE"_m>> p_Node;	// parent class?
+		std::shared_ptr<INFO> p_Info;
 
-		std::vector<segm*> m_Segments;
+		std::vector<std::shared_ptr<segm>> m_Segments;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "modl"_m; }
 	};
 }

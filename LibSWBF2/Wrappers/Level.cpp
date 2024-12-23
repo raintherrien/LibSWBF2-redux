@@ -46,197 +46,188 @@ namespace LibSWBF2::Wrappers
     using namespace Chunks::LVL::config;
     using namespace Chunks::LVL::sound;
 
-	Level::Level(LVL* lvl, Container* mainContainer)
+	Level::Level(std::shared_ptr<LVL> lvl, std::shared_ptr<Container> mainContainer)
 	: p_lvl{lvl}, p_MainContainer{mainContainer}
 	{
 	}
 
-	void Level::ExploreChildrenRecursive(GenericBaseChunk* root)
+	void Level::ExploreChildrenRecursive(std::shared_ptr<GenericBaseChunk> root)
 	{
+		LIBSWBF2_LOG_INFO("root = {}", typeid(*root.get()).name());
+		std::shared_ptr<Container> container = p_MainContainer.lock();
+		if (!container) {
+			LIBSWBF2_THROW("Container no longer valid!");
+		}
+
 		// IMPORTANT: crawl textures BEFORE models, so texture references via string can be resolved in models
-		tex_* textureChunk = dynamic_cast<tex_*>(root);
-		if (textureChunk != nullptr)
+		std::shared_ptr<tex_> textureChunk = std::dynamic_pointer_cast<tex_>(root);
+		if (textureChunk)
 		{
-			Texture texture;
-			if (Texture::FromChunk(textureChunk, texture))
+			if (std::optional<Texture> texture = Texture::FromChunk(textureChunk))
 			{
-				m_NameToIndexMaps.TextureNameToIndex.emplace(FNV::Hash(texture.GetName()), m_Textures.size());
-				m_Textures.push_back(texture);
+				m_NameToIndexMaps.TextureNameToIndex.emplace(FNV::Hash(texture->GetName()), m_Textures.size());
+				m_Textures.push_back(*texture);
 			}
 		}
 		
-		zaa_* animationChunk = dynamic_cast<zaa_*>(root);
-		if (animationChunk != nullptr)
+		std::shared_ptr<zaa_> animationChunk = std::dynamic_pointer_cast<zaa_>(root);
+		if (animationChunk)
 		{
-			AnimationBank animBank;
-			if (AnimationBank::FromChunk(animationChunk, animBank))
+			if (std::optional<AnimationBank> animBank = AnimationBank::FromChunk(animationChunk))
 			{
-				m_NameToIndexMaps.AnimationBankNameToIndex.emplace(FNV::Hash(animBank.GetName()), m_AnimationBanks.size());
-				m_AnimationBanks.push_back(animBank);
+				m_NameToIndexMaps.AnimationBankNameToIndex.emplace(FNV::Hash(animBank->GetName()), m_AnimationBanks.size());
+				m_AnimationBanks.push_back(std::move(*animBank));
 			}	
 		}
 
-		zaf_* animSkelChunk = dynamic_cast<zaf_*>(root);
-		if (animSkelChunk != nullptr)
+		std::shared_ptr<zaf_> animSkelChunk = std::dynamic_pointer_cast<zaf_>(root);
+		if (animSkelChunk)
 		{
-			AnimationSkeleton animSkel;
-			if (AnimationSkeleton::FromChunk(animSkelChunk, animSkel))
+			if (std::optional<AnimationSkeleton> animSkel = AnimationSkeleton::FromChunk(animSkelChunk))
 			{
-				m_NameToIndexMaps.AnimationSkeletonNameToIndex.emplace(FNV::Hash(animSkel.GetName()), m_AnimationSkeletons.size());
-				m_AnimationSkeletons.push_back(animSkel);
+				m_NameToIndexMaps.AnimationSkeletonNameToIndex.emplace(FNV::Hash(animSkel->GetName()), m_AnimationSkeletons.size());
+				m_AnimationSkeletons.push_back(*animSkel);
 			}	
 		}
 
 		//Config chunks
-		fx__* fxChunk = dynamic_cast<fx__*>(root);
-		if (fxChunk != nullptr)
+		std::shared_ptr<fx__> fxChunk = std::dynamic_pointer_cast<fx__>(root);
+		if (fxChunk)
 		{
-			Config effect;
-			if (Config::FromChunk(fxChunk, effect))
+			if (std::optional<Config> effect = Config::FromChunk(fxChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(effect.m_Name + (uint32_t) effect.m_Type, m_Configs.size());
-				m_Configs.push_back(effect);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(effect->m_Name + (uint32_t) effect->m_Type, m_Configs.size());
+				m_Configs.push_back(*effect);
 			}
 		}
 
-		lght* lightListChunk = dynamic_cast<lght*>(root);
-		if (lightListChunk != nullptr)
+		std::shared_ptr<lght> lightListChunk = std::dynamic_pointer_cast<lght>(root);
+		if (lightListChunk)
 		{
-			Config lighting;
-			if (Config::FromChunk(lightListChunk, lighting))
+			if (std::optional<Config> lighting = Config::FromChunk(lightListChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(lighting.m_Name + (uint32_t) lighting.m_Type, m_Configs.size());
-				m_Configs.push_back(lighting);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(lighting->m_Name + (uint32_t) lighting->m_Type, m_Configs.size());
+				m_Configs.push_back(*lighting);
 			}
 		}
 
-		sky_* skydomeChunk = dynamic_cast<sky_*>(root);
-		if (skydomeChunk != nullptr)
+		std::shared_ptr<sky_> skydomeChunk = std::dynamic_pointer_cast<sky_>(root);
+		if (skydomeChunk)
 		{
-			Config skydome;
-			if (Config::FromChunk(skydomeChunk, skydome))
+			if (std::optional<Config> skydome = Config::FromChunk(skydomeChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(skydome.m_Name + (uint32_t) skydome.m_Type, m_Configs.size());
-				m_Configs.push_back(skydome);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(skydome->m_Name + (uint32_t) skydome->m_Type, m_Configs.size());
+				m_Configs.push_back(*skydome);
 			}
 		}
 
-		path* pathChunk = dynamic_cast<path*>(root);
-		if (pathChunk != nullptr)
+		std::shared_ptr<path> pathChunk = std::dynamic_pointer_cast<path>(root);
+		if (pathChunk)
 		{
-			Config path;
-			if (Config::FromChunk(pathChunk, path))
+			if (std::optional<Config> path = Config::FromChunk(pathChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(path.m_Name + (uint32_t) path.m_Type, m_Configs.size());
-				m_Configs.push_back(path);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(path->m_Name + (uint32_t) path->m_Type, m_Configs.size());
+				m_Configs.push_back(*path);
 			}
 		}
 
-		comb* comboChunk = dynamic_cast<comb*>(root);
-		if (comboChunk != nullptr)
+		std::shared_ptr<comb> comboChunk = std::dynamic_pointer_cast<comb>(root);
+		if (comboChunk)
 		{
-			Config combo;
-			if (Config::FromChunk(comboChunk, combo))
+			if (std::optional<Config> combo = Config::FromChunk(comboChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(combo.m_Name + (uint32_t) combo.m_Type, m_Configs.size());
-				m_Configs.push_back(combo);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(combo->m_Name + (uint32_t) combo->m_Type, m_Configs.size());
+				m_Configs.push_back(*combo);
 			}
 		}
 
-		snd_* soundChunk = dynamic_cast<snd_*>(root);
-		if (soundChunk != nullptr)
+		std::shared_ptr<snd_> soundChunk = std::dynamic_pointer_cast<snd_>(root);
+		if (soundChunk)
 		{
-			Config sound;
-			if (Config::FromChunk(soundChunk, sound))
+			if (std::optional<Config> sound = Config::FromChunk(soundChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(sound.m_Name + (uint32_t) sound.m_Type, m_Configs.size());
-				m_Configs.push_back(sound);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(sound->m_Name + (uint32_t) sound->m_Type, m_Configs.size());
+				m_Configs.push_back(*sound);
 			}
 		}
 
-		mus_* musicChunk = dynamic_cast<mus_*>(root);
-		if (musicChunk != nullptr)
+		std::shared_ptr<mus_> musicChunk = std::dynamic_pointer_cast<mus_>(root);
+		if (musicChunk)
 		{
-			Config music;
-			if (Config::FromChunk(musicChunk, music))
+			if (std::optional<Config> music = Config::FromChunk(musicChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(music.m_Name + (uint32_t) music.m_Type, m_Configs.size());
-				m_Configs.push_back(music);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(music->m_Name + (uint32_t) music->m_Type, m_Configs.size());
+				m_Configs.push_back(*music);
 			}
 		}
 
-		ffx_* foleyFXChunk = dynamic_cast<ffx_*>(root);
-		if (foleyFXChunk != nullptr)
+		std::shared_ptr<ffx_> foleyFXChunk = std::dynamic_pointer_cast<ffx_>(root);
+		if (foleyFXChunk)
 		{
-			Config foleyFX;
-			if (Config::FromChunk(foleyFXChunk, foleyFX))
+			if (std::optional<Config> foleyFX = Config::FromChunk(foleyFXChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(foleyFX.m_Name + (uint32_t) foleyFX.m_Type, m_Configs.size());
-				m_Configs.push_back(foleyFX);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(foleyFX->m_Name + (uint32_t) foleyFX->m_Type, m_Configs.size());
+				m_Configs.push_back(*foleyFX);
 			}
 		}
 		
-		tsr_* soundTriggerChunk = dynamic_cast<tsr_*>(root);
-		if (soundTriggerChunk != nullptr)
+		std::shared_ptr<tsr_> soundTriggerChunk = std::dynamic_pointer_cast<tsr_>(root);
+		if (soundTriggerChunk)
 		{
-			Config soundTrigger;
-			if (Config::FromChunk(soundTriggerChunk, soundTrigger))
+			if (std::optional<Config> soundTrigger = Config::FromChunk(soundTriggerChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(soundTrigger.m_Name + (uint32_t) soundTrigger.m_Type, m_Configs.size());
-				m_Configs.push_back(soundTrigger);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(soundTrigger->m_Name + (uint32_t) soundTrigger->m_Type, m_Configs.size());
+				m_Configs.push_back(*soundTrigger);
 			}
 		}
 
-		hud_* hudChunk = dynamic_cast<hud_*>(root);
-		if (hudChunk != nullptr)
+		std::shared_ptr<hud_> hudChunk = std::dynamic_pointer_cast<hud_>(root);
+		if (hudChunk)
 		{
-			Config HUD;
-			if (Config::FromChunk(hudChunk, HUD))
+			if (std::optional<Config> HUD = Config::FromChunk(hudChunk))
 			{
-				m_NameToIndexMaps.ConfigHashToIndex.emplace(HUD.m_Name + (uint32_t) HUD.m_Type, m_Configs.size());
-				m_Configs.push_back(HUD);
+				m_NameToIndexMaps.ConfigHashToIndex.emplace(HUD->m_Name + (uint32_t) HUD->m_Type, m_Configs.size());
+				m_Configs.push_back(*HUD);
 			}
 		}
 
 		// IMPORTANT: crawl skeletons BEFORE models, so skeleton references via string can be resolved in models
-		skel* skelChunk = dynamic_cast<skel*>(root);
-		if (skelChunk != nullptr)
+		std::shared_ptr<skel> skelChunk = std::dynamic_pointer_cast<skel>(root);
+		if (skelChunk)
 		{
 			m_NameToIndexMaps.SkeletonNameToSkel.emplace(FNV::Hash(skelChunk->p_Info->m_ModelName), skelChunk);
 		}
 
 		// IMPORTANT: crawl models BEFORE worlds, so model references via string can be resolved in worlds
-		modl* modelChunk = dynamic_cast<modl*>(root);
-		if (modelChunk != nullptr)
+		std::shared_ptr<modl> modelChunk = std::dynamic_pointer_cast<modl>(root);
+		if (modelChunk)
 		{
-			Model model;
-			if (Model::FromChunk(this, modelChunk, model))
+			if (std::optional<Model> model = Model::FromChunk(shared_from_this(), modelChunk))
 			{
-				m_NameToIndexMaps.ModelNameToIndex.emplace(FNV::Hash(model.GetName()), m_Models.size());
-				m_Models.push_back(model);
+				m_NameToIndexMaps.ModelNameToIndex.emplace(FNV::Hash(model->GetName()), m_Models.size());
+				m_Models.push_back(*model);
 			}
 		}
 
-		coll* collisionChunk = dynamic_cast<coll*>(root);
-		if (collisionChunk != nullptr)
+		std::shared_ptr<coll> collisionChunk = std::dynamic_pointer_cast<coll>(root);
+		if (collisionChunk)
 		{
-			CollisionMesh collMesh;
-			if (CollisionMesh::FromChunk(collisionChunk, collMesh))
+			if (std::optional<CollisionMesh> collMesh = CollisionMesh::FromChunk(collisionChunk))
 			{
-				if (m_NameToIndexMaps.ModelNameToIndex.count(FNV::Hash(collMesh.GetName())) == 1)
+				if (m_NameToIndexMaps.ModelNameToIndex.count(FNV::Hash(collMesh->GetName())) == 1)
 				{
-					size_t modelIndex = m_NameToIndexMaps.ModelNameToIndex[FNV::Hash(collMesh.GetName())];
-					m_Models[modelIndex].m_CollisionMesh = collMesh;
+					size_t modelIndex = m_NameToIndexMaps.ModelNameToIndex[FNV::Hash(collMesh->GetName())];
+					m_Models[modelIndex].m_CollisionMesh = *collMesh;
 				}
 				else 
 				{
-					LIBSWBF2_LOG_ERROR("CollisionMesh references missing model {}", collMesh.GetName());
+					LIBSWBF2_LOG_ERROR("CollisionMesh references missing model {}", collMesh->GetName());
 				}
 			}
 		}
 		
-		prim* primChunk = dynamic_cast<prim*>(root);
-		if (primChunk != nullptr)
+		std::shared_ptr<prim> primChunk = std::dynamic_pointer_cast<prim>(root);
+		if (primChunk)
 		{
 			std::vector<CollisionPrimitive> primitives;
 			auto& NAMEList = primChunk -> m_PrimitiveNAMEs;
@@ -247,13 +238,10 @@ namespace LibSWBF2::Wrappers
 			
 			for (int i = 0; i < primChunk -> p_InfoChunk -> m_NumPrimitives; i++)
 			{
-				CollisionPrimitive newPrimitive;
 
-				if (CollisionPrimitive::FromChunks(NAMEList[i], MASKList[i], 
-												PRNTList[i], XFRMList[i], 
-												DATAList[i], newPrimitive))
+				if (std::optional<CollisionPrimitive> newPrimitive = CollisionPrimitive::FromChunks(NAMEList[i], MASKList[i], PRNTList[i], XFRMList[i], DATAList[i]))
 				{
-					primitives.push_back(newPrimitive);	
+					primitives.push_back(*newPrimitive);	
 				}
 			}
 
@@ -271,117 +259,107 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		wrld* worldChunk = dynamic_cast<wrld*>(root);
-		if (worldChunk != nullptr)
+		std::shared_ptr<wrld> worldChunk = std::dynamic_pointer_cast<wrld>(root);
+		if (worldChunk)
 		{
 			// LVLs potentially contain the SAME wrld chunk more than once...
 			// Check for wrld name to prevent duplicates!
 			FNVHash name = FNV::Hash(worldChunk->p_Name->m_Text);
 			if (m_NameToIndexMaps.WorldNameToIndex.find(name) == m_NameToIndexMaps.WorldNameToIndex.end())
 			{
-				World world;
-				if (World::FromChunk(p_MainContainer, worldChunk, world))
-				{
+				if (std::optional<World> world = World::FromChunk(container, worldChunk)) {
 					m_NameToIndexMaps.WorldNameToIndex.emplace(name, m_Worlds.size());
-					m_Worlds.push_back(world);
+					m_Worlds.push_back(*world);
 				}
 			}
 		}
 
-		tern* terrainChunk = dynamic_cast<tern*>(root);
-		if (terrainChunk != nullptr)
+		std::shared_ptr<tern> terrainChunk = std::dynamic_pointer_cast<tern>(root);
+		if (terrainChunk)
 		{
-			Terrain terrain;
-			if (Terrain::FromChunk(terrainChunk, terrain))
+			if (std::optional<Terrain> terrain = Terrain::FromChunk(terrainChunk))
 			{
-				m_NameToIndexMaps.TerrainNameToIndex.emplace(FNV::Hash(terrain.GetName()), m_Terrains.size());
-				m_Terrains.push_back(terrain);
+				m_NameToIndexMaps.TerrainNameToIndex.emplace(FNV::Hash(terrain->GetName()), m_Terrains.size());
+				m_Terrains.push_back(*terrain);
 			}
 		}
 
-		scr_* scriptChunk = dynamic_cast<scr_*>(root);
-		if (scriptChunk != nullptr)
+		std::shared_ptr<scr_> scriptChunk = std::dynamic_pointer_cast<scr_>(root);
+		if (scriptChunk)
 		{
-			Script script;
-			if (Script::FromChunk(scriptChunk, script))
+			if (std::optional<Script> script = Script::FromChunk(scriptChunk))
 			{
-				m_NameToIndexMaps.ScriptNameToIndex.emplace(FNV::Hash(script.GetName()), m_Scripts.size());
-				m_Scripts.push_back(script);
+				m_NameToIndexMaps.ScriptNameToIndex.emplace(FNV::Hash(script->GetName()), m_Scripts.size());
+				m_Scripts.push_back(*script);
 			}
 		}
 
-		Locl* loclChunk = dynamic_cast<Locl*>(root);
-		if (loclChunk != nullptr)
+		std::shared_ptr<Locl> loclChunk = std::dynamic_pointer_cast<Locl>(root);
+		if (loclChunk)
 		{
-			Localization localization;
-			if (Localization::FromChunk(loclChunk, localization))
+			if (std::optional<Localization> localization = Localization::FromChunk(loclChunk))
 			{
-				m_NameToIndexMaps.LocalizationNameToIndex.emplace(FNV::Hash(localization.GetName()), m_Localizations.size());
-				m_Localizations.push_back(localization);
+				m_NameToIndexMaps.LocalizationNameToIndex.emplace(FNV::Hash(localization->GetName()), m_Localizations.size());
+				m_Localizations.push_back(*localization);
 			}
 		}
 
-		entc* entityChunk = dynamic_cast<entc*>(root);
-		if (entityChunk != nullptr)
+		std::shared_ptr<entc> entityChunk = std::dynamic_pointer_cast<entc>(root);
+		if (entityChunk)
 		{
-			EntityClass entityClass;
-			if (EntityClass::FromChunk(p_MainContainer, entityChunk, entityClass))
+			if (std::optional<EntityClass> entityClass = EntityClass::FromChunk(container, entityChunk))
 			{
-				FNVHash name = FNV::Hash(entityClass.GetTypeName());
+				FNVHash name = FNV::Hash(entityClass->GetTypeName());
 				m_NameToIndexMaps.EntityClassTypeToIndex.emplace(name, m_EntityClasses.size());
-				m_EntityClasses.push_back(entityClass);
+				m_EntityClasses.push_back(*entityClass);
 			}
 		}
 
-		ordc* ordenanceChunk = dynamic_cast<ordc*>(root);
-		if (ordenanceChunk != nullptr)
+		std::shared_ptr<ordc> ordenanceChunk = std::dynamic_pointer_cast<ordc>(root);
+		if (ordenanceChunk)
 		{
-			EntityClass entityClass;
-			if (EntityClass::FromChunk(p_MainContainer, ordenanceChunk, entityClass))
+			if (std::optional<EntityClass> entityClass = EntityClass::FromChunk(container, ordenanceChunk))
 			{
-				FNVHash name = FNV::Hash(entityClass.GetTypeName());
+				FNVHash name = FNV::Hash(entityClass->GetTypeName());
 				m_NameToIndexMaps.EntityClassTypeToIndex.emplace(name, m_EntityClasses.size());
-				m_EntityClasses.push_back(entityClass);
+				m_EntityClasses.push_back(*entityClass);
 			}
 		}
 
-		wpnc* weaponChunk = dynamic_cast<wpnc*>(root);
-		if (weaponChunk != nullptr)
+		std::shared_ptr<wpnc> weaponChunk = std::dynamic_pointer_cast<wpnc>(root);
+		if (weaponChunk)
 		{
-			EntityClass entityClass;
-			if (EntityClass::FromChunk(p_MainContainer, weaponChunk, entityClass))
+			if (std::optional<EntityClass> entityClass = EntityClass::FromChunk(container, weaponChunk))
 			{
-				FNVHash name = FNV::Hash(entityClass.GetTypeName());
+				FNVHash name = FNV::Hash(entityClass->GetTypeName());
 				m_NameToIndexMaps.EntityClassTypeToIndex.emplace(name, m_EntityClasses.size());
-				m_EntityClasses.push_back(entityClass);
+				m_EntityClasses.push_back(*entityClass);
 			}
 		}
 
-		expc* explosionChunk = dynamic_cast<expc*>(root);
-		if (explosionChunk != nullptr)
+		std::shared_ptr<expc> explosionChunk = std::dynamic_pointer_cast<expc>(root);
+		if (explosionChunk)
 		{
-			EntityClass entityClass;
-			if (EntityClass::FromChunk(p_MainContainer, explosionChunk, entityClass))
+			if (std::optional<EntityClass> entityClass = EntityClass::FromChunk(container, explosionChunk))
 			{
-				FNVHash name = FNV::Hash(entityClass.GetTypeName());
+				FNVHash name = FNV::Hash(entityClass->GetTypeName());
 				m_NameToIndexMaps.EntityClassTypeToIndex.emplace(name, m_EntityClasses.size());
-				m_EntityClasses.push_back(entityClass);
+				m_EntityClasses.push_back(*entityClass);
 			}
 		}
 
 		
-		SampleBank* bankChunk = dynamic_cast<SampleBank*>(root);
-		if (bankChunk != nullptr)
+		std::shared_ptr<SampleBank> bankChunk = std::dynamic_pointer_cast<SampleBank>(root);
+		if (bankChunk)
 		{
-			SoundBank bank;
-			if (SoundBank::FromChunk(bankChunk, bank))
+			if (std::optional<SoundBank> bank = SoundBank::FromChunk(bankChunk))
 			{
-				m_NameToIndexMaps.SoundBankHashToIndex.emplace(bank.GetHashedName(), m_SoundBanks.size());
-				m_SoundBanks.push_back(bank);
+				m_NameToIndexMaps.SoundBankHashToIndex.emplace(bank->GetHashedName(), m_SoundBanks.size());
+				m_SoundBanks.push_back(*bank);
 				
-				if (bank.HasData())
+				if (bank->HasData())
 				{
-					const std::vector<Sound>& sounds = bank.GetSounds(); 
+					const std::vector<Sound>& sounds = bank->GetSounds(); 
 					for (uint32_t i = 0; i < sounds.size(); i++)
 					{
 						m_NameToIndexMaps.SoundHashToIndex.emplace(sounds[i].GetHashedName(), m_Sounds.size());
@@ -391,47 +369,44 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 		
-		Stream* streamChunk = dynamic_cast<Stream*>(root);
-		if (streamChunk != nullptr)
+		std::shared_ptr<Stream> streamChunk = std::dynamic_pointer_cast<Stream>(root);
+		if (streamChunk)
 		{
 			WrapStreamChunk(streamChunk);
 		}
 
-		plan* planChunk = dynamic_cast<plan*>(root);
-		if (planChunk != nullptr)
+		std::shared_ptr<plan> planChunk = std::dynamic_pointer_cast<plan>(root);
+		if (planChunk)
 		{
-			PlanSet ps;
-			if (PlanSet::FromChunk(planChunk, ps))
+			if (std::optional<PlanSet> ps = PlanSet::FromChunk(planChunk))
 			{
-				m_PlanSets.push_back(ps);
+				m_PlanSets.push_back(*ps);
 			}
 		}
 
-
-		const std::vector<GenericBaseChunk*>& children = root->GetChildren();
+		const std::vector<std::shared_ptr<GenericBaseChunk>>& children = root->GetChildren();
 		for (size_t i = 0; i < children.size(); ++i)
 		{
 			ExploreChildrenRecursive(children[i]);
 		}
 	}
 
-	std::optional<Level> Level::FromFile(const std::string& path, const std::vector<std::string>* subLVLsToLoad)
+	std::shared_ptr<Level> Level::FromFile(const std::string& path, const std::vector<std::string>* subLVLsToLoad)
 	{
-		LVL* lvl = LVL::Create();
-		if (!lvl->ReadFromFile(path, subLVLsToLoad))
+		std::shared_ptr<LVL> lvl = std::make_shared<LVL>();
+		if (!lvl->ReadFile(path, subLVLsToLoad))
 		{
-			LVL::Destroy(lvl);
 			return {};
 		}
 
-		Level result{lvl, nullptr};
-		result.m_FullPath = path;
-		result.ExploreChildrenRecursive(lvl);
+		std::shared_ptr<Level> result = std::make_shared<Level>(lvl, nullptr);
+		result->m_FullPath = path;
+		result->ExploreChildrenRecursive(lvl);
 
 		return result;
 	}
 
-	std::optional<Level> Level::FromChunk(LVL* lvl, Container* mainContainer)
+	std::shared_ptr<Level> Level::FromChunk(std::shared_ptr<LVL> lvl, std::shared_ptr<Container> mainContainer)
 	{
 		if (lvl == nullptr)
 		{
@@ -439,20 +414,19 @@ namespace LibSWBF2::Wrappers
 			return {};
 		}
 
-		Level result{lvl, mainContainer};
-		result.ExploreChildrenRecursive(lvl);
+		std::shared_ptr<Level> result = std::make_shared<Level>(lvl, mainContainer);
+		result->ExploreChildrenRecursive(lvl);
 
 		return result;
 	}
 
-	std::optional<Level> Level::FromStream(FileReader& reader)
+	std::shared_ptr<Level> Level::FromStream(FileReader& reader)
 	{
-		LVL* lvl = LVL::Create();
-		lvl -> SetLazy(true);
+		std::shared_ptr<LVL> lvl = std::make_shared<LVL>();
 		lvl -> ReadFromStream(reader);
 
-		Level result{lvl, nullptr};
-		result.m_FullPath = reader.GetFileName();
+		std::shared_ptr<Level> result = std::make_shared<Level>(lvl, nullptr);
+		result->m_FullPath = reader.GetFileName();
 
 		// Don't read all children since we're streaming...
 		return result;
@@ -464,14 +438,13 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	SoundStream * Level::WrapStreamChunk(Stream *streamChunk)
+	SoundStream * Level::WrapStreamChunk(std::shared_ptr<Stream> streamChunk)
 	{
-		SoundStream stream;
-		if (SoundStream::FromChunk(streamChunk, stream))
+		if (std::optional<SoundStream> stream = SoundStream::FromChunk(streamChunk))
 		{
 			auto streamIndex = m_SoundStreams.size();
-			m_SoundStreams.push_back(stream);
-			m_NameToIndexMaps.SoundStreamHashToIndex.emplace(stream.GetHashedName(), streamIndex);
+			m_SoundStreams.push_back(*stream);
+			m_NameToIndexMaps.SoundStreamHashToIndex.emplace(stream->GetHashedName(), streamIndex);
 
 			return &(m_SoundStreams[streamIndex]);
 		}
@@ -765,12 +738,12 @@ namespace LibSWBF2::Wrappers
 
 
 	// Skeleton
-	skel* Level::FindSkeleton(const std::string& skelName) const
+	std::shared_ptr<skel> Level::FindSkeleton(const std::string& skelName) const
 	{
 		return skelName.empty() ? nullptr : FindSkeleton(FNV::Hash(skelName));
 	}
 
-	skel* Level::FindSkeleton(FNVHash skeletonName) const
+	std::shared_ptr<skel> Level::FindSkeleton(FNVHash skeletonName) const
 	{
 		auto it = m_NameToIndexMaps.SkeletonNameToSkel.find(skeletonName);
 		if (it != m_NameToIndexMaps.SkeletonNameToSkel.end())
@@ -778,7 +751,7 @@ namespace LibSWBF2::Wrappers
 			return it->second;
 		}
 
-		return nullptr;
+		return {};
 	}
 
 
@@ -841,7 +814,7 @@ namespace LibSWBF2::Wrappers
 		return p_lvl.get();
 	}
 
-	SoundStream* Level::FindAndIndexSoundStream(FileReader& stream, FNVHash StreamName)
+	SoundStream *Level::FindAndIndexSoundStream(FileReader& stream, FNVHash StreamName)
 	{
 		auto it = m_NameToIndexMaps.SoundStreamHashToIndex.find(StreamName);
 		if (it != m_NameToIndexMaps.SoundStreamHashToIndex.end())
@@ -850,14 +823,13 @@ namespace LibSWBF2::Wrappers
 		}
 		else 
 		{
-			Stream* streamChunk;
-			if (p_lvl -> FindAndReadSoundStream(stream, StreamName, streamChunk))
+			if (std::shared_ptr<Stream> streamChunk = p_lvl->FindAndReadSoundStream(stream, StreamName))
 			{
 				return WrapStreamChunk(streamChunk);
 			}
 			else 
 			{
-				return nullptr;
+				return {};
 			}			
 		}
 	}

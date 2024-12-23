@@ -32,51 +32,47 @@ namespace LibSWBF2::Chunks::LVL::modl
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+                p_Info = ReadChild<segment::INFO>(stream);
             }
             else if (next == "MTRL"_h)
             {
-                READ_CHILD(stream, p_Material);
+                p_Material = ReadChild<MTRL>(stream);
             }
             else if (next == "RTYP"_h)
             {
-                READ_CHILD(stream, p_RenderType);
+                p_RenderType = ReadChild<STR<"RTYP"_m>>(stream);
             }
             else if (next == "IBUF"_h)
             {
-                READ_CHILD(stream, p_IndexBuffer);
+                p_IndexBuffer = ReadChild<IBUF>(stream);
             }
             else if (next == "BNAM"_h)
             {
-                READ_CHILD(stream, p_Parent);
+                p_Parent = ReadChild<STR<"BNAM"_m>>(stream);
             }
             else if (next == "SKIN"_h)
             {
-                READ_CHILD(stream, p_Skin);
+                p_Skin = ReadChild<SKIN>(stream);
             }
             else if (next == "BMAP"_h)
             {
-                READ_CHILD(stream, p_BoneMap);
+                p_BoneMap = ReadChild<BMAP>(stream);
             }
             else if (next == "VBUF"_h)
             {
-                VBUF* vertexBuffer;
-                READ_CHILD(stream, vertexBuffer);
-                m_VertexBuffers.push_back(vertexBuffer);
+                m_VertexBuffers.emplace_back(ReadChild<VBUF>(stream));
             }
             else if (next == "TNAM"_h)
             {
-                TNAM* texture;
-                READ_CHILD(stream, texture);
-                m_Textures.push_back(texture);
+                m_Textures.emplace_back(ReadChild<TNAM>(stream));
             }
             else if (next == "MNAM"_h)
             {
-                READ_CHILD(stream, p_Tag);
+                p_Tag = ReadChild<STR<"MNAM"_m>>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                (void) ReadChild<GenericChunk>(stream);
             }
         }
 

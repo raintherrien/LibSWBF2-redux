@@ -6,7 +6,7 @@
 namespace LibSWBF2::Chunks
 {
 	template<uint32_t Header>
-	struct LIBSWBF2_API STRMULT : public GenericChunk<Header>
+	struct LIBSWBF2_API STRMULT : public GenericChunk
 	{
 	public:
 		std::vector<std::string> m_Texts;
@@ -17,5 +17,7 @@ namespace LibSWBF2::Chunks
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return Header; }
 	};
 }

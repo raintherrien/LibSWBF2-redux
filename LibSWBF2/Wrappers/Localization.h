@@ -19,7 +19,7 @@ namespace LibSWBF2::Wrappers
 		Localization& operator=(Localization&& other);
 
 	private:
-		Locl* p_Locl;
+		std::shared_ptr<Locl> p_Locl;
 		class LocalizationMaps* m_LocalizationMaps;
 
 	public:
@@ -27,7 +27,7 @@ namespace LibSWBF2::Wrappers
 		~Localization();
 		Localization(const Localization &);
 
-		static bool FromChunk(Locl* loclChunk, Localization& out);
+		static std::optional<Localization> FromChunk(std::shared_ptr<Locl> loclChunk);
 
 		const std::string& GetName() const;
 

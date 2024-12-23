@@ -6,11 +6,11 @@ namespace LibSWBF2::Chunks::LVL::animation
 {
 	struct TNOJ;
 
-	struct LIBSWBF2_API LEKS : public GenericChunk<"LEKS"_m> //SKEL
+	struct LIBSWBF2_API LEKS : public GenericChunk
 	{
 	public:
 
-		std::vector<TNOJ *> m_Joints; 
+		std::vector<std::shared_ptr<TNOJ>> m_Joints; 
 
 	public:
 		void RefreshSize() override;
@@ -18,5 +18,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "LEKS"_m; } //SKEL
 	};
 }

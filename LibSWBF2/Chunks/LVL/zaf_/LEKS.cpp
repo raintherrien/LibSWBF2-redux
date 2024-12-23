@@ -27,7 +27,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 
 			if (next == "TNOJ"_h)
 			{
-				READ_CHILD(stream, m_Joints.emplace_back());
+				m_Joints.emplace_back(ReadChild<TNOJ>(stream));
 			}
 			else 
 			{

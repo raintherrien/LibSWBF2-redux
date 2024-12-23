@@ -21,41 +21,29 @@ namespace LibSWBF2::Chunks::LVL::prim
 	}
 
 	void prim::ReadFromStream(FileReader& stream)
-	{       
-        BaseChunk::ReadFromStream(stream);
-        Check(stream);
+	{
+		BaseChunk::ReadFromStream(stream);
+		Check(stream);
 
-        DATA_PRIM *tempDATA;
-        wrld::XFRM *tempXFRM;
-        MASK *tempMASK;
-        STR<"PRNT"_m> *tempPRNT;
-        STR<"NAME"_m> *tempNAME;
+		p_InfoChunk = ReadChild<INFO_prim>(stream);
+		ChunkHeader nextHeader;
 
-        READ_CHILD(stream, p_InfoChunk);
-        ChunkHeader nextHeader;
+		for (int i = 0; i < p_InfoChunk -> m_NumPrimitives; i++)
+		{
+			m_PrimitiveNAMEs.emplace_back(ReadChild<STR<"NAME"_m>>(stream));
 
-        for (int i = 0; i < p_InfoChunk -> m_NumPrimitives; i++)
-        {
-            READ_CHILD(stream, tempNAME);
-            m_PrimitiveNAMEs.push_back(tempNAME);
+			if (stream.ReadChunkHeader(true) == "MASK"_h) {
+				m_PrimitiveMASKs.emplace_back(ReadChild<MASK>(stream));
+			} else {
+				m_PrimitiveMASKs.emplace_back();
+			}
 
-            tempMASK = nullptr;
-            if (stream.ReadChunkHeader(true) == "MASK"_h)
-            {
-                READ_CHILD(stream, tempMASK);
-            }
+			m_PrimitivePRNTs.emplace_back(ReadChild<STR<"PRNT"_m>>(stream));
 
-            m_PrimitiveMASKs.push_back(tempMASK);
+			m_PrimitiveXFRMs.emplace_back(ReadChild<wrld::XFRM>(stream));
 
-            READ_CHILD(stream, tempPRNT);
-            m_PrimitivePRNTs.push_back(tempPRNT);
-
-            READ_CHILD(stream, tempXFRM);
-            m_PrimitiveXFRMs.push_back(tempXFRM);
-
-            READ_CHILD(stream, tempDATA);
-            m_PrimitiveDATAs.push_back(tempDATA);     	
-        }
+			m_PrimitiveDATAs.emplace_back(ReadChild<DATA_PRIM>(stream));
+		}
 
 		BaseChunk::EnsureEnd(stream);
 	}

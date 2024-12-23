@@ -9,7 +9,7 @@ namespace LibSWBF2::Chunks
 	template<uint32_t Header>
 	void STR<Header>::RefreshSize()
 	{
-		GenericChunk<Header>::m_Size = (ChunkSize)m_Text.size();
+		m_Size = (ChunkSize)m_Text.size();
 	}
 
 	template<uint32_t Header>
@@ -23,9 +23,9 @@ namespace LibSWBF2::Chunks
 	void STR<Header>::ReadFromStream(FileReader& stream)
 	{
 		BaseChunk::ReadFromStream(stream);
-		GenericChunk<Header>::Check(stream);
+		Check(stream);
 
-		m_Text = stream.ReadString(GenericChunk<Header>::m_Size);
+		m_Text = stream.ReadString(m_Size);
 		const char* buffer = m_Text.c_str();
 
 		// if all these conditions apply, we're probably
@@ -38,7 +38,9 @@ namespace LibSWBF2::Chunks
 			)
 		{
 			std::string output;
-			FNVHash hash = *((FNVHash*)buffer);
+			FNVHash hash = 0;
+			static_assert(sizeof(FNVHash) == 4 * sizeof(char));
+			memcpy(&hash, buffer, sizeof(FNVHash));
 			if (LibSWBF2::FNV::Lookup(hash, output))
 			{
 				m_Text = output;

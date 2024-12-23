@@ -40,8 +40,8 @@ namespace LibSWBF2::Wrappers
 		Scope() = default;
 	
 	private:
-		Scope(SCOP *scopePtr);
-		SCOP *p_Scope;
+		Scope(std::shared_ptr<SCOP> scopePtr);
+		std::shared_ptr<SCOP> p_Scope;
 
 		// These are lazily initialized, since we may not
 		// use many Config types
@@ -62,10 +62,10 @@ namespace LibSWBF2::Wrappers
 	typedef LibSWBF2::Chunks::LVL::config::SCOP SCOP;
 
 	public:
-		Field(DATA_CONFIG* data, SCOP* scope);
+		Field(std::shared_ptr<DATA_CONFIG> data, std::shared_ptr<SCOP> scope);
 		Field() = default;
 
-		static std::vector<Field> FieldsFromChunkChildren(GenericBaseChunk *chunk);
+		static std::vector<Field> FieldsFromChunkChildren(std::shared_ptr<GenericBaseChunk> chunk);
 
 		FNVHash GetNameHash() const;
 
@@ -84,7 +84,7 @@ namespace LibSWBF2::Wrappers
 		friend Scope;
 		friend class Config;
 
-		DATA_CONFIG* p_Data;
+		std::shared_ptr<DATA_CONFIG> p_Data;
 	};
 
 
@@ -106,7 +106,7 @@ namespace LibSWBF2::Wrappers
 		const Field *GetField(FNVHash hash = 0) const;
 		std::vector<const Field *> GetFields(FNVHash hash = 0) const;
 
-		static bool FromChunk(GenericBaseChunk *cfg, Config& wrapperOut);
+		static std::optional<Config> FromChunk(std::shared_ptr<GenericBaseChunk> cfg);
 
 	private:
 

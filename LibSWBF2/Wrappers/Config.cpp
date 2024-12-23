@@ -19,25 +19,23 @@ namespace LibSWBF2::Wrappers
 
 	*/
 
-	std::vector<Field> Field::FieldsFromChunkChildren(GenericBaseChunk *chunk)
+	std::vector<Field> Field::FieldsFromChunkChildren(std::shared_ptr<GenericBaseChunk> chunk)
 	{
 		std::vector<Field> fields;
-		const std::vector<GenericBaseChunk *>& children = chunk -> GetChildren();
+		const std::vector<std::shared_ptr<GenericBaseChunk>>& children = chunk -> GetChildren();
 		
 		for (uint16_t i = 0; i < children.size(); i++)
 		{
-			DATA_CONFIG *child = dynamic_cast<DATA_CONFIG *>(children[i]);
+			std::shared_ptr<DATA_CONFIG> child = std::dynamic_pointer_cast<DATA_CONFIG>(children[i]);
 			
-			if (child == nullptr) continue;
-			
-			SCOP *scope;
-			if (i == children.size() - 1)
-			{
-				scope = nullptr;
+			if (!child) {
+				continue;
 			}
-			else
+			
+			std::shared_ptr<SCOP> scope;
+			if (i != children.size() - 1)
 			{
-				scope = dynamic_cast<SCOP *>(children[i+1]);
+				scope = std::dynamic_pointer_cast<SCOP>(children[i+1]);
 			}
 				
 			fields.push_back(Field(child, scope));
@@ -47,9 +45,9 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	Field::Field(DATA_CONFIG *data, SCOP* scop) : m_Scope(scop)
+	Field::Field(std::shared_ptr<DATA_CONFIG> data, std::shared_ptr<SCOP> scop)
+		: m_Scope(scop), p_Data{data}
 	{
-		p_Data = data;
 	}
 
 	FNVHash Field::GetNameHash() const
@@ -163,7 +161,7 @@ namespace LibSWBF2::Wrappers
 			return;
 		}
 
-		m_Fields = std::move(Field::FieldsFromChunkChildren(p_Scope));
+		m_Fields = Field::FieldsFromChunkChildren(p_Scope);
 		m_IsValid = true;
 	}
 
@@ -217,7 +215,7 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	Scope::Scope(SCOP *scopePtr)
+	Scope::Scope(std::shared_ptr<SCOP> scopePtr)
 	{
 		p_Scope = scopePtr;
 		m_IsValid = false;
@@ -261,72 +259,78 @@ namespace LibSWBF2::Wrappers
 	}
 
 
-	bool Config::FromChunk(GenericBaseChunk *cfgPtr, Config& wrapperOut)
+	std::optional<Config> Config::FromChunk(std::shared_ptr<GenericBaseChunk> cfgPtr)
 	{
-		const std::vector<GenericBaseChunk *>& children = cfgPtr -> GetChildren();
+		const std::vector<std::shared_ptr<GenericBaseChunk>>& children = cfgPtr -> GetChildren();
 
-		if (children.size() == 0) return false;
+		if (children.size() == 0) {
+			return {};
+		}
 		
-		config_NAME* nameChunk = dynamic_cast<config_NAME *>(children[0]);
+		std::shared_ptr<config_NAME> nameChunk = std::dynamic_pointer_cast<config_NAME>(children[0]);
 		
-		if (nameChunk == nullptr) return false;
+		if (!nameChunk) {
+			return {};
+		}
 
 		EConfigType type;
 
-		if (dynamic_cast<comb*>(cfgPtr) != nullptr)
+		if (std::dynamic_pointer_cast<comb>(cfgPtr))
 		{
 			type = EConfigType::Combo;
 		}
-		else if (dynamic_cast<lght*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<lght>(cfgPtr))
 		{
 			type = EConfigType::Lighting;
 		}
-		else if (dynamic_cast<path*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<path>(cfgPtr))
 		{
 			type = EConfigType::Path;
 		}
-		else if (dynamic_cast<bnd_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<bnd_>(cfgPtr))
 		{
 			type = EConfigType::Boundary;
 		}
-		else if (dynamic_cast<fx__*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<fx__>(cfgPtr))
 		{
 			type = EConfigType::Effect;
 		}
-		else if (dynamic_cast<sky_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<sky_>(cfgPtr))
 		{
 			type = EConfigType::Skydome;
 		}
-		else if (dynamic_cast<snd_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<snd_>(cfgPtr))
 		{
 			type = EConfigType::Sound;
 		}
-		else if (dynamic_cast<mus_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<mus_>(cfgPtr))
 		{
 			type = EConfigType::Music;
 		}
-		else if (dynamic_cast<ffx_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<ffx_>(cfgPtr))
 		{
 			type = EConfigType::FoleyFX;
 		}
-		else if (dynamic_cast<tsr_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<tsr_>(cfgPtr))
 		{
 			type = EConfigType::TriggerSoundRegion;
 		}
-		else if (dynamic_cast<hud_*>(cfgPtr) != nullptr)
+		else if (std::dynamic_pointer_cast<hud_>(cfgPtr))
 		{
 			type = EConfigType::HUD;
 		}
 		else 
 		{
 			LIBSWBF2_LOG_ERROR("Couldn't wrap unhandled config chunk...");
-			return false;
+			return {};
 		}
+
+		Config wrapperOut;
 
 		wrapperOut.m_Type = type; 
 		wrapperOut.m_Fields = Field::FieldsFromChunkChildren(cfgPtr);
 		wrapperOut.m_Name = nameChunk -> m_Name;
 
-		return true;
+		return wrapperOut;
 	}
 }

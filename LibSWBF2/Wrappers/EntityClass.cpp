@@ -1,10 +1,7 @@
 #include "pch.h"
 #include "EntityClass.h"
-#include "InternalHelpers.h"
 #include "Hashing.h"
 #include "Container.h"
-
-#include "Chunks/LVL/common/GenericClass.h"
 
 #include <string>
 #include <map>
@@ -14,114 +11,6 @@ typedef LibSWBF2::Chunks::LVL::common::PROP PROP;
 
 namespace LibSWBF2::Wrappers
 {
-	using LibSWBF2::Chunks::LVL::common::entc;
-	using LibSWBF2::Chunks::LVL::common::ordc;
-	using LibSWBF2::Chunks::LVL::common::wpnc;
-	using LibSWBF2::Chunks::LVL::common::expc;
-
-
-	struct PropertyMap
-	{
-		std::unordered_map<FNVHash, std::vector<uint32_t>> m_HashToIndices;
-	};
-
-
-	EntityClass::EntityClass()
-	{
-		m_PropertyMapping = new PropertyMap();
-		p_MainContainer = nullptr;
-	}
-
-	EntityClass::~EntityClass()
-	{
-		delete m_PropertyMapping;
-		m_PropertyMapping = nullptr;
-	}
-
-	EntityClass::EntityClass(const EntityClass &other)
-	{
-		p_MainContainer = other.p_MainContainer;
-		p_classChunk = other.p_classChunk;
-		m_EntityClassType = other.m_EntityClassType;
-		m_PropertyMapping = new PropertyMap();
-		*m_PropertyMapping = *other.m_PropertyMapping;
-	}
-
-	EntityClass& EntityClass::operator=(const EntityClass& other)
-	{
-		p_MainContainer = other.p_MainContainer;
-		p_classChunk = other.p_classChunk;
-		m_EntityClassType = other.m_EntityClassType;
-		m_PropertyMapping->m_HashToIndices = other.m_PropertyMapping->m_HashToIndices;
-		return *this;
-	}
-
-	EntityClass& EntityClass::operator=(EntityClass&& other)
-	{
-		p_MainContainer = other.p_MainContainer;
-		p_classChunk = other.p_classChunk;
-		m_EntityClassType = other.m_EntityClassType;
-		m_PropertyMapping->m_HashToIndices = std::move(other.m_PropertyMapping->m_HashToIndices);
-		other.p_MainContainer = nullptr;
-		other.p_classChunk = nullptr;
-		other.m_EntityClassType = EEntityClassType::GameObjectClass;
-		other.m_PropertyMapping = nullptr;
-		return *this;
-	}
-
-	template<class ChunkType>
-	bool EntityClass::FromChunk(Container* mainContainer, ChunkType* classChunk, EntityClass& out)
-	{
-		if (classChunk == nullptr)
-		{
-			LIBSWBF2_LOG_ERROR("Given classChunk was NULL!");
-			return false;
-		}
-
-		out.p_classChunk = (GenericClassNC*)classChunk;
-		out.p_MainContainer = mainContainer;
-
-		if (typeid(ChunkType*) == typeid(entc*))
-		{
-			out.m_EntityClassType = EEntityClassType::GameObjectClass;
-		}
-		else if (typeid(ChunkType*) == typeid(ordc*))
-		{
-			out.m_EntityClassType = EEntityClassType::OrdnanceClass;
-		}
-		else if (typeid(ChunkType*) == typeid(wpnc*))
-		{
-			out.m_EntityClassType = EEntityClassType::WeaponClass;
-		}
-		else if (typeid(ChunkType*) == typeid(expc*))
-		{
-			out.m_EntityClassType = EEntityClassType::ExplosionClass;
-		}
-		else
-		{
-			LIBSWBF2_LOG_ERROR("Invalid EntityClass Type: {}", typeid(classChunk).name());
-			return false;
-		}
-
-		out.m_PropertyMapping->m_HashToIndices.clear();
-		for (size_t i = 0; i < classChunk->m_Properties.size(); ++i)
-		{
-			FNVHash hashedName = classChunk->m_Properties[i]->m_PropertyName;
-
-			auto it = out.m_PropertyMapping->m_HashToIndices.find(hashedName);
-			if (it != out.m_PropertyMapping->m_HashToIndices.end())
-			{
-				out.m_PropertyMapping->m_HashToIndices[hashedName].push_back((uint32_t)i);
-			}
-			else
-			{
-				out.m_PropertyMapping->m_HashToIndices.insert(std::make_pair(hashedName, std::vector<uint32_t>{ (uint32_t)i }));
-			}
-		}
-
-		return true;
-	}
-
 	EEntityClassType EntityClass::GetClassType() const
 	{
 		return m_EntityClassType;
@@ -129,27 +18,39 @@ namespace LibSWBF2::Wrappers
 
 	std::string EntityClass::GetTypeName() const
 	{
+		if (p_classChunk == nullptr) {
+			LIBSWBF2_THROW("Invalid class chunk");
+		}
+		if (p_classChunk->p_Type == nullptr) {
+			LIBSWBF2_THROW("Invalid class chunk type");
+		}
 		return p_classChunk->p_Type->m_Text;
 	}
 
 	std::string EntityClass::GetBaseName() const
 	{
+		if (p_classChunk == nullptr) {
+			LIBSWBF2_THROW("Invalid class chunk");
+		}
+		if (p_classChunk->p_Base == nullptr) {
+			LIBSWBF2_THROW("Invalid class chunk base");
+		}
 		return p_classChunk->p_Base->m_Text;
 	}
 
 	const EntityClass* EntityClass::GetBase() const
 	{
-		if (p_MainContainer == nullptr)
+		if (auto container = p_MainContainer.lock())
 		{
-			return nullptr;
+			return container->FindEntityClass(GetBaseName());
 		}
-		return p_MainContainer->FindEntityClass(GetBaseName());
+		return nullptr;
 	}
 
 	bool EntityClass::GetProperty(FNVHash hashedPropertyName, std::string& outValue) const
 	{
-		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
-		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
+		auto it = m_HashToIndices.find(hashedPropertyName);
+		if (it != m_HashToIndices.end() && it->second.size() > 0)
 		{
 			outValue = p_classChunk->m_Properties[it->second[0]]->m_Value;
 			return true;
@@ -182,8 +83,8 @@ namespace LibSWBF2::Wrappers
 
 	bool EntityClass::GetProperty(FNVHash hashedPropertyName, std::vector<std::string>& outValues) const
 	{
-		auto it = m_PropertyMapping->m_HashToIndices.find(hashedPropertyName);
-		if (it != m_PropertyMapping->m_HashToIndices.end() && it->second.size() > 0)
+		auto it = m_HashToIndices.find(hashedPropertyName);
+		if (it != m_HashToIndices.end() && it->second.size() > 0)
 		{
 			for (size_t i = 0; i < it->second.size(); ++i)
 			{
@@ -208,7 +109,7 @@ namespace LibSWBF2::Wrappers
 		outHashes.clear();
 		outValues.clear();
 
-		std::vector<PROP*>& properties = p_classChunk -> m_Properties;
+		std::vector<std::shared_ptr<PROP>>& properties = p_classChunk -> m_Properties;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			outHashes.push_back(properties[i] -> m_PropertyName);
@@ -227,7 +128,7 @@ namespace LibSWBF2::Wrappers
 			outHashes.insert(outHashes.end(), base_hashes.begin(), base_hashes.end());
 		}
 
-		std::vector<PROP*>& properties = p_classChunk->m_Properties;
+		std::vector<std::shared_ptr<PROP>>& properties = p_classChunk->m_Properties;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			outHashes.push_back(properties[i]->m_PropertyName);
@@ -247,17 +148,11 @@ namespace LibSWBF2::Wrappers
 			base->GetAllProperties(outHashes, outValues);
 		}
 
-		std::vector<PROP*>& properties = p_classChunk->m_Properties;
+		std::vector<std::shared_ptr<PROP>>& properties = p_classChunk->m_Properties;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			outHashes.push_back(properties[i]->m_PropertyName);
 			outValues.push_back(properties[i]->m_Value);
 		}
 	}
-	
-
-	template LIBSWBF2_API bool EntityClass::FromChunk(Container* mainContainer, entc* classChunk, EntityClass& out);
-	template LIBSWBF2_API bool EntityClass::FromChunk(Container* mainContainer, ordc* classChunk, EntityClass& out);
-	template LIBSWBF2_API bool EntityClass::FromChunk(Container* mainContainer, wpnc* classChunk, EntityClass& out);
-	template LIBSWBF2_API bool EntityClass::FromChunk(Container* mainContainer, expc* classChunk, EntityClass& out);
 }

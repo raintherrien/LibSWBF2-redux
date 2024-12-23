@@ -28,7 +28,7 @@ namespace LibSWBF2::Chunks::LVL::terrain
             return;
         }
 
-        INFO* info = parent->p_Info;
+	std::shared_ptr<INFO> info = parent->p_Info;
         if (info == nullptr)
         {
             LIBSWBF2_LOG_ERROR("Cannot read texture layers, terrain has no Info chunk!");

@@ -1,5 +1,7 @@
 #pragma once
 #include "Types/Enums.h"
+#include <memory>
+#include <optional>
 #include <string>
 
 namespace LibSWBF2::Chunks::LVL::texture
@@ -20,14 +22,11 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 
-		tex_* p_Texture;
-		FMT_* p_FMT;
+		std::shared_ptr<tex_> p_Texture;
+		std::shared_ptr<FMT_> p_FMT;
 
 	public:
-		Texture() = default;
-		~Texture() = default;
-
-		static bool FromChunk(tex_* textureChunk, Texture& out);
+		static std::optional<Texture> FromChunk(std::shared_ptr<tex_> textureChunk);
 
 		std::string GetName() const;
 		uint32_t GetNumMipMaps() const;

@@ -24,31 +24,28 @@ namespace LibSWBF2::Chunks::LVL::config
 	void ConfigChunk<Header>::ReadFromStream(FileReader& stream)
 	{
 		BaseChunk::ReadFromStream(stream);
-		GenericChunk<Header>::Check(stream);
+		Check(stream);
 		
 		
-        while (GenericChunk<Header>::ThereIsAnother(stream))
+        while (ThereIsAnother(stream))
         {
             ChunkHeader next = stream.ReadChunkHeader(true);
 			if (next == "NAME"_h)
 			{
-				GenericChunk<Header>::READ_CHILD(stream, p_Hash);
+				p_Hash = ReadChild<config_NAME>(stream);
 			}
 			else if (next == "DATA"_h)
 			{
-				DATA_CONFIG *data;
-				GenericChunk<Header>::READ_CHILD(stream, data);
+				(void) ReadChild<DATA_CONFIG>(stream);
 			}
 			else if (next == "SCOP"_h)
 			{
-				SCOP *scop;
-				GenericChunk<Header>::READ_CHILD(stream, scop);
+				(void) ReadChild<SCOP>(stream);
 			}
 			else 
 			{
 				LIBSWBF2_LOG_WARN("Irregular config chunk child found ({0:x})!", Header);
 				BaseChunk::EnsureEnd(stream);
-				//GenericChunk<Header>::READ_CHILD_GENERIC(stream);
 			}
         }
 
@@ -58,7 +55,7 @@ namespace LibSWBF2::Chunks::LVL::config
 	template<uint32_t Header>
 	std::string ConfigChunk<Header>::ToString() const
 	{
-		if (p_Hash != nullptr)
+		if (p_Hash)
 		{
 			std::string name;
 			return fmt::format(

@@ -10,8 +10,8 @@ if (UNIX)
   # Optionally build with GCC/Clang sanitizers
   option(BUILD_SAN "Build with sanitizers" OFF)
   if(BUILD_SAN)
-    target_compile_options(parse_level PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3)
-    target_link_options   (parse_level PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3)
+    target_compile_options(parse_level PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3 -O0)
+    target_link_options   (parse_level PUBLIC -fsanitize=address,leak,undefined,pointer-compare,pointer-subtract -fstack-protector -g3 -O0)
   endif()
 endif(UNIX)
 

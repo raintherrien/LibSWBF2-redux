@@ -21,18 +21,17 @@ namespace LibSWBF2::Chunks::LVL::animation
 		BaseChunk::ReadFromStream(stream);
 		Check(stream);
 
-		READ_CHILD(stream, p_Name);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
 
-		try 
-		{
-			READ_CHILD(stream, p_Bin);
-		}
-		catch (const LibSWBF2Exception &le)
-		{
-
-			LIBSWBF2_LOG_ERROR("{}", le.what());
-			p_Bin = nullptr;
-		}
+		//try 
+		//{
+			p_Bin = ReadChild<BIN_>(stream);
+		//}
+		//catch (const LibSWBF2Exception &le)
+		//{
+		//	LIBSWBF2_LOG_ERROR("{}", le.what());
+		//	p_Bin = nullptr;
+		//}
 
 		BaseChunk::EnsureEnd(stream);
 	}

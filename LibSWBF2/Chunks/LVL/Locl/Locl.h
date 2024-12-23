@@ -6,11 +6,11 @@
 
 namespace LibSWBF2::Chunks::LVL::Localization
 {
-	struct LIBSWBF2_API Locl : public GenericChunk<"Locl"_m>
+	struct LIBSWBF2_API Locl : public GenericChunk
 	{
 	public:
-		STR<"NAME"_m>* p_Name;
-		BODY* p_Body;
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<BODY> p_Body;
 
 	public:
 		void RefreshSize() override;
@@ -18,5 +18,7 @@ namespace LibSWBF2::Chunks::LVL::Localization
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "Locl"_m; }
 	};
 }

@@ -4,10 +4,11 @@
 
 namespace LibSWBF2::Chunks::LVL::config
 {
-    struct LIBSWBF2_API SCOP : public GenericChunk<"SCOP"_m>
-    {
-	    void RefreshSize() override;
-	    void WriteToStream(FileWriter& stream) override;
-	    void ReadFromStream(FileReader& stream) override;
-    };
+	struct LIBSWBF2_API SCOP : public GenericChunk
+	{
+		void RefreshSize() override;
+		void WriteToStream(FileWriter& stream) override;
+		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "SCOP"_m; }
+	};
 }

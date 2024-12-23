@@ -33,13 +33,13 @@ namespace LibSWBF2::Wrappers
 	private:
 		friend Level;
 
-		zaf_* p_AnimSkeleton;
+		std::shared_ptr<zaf_> p_AnimSkeleton;
 
 	public:
 		AnimationSkeleton() = default;
 		~AnimationSkeleton() = default;
 
-		static bool FromChunk(zaf_* animSkelChunk, AnimationSkeleton& out);
+		static std::optional<AnimationSkeleton> FromChunk(std::shared_ptr<zaf_> animSkelChunk);
 
 		std::string GetName() const;
 		bool GetJoints(std::vector<Joint>& joints) const;

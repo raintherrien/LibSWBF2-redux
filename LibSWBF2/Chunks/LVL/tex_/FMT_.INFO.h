@@ -5,7 +5,7 @@
 
 namespace LibSWBF2::Chunks::LVL::FMT
 {
-	struct LIBSWBF2_API INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API INFO : public GenericChunk
 	{
 		D3DFORMAT m_Format;
 		uint16_t m_Width;
@@ -19,5 +19,6 @@ namespace LibSWBF2::Chunks::LVL::FMT
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

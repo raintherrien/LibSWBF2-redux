@@ -11,7 +11,7 @@ using LibSWBF2::Types::Connection;
 namespace LibSWBF2::Chunks::plan
 {
 
-	struct LIBSWBF2_API PLAN_INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API PLAN_INFO : public GenericChunk
 	{
 	public:
 		uint16_t m_iHubCount;
@@ -19,9 +19,11 @@ namespace LibSWBF2::Chunks::plan
 
 		void ReadFromStream(FileReader& stream) override;
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 
-	struct LIBSWBF2_API NODE : public GenericChunk<"NODE"_m>
+	struct LIBSWBF2_API NODE : public GenericChunk
 	{
 	public:
 
@@ -33,9 +35,10 @@ namespace LibSWBF2::Chunks::plan
 		void ReadFromStream(FileReader& stream) override;
 		std::string ToString() const override;
 
+		uint32_t GetHeader() override { return "NODE"_m; }
 	};
 
-	struct LIBSWBF2_API ARCS : public GenericChunk<"ARCS"_m>
+	struct LIBSWBF2_API ARCS : public GenericChunk
 	{
 	public:
 		ARCS(uint16_t count);
@@ -45,16 +48,23 @@ namespace LibSWBF2::Chunks::plan
 
 		void ReadFromStream(FileReader& stream) override;
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "ARCS"_m; }
 	};
 
-	struct LIBSWBF2_API plan : public GenericChunk<"plan"_m>
+	struct LIBSWBF2_API plan : public GenericChunk
 	{
-		PLAN_INFO* m_pInfo;
-		NODE* m_pNode;
-		ARCS* m_pArcs;
+		std::shared_ptr<PLAN_INFO> m_pInfo;
+		std::shared_ptr<NODE> m_pNode;
+		std::shared_ptr<ARCS> m_pArcs;
 
 		void ReadFromStream(FileReader& stream) override;
+
+		uint32_t GetHeader() override { return "plan"_m; }
 	};
 
-	struct LIBSWBF2_API PLNS : public GenericChunk<"PLNS"_m> { };
+	struct LIBSWBF2_API PLNS : public GenericChunk
+	{
+		uint32_t GetHeader() override { return "PLNS"_m; }
+	};
 }

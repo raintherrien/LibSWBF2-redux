@@ -210,12 +210,14 @@ namespace LibSWBF2::Wrappers
 
 
 
-	bool SoundStream::FromChunk(Stream* streamChunk, SoundStream& out)
+ 	std::optional<SoundStream> SoundStream::FromChunk(std::shared_ptr<Stream> streamChunk)
 	{
+		SoundStream out;
+
 		if (streamChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given Stream chunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_StreamChunk = streamChunk;
@@ -249,7 +251,7 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 

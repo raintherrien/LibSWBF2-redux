@@ -5,7 +5,7 @@
 
 namespace LibSWBF2::Chunks::LVL::script
 {
-	struct LIBSWBF2_API INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API INFO : public GenericChunk
 	{
 	public:
 		uint32_t m_NumBodies;	// best guess so far
@@ -16,5 +16,6 @@ namespace LibSWBF2::Chunks::LVL::script
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

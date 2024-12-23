@@ -6,15 +6,16 @@
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
-	struct LIBSWBF2_API anim : public GenericChunk<"anim"_m>
+	struct LIBSWBF2_API anim : public GenericChunk
 	{
-		anim_INFO* p_Info;
+		std::shared_ptr<anim_INFO> p_Info;
 
-		std::vector<POSK *> m_PositionKeys;
-		std::vector<ROTK *> m_RotationKeys;
+		std::vector<std::shared_ptr<POSK>> m_PositionKeys;
+		std::vector<std::shared_ptr<ROTK>> m_RotationKeys;
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "anim"_m; }
 	};
 }

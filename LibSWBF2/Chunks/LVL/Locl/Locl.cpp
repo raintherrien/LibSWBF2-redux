@@ -22,8 +22,8 @@ namespace LibSWBF2::Chunks::LVL::Localization
 
 		// order of these two chunks seems to be fixed.
 		// so no need for dynamic chunk checking.
-		READ_CHILD(stream, p_Name);
-		READ_CHILD(stream, p_Body);
+		p_Name = ReadChild<STR<"NAME"_m>>(stream);
+		p_Body = ReadChild<BODY>(stream);
 
 		BaseChunk::EnsureEnd(stream);
 	}

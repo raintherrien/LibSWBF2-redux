@@ -5,10 +5,8 @@
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
-	struct LIBSWBF2_API anmh_INFO : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API anmh_INFO : public GenericChunk
 	{
-	public:
-
 		uint8_t m_NumStrings;
 
 		std::string m_RootName;
@@ -19,5 +17,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void ReadFromStream(FileReader& stream) override;
 		
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

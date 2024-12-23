@@ -62,7 +62,7 @@ namespace LibSWBF2
 			std::unordered_map<FNVHash, size_t> ScriptNameToIndex;
 			std::unordered_map<FNVHash, size_t> LocalizationNameToIndex;
 			std::unordered_map<FNVHash, size_t> EntityClassTypeToIndex;
-			std::unordered_map<FNVHash, Chunks::LVL::skel::skel*> SkeletonNameToSkel;
+			std::unordered_map<FNVHash, std::shared_ptr<Chunks::LVL::skel::skel>> SkeletonNameToSkel;
 			std::unordered_map<FNVHash, size_t> AnimationBankNameToIndex;
 			std::unordered_map<FNVHash, size_t> AnimationSkeletonNameToIndex;
 			std::unordered_map<FNVHash, size_t> SoundHashToIndex;

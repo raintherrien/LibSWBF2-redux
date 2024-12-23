@@ -4,7 +4,7 @@
 
 namespace LibSWBF2::Chunks::LVL::prim
 {
-	struct LIBSWBF2_API INFO_prim : public GenericChunk<"INFO"_m>
+	struct LIBSWBF2_API INFO_prim : public GenericChunk
 	{
 	public:
 		void RefreshSize() override;
@@ -15,5 +15,7 @@ namespace LibSWBF2::Chunks::LVL::prim
 
 		std::string m_ModelName;
 		uint16_t m_NumPrimitives;
+
+		uint32_t GetHeader() override { return "INFO"_m; }
 	};
 }

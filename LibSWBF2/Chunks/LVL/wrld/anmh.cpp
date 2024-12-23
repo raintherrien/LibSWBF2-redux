@@ -22,18 +22,18 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+		p_Info = ReadChild<anmh_INFO>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }

@@ -7,7 +7,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 	struct LEKS;
 
 
-	struct LIBSWBF2_API ZAF_BIN_ : public GenericChunk<"BIN_"_m>
+	struct LIBSWBF2_API ZAF_BIN_ : public GenericChunk
 	{
 	public:
 
@@ -20,7 +20,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		uint32_t m_Version = 8; 
 
 		// Just a list of joints
-		LEKS *p_Skeleton;
+		std::shared_ptr<LEKS> p_Skeleton;
 
 	public:
 		void RefreshSize() override;
@@ -28,5 +28,7 @@ namespace LibSWBF2::Chunks::LVL::animation
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "BIN_"_m; }
 	};
 }

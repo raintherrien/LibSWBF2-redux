@@ -4,7 +4,7 @@
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
-	struct LIBSWBF2_API SIZE : public GenericChunk<"SIZE"_m>
+	struct LIBSWBF2_API SIZE : public GenericChunk
 	{
 	public:
 		Vector3 m_Dimensions;
@@ -15,5 +15,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "SIZE"_m; }
 	};
 }

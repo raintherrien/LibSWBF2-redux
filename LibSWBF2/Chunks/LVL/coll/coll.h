@@ -9,22 +9,23 @@
 
 namespace LibSWBF2::Chunks::LVL::coll
 {
-    struct LIBSWBF2_API coll : public GenericChunk<"coll"_m>
-    {
-    public:
-	    void RefreshSize() override;
-	    void WriteToStream(FileWriter& stream) override;
-	    void ReadFromStream(FileReader& stream) override;
+	struct LIBSWBF2_API coll : public GenericChunk
+	{
+		void RefreshSize() override;
+		void WriteToStream(FileWriter& stream) override;
+		void ReadFromStream(FileReader& stream) override;
 
-	    std::string ToString() const override;
+		std::string ToString() const override;
 
-        STR<"NAME"_m> *p_ChunkName;
+		uint32_t GetHeader() override { return "coll"_m; }
 
-        prim::MASK    *p_Mask;
-        STR<"NODE"_m> *p_NodeName;
+		std::shared_ptr<STR<"NAME"_m>> p_ChunkName;
 
-        INFO_coll *p_Info;
-        TREE *p_Tree;
-        POSI *p_Verts;
-    };
+		std::shared_ptr<prim::MASK> p_Mask;
+		std::shared_ptr<STR<"NODE"_m>> p_NodeName;
+
+		std::shared_ptr<INFO_coll> p_Info;
+		std::shared_ptr<TREE> p_Tree;
+		std::shared_ptr<POSI> p_Verts;
+	};
 }

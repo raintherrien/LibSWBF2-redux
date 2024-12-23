@@ -17,23 +17,25 @@ namespace LibSWBF2::Wrappers
 {
 	using LibSWBF2::Chunks::LVL::modl::segm;
 
-	bool Material::FromChunk(Level* mainContainer, MTRL* materialChunk, Material& out)
+	std::optional<Material> Material::FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<MTRL> materialChunk)
 	{
+		Material out;
+
 		if (mainContainer == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given mainContainer was NULL!");
-			return false;
+			return {};
 		}
 		if (materialChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given materialChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.m_MainContainer = mainContainer;
 		out.p_Material = materialChunk;
 
-		return true;
+		return out;
 	}
 
 	EMaterialFlags Material::GetFlags() const
@@ -92,9 +94,10 @@ namespace LibSWBF2::Wrappers
 	const Texture* Material::GetTexture(uint8_t index) const
 	{
 		std::string textureName;
-		if (m_MainContainer != nullptr && GetTextureName(index, textureName))
-		{
-			return m_MainContainer->GetTexture(textureName);
+		if (auto level = m_MainContainer.lock()) {
+			if (GetTextureName(index, textureName)) {
+				return level->GetTexture(textureName);
+			}
 		}
 		return nullptr;
 	}

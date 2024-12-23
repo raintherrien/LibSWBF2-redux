@@ -27,13 +27,10 @@ namespace LibSWBF2
 	// Procedure:
 	// - Load levels and sound banks via AddLevel
 	// - Repeat as many times as you want
-	class LIBSWBF2_API Container
+	class LIBSWBF2_API Container : public std::enable_shared_from_this<Container>
 	{
 	private:
-		Container() = default;
-		~Container() = default;
-
-		std::vector<Level> m_Levels;
+		std::vector<std::shared_ptr<Level>> m_Levels;
 
 		// TODO: rework once we allow modifications (add / delete) in Levels
 		std::unordered_map<FNVHash, const Texture*> m_TextureDB;
@@ -53,17 +50,14 @@ namespace LibSWBF2
 
 		uint64_t m_OverallSize = 0;
 
-		std::optional<Level> LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents);
+		std::shared_ptr<Level> LoadLevel(const std::string& path, const std::vector<std::string>* subLVLsToLoad, bool bRegisterContents);
 
 	public:
-		static Container* Create();
-		static void Delete(Container* instance);
-
-		const Level *AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
-		const Level *GetLevel(size_t index) const;
+		std::shared_ptr<Level> AddLevel(const std::string &path, const std::vector<std::string>* subLVLsToLoad = nullptr, bool bRegisterContents=true);
+		std::shared_ptr<Level> GetLevel(size_t index) const;
 
 		// will return the first encountered world LVL, if existent
-		const Level* TryGetWorldLevel() const;
+		std::shared_ptr<Level> TryGetWorldLevel() const;
 
 		const std::vector<const World*>& GetWorlds();
 

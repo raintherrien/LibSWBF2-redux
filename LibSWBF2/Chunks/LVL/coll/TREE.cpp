@@ -19,47 +19,44 @@ namespace LibSWBF2::Chunks::LVL::coll
 	}
 
 	void TREE::ReadFromStream(FileReader& stream)
-	{       
-        BaseChunk::ReadFromStream(stream);
-        Check(stream);
+	{	   
+		BaseChunk::ReadFromStream(stream);
+		Check(stream);
 
-        TREE_NODE *tempNode;
-        TREE_LEAF *tempLeaf;
+		ChunkHeader nextHeader;
 
-        ChunkHeader nextHeader;
+		int index = 0;
 
-        int index = 0;
+		while(ThereIsAnother(stream))
+		{
+			nextHeader = stream.ReadChunkHeader(true);
 
-        while(ThereIsAnother(stream))
-        {
-        	nextHeader = stream.ReadChunkHeader(true);
-
-        	if (nextHeader == "NODE"_h)
-        	{
-        		READ_CHILD(stream,tempNode);
-        		tempNode -> m_FlattenedTreeIndex = index++;
-        		m_Nodes.push_back(tempNode);
-        	}
-        	else if (nextHeader == "LEAF"_h)
-        	{
-        		READ_CHILD(stream, tempLeaf)
-        		tempLeaf -> m_FlattenedTreeIndex = index++;
-        		m_Leaves.push_back(tempLeaf);
-        	}
-        	else
-        	{
-                LIBSWBF2_LOG_WARN("Irregular TREE child: {}", nextHeader.ToString());
-        		READ_CHILD_GENERIC(stream);
-        	}
-        }
+			if (nextHeader == "NODE"_h)
+			{
+				std::shared_ptr<TREE_NODE> tempNode = ReadChild<TREE_NODE>(stream);
+				tempNode -> m_FlattenedTreeIndex = index++;
+				m_Nodes.push_back(tempNode);
+			}
+			else if (nextHeader == "LEAF"_h)
+			{
+				std::shared_ptr<TREE_LEAF> tempLeaf = ReadChild<TREE_LEAF>(stream);
+				tempLeaf -> m_FlattenedTreeIndex = index++;
+				m_Leaves.push_back(tempLeaf);
+			}
+			else
+			{
+				LIBSWBF2_LOG_WARN("Irregular TREE child: {}", nextHeader.ToString());
+				ReadChild<GenericChunk>(stream);
+			}
+		}
 
 		BaseChunk::EnsureEnd(stream);
 	}
 
 	std::string TREE::ToString() const 
-    {
-        return fmt::format("{} internal nodes, {} leaf nodes",
-        				    m_Nodes.size(),
-        				    m_Leaves.size());
-    }
+	{
+		return fmt::format("{} internal nodes, {} leaf nodes",
+							m_Nodes.size(),
+							m_Leaves.size());
+	}
 }

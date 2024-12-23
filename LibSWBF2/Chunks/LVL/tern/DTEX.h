@@ -5,16 +5,15 @@
 
 namespace LibSWBF2::Chunks::LVL::terrain
 {
-	struct LIBSWBF2_API DTEX : public GenericChunk<"DTEX"_m>
+	struct LIBSWBF2_API DTEX : public GenericChunk
 	{
-	public:
 		std::vector<std::string> m_LayerTextures;
 
-	public:
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "DTEX"_m; }
 	};
 }

@@ -20,13 +20,10 @@ namespace LibSWBF2::Wrappers
 		friend Level;
 
 	private:
-		scr_* p_Script;
+		std::shared_ptr<scr_> p_Script;
 
 	public:
-		Script() = default;
-		~Script() = default;
-
-		static bool FromChunk(scr_* scriptChunk, Script& out);
+		static std::optional<Script> FromChunk(std::shared_ptr<scr_> scriptChunk);
 
 		std::string GetName() const;
 		bool GetData(const uint8_t*& data, size_t& size) const;

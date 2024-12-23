@@ -10,29 +10,30 @@ static const char *empty = "";
 
 namespace LibSWBF2::Wrappers
 {
-	bool Model::FromChunk(Level* mainContainer, modl* modelChunk, Model& out)
+	std::optional<Model> Model::FromChunk(std::shared_ptr<Level> mainContainer, std::shared_ptr<modl> modelChunk)
 	{
+		Model out;
+
 		if (mainContainer == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given mainContainer was NULL!");
-			return false;
+			return {};
 		}
 		if (modelChunk == nullptr)
 		{
 			LIBSWBF2_LOG_ERROR("Given modelChunk was NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_Model = modelChunk;
 		out.p_Skeleton = mainContainer->FindSkeleton(out.p_Model->p_Name->m_Text);
 
-		std::vector<segm*>& segments = modelChunk->m_Segments;
+		std::vector<std::shared_ptr<segm>>& segments = modelChunk->m_Segments;
 		for (size_t i = 0; i < segments.size(); ++i)
 		{
-			Segment segment;
-			if (Segment::FromChunk(mainContainer, segments[i], segment))
+			if (std::optional<Segment> segment = Segment::FromChunk(mainContainer, segments[i]))
 			{
-				out.m_Segments.push_back(segment);
+				out.m_Segments.push_back(*segment);
 			}
 		}
 
@@ -55,7 +56,7 @@ namespace LibSWBF2::Wrappers
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 	std::string Model::GetName() const

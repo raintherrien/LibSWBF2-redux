@@ -299,16 +299,16 @@ namespace LibSWBF2::Chunks::LVL::terrain
 		StreamReader reader;
 		if (reader.Open(Path))
 		{
-			try
-			{
+			//try
+			//{
 				ReadFromStream(reader);
 				reader.Close();
-			}
-			catch (const LibSWBF2Exception &)
-			{
-				LIBSWBF2_LOG_ERROR("Aborting read process...");
-				return false;
-			}
+			//}
+			//catch (const LibSWBF2Exception &)
+			//{
+			//	LIBSWBF2_LOG_ERROR("Aborting read process...");
+			//	return false;
+			//}
 			LIBSWBF2_LOG_INFO("Successfully finished reading process!");
 			return true;
 		}

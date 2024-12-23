@@ -5,8 +5,9 @@
 
 namespace LibSWBF2::Chunks::LVL::common
 {
-	struct LIBSWBF2_API DATA : public GenericChunk<"DATA"_m>
+	struct LIBSWBF2_API DATA : public GenericChunk
 	{
 		static uint32_t PeekDATATag(FileReader& stream);
+		uint32_t GetHeader() override { return "DATA"_m; }
 	};
 }

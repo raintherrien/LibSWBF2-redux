@@ -22,7 +22,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 	void WorldAnimKeyChunk<Header>::ReadFromStream(FileReader& stream)
 	{
 		BaseChunk::ReadFromStream(stream);
-		GenericChunk<Header>::Check(stream);
+		Check(stream);
 			
     	m_Key.ReadFromStream(stream);
 

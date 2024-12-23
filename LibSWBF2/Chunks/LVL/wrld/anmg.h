@@ -7,18 +7,22 @@ namespace LibSWBF2::Chunks::LVL::wrld
 {
 	struct anmg_INFO;
 
-	struct LIBSWBF2_API anmg : public GenericChunk<"anmg"_m>
+	struct LIBSWBF2_API NOHI : public GenericChunk
 	{
-	public:
+		uint32_t GetHeader() override { return "NOHI"_m; }
+	};
 
-		anmg_INFO *p_Info;
+	struct LIBSWBF2_API anmg : public GenericChunk
+	{
+		std::shared_ptr<anmg_INFO> p_Info;
 
-		std::vector<STRMULT<"ANIM"_m> *> m_AnimObjectPairs;
+		std::vector<std::shared_ptr<STRMULT<"ANIM"_m>>> m_AnimObjectPairs;
 
-		GenericChunk<"NOHI"_m> * p_NoHierarchy; 
+		std::shared_ptr<NOHI> p_NoHierarchy; 
 
 		void RefreshSize() override;
 		void WriteToStream(FileWriter& stream) override;
 		void ReadFromStream(FileReader& stream) override;
+		uint32_t GetHeader() override { return "anmg"_m; }
 	};
 }

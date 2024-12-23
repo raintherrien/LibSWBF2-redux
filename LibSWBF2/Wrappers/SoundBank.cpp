@@ -13,16 +13,17 @@ namespace LibSWBF2::Wrappers
 	using Types::SoundClip;
 
 
-	bool SoundBank::FromChunk(SampleBank* bankChunk, SoundBank& out)
+	std::optional<SoundBank> SoundBank::FromChunk(std::shared_ptr<SampleBank> bankChunk)
 	{
+		SoundBank out;
+
 		if (bankChunk == nullptr)
 		{
 			LIBSWBF2_LOG_WARN("Given SampleBank chunk is NULL!");
-			return false;
+			return {};
 		}
 
 		out.p_soundBank = bankChunk;
-		out.m_NameToIndexMaps = new SoundMapsWrapper();
 
 		std::vector<SoundClip>& clips = bankChunk -> p_Info -> m_SoundHeaders;
 		for (size_t i = 0; i < clips.size(); ++i)
@@ -34,11 +35,11 @@ namespace LibSWBF2::Wrappers
 				sound.m_NumChannels = 1;
 				size_t index = out.m_Sounds.size();
 				out.m_Sounds.push_back(sound);
-				out.m_NameToIndexMaps->SoundHashToIndex.emplace(clips[i].m_NameHash, index);
+				out.m_NameToIndexMaps.SoundHashToIndex.emplace(clips[i].m_NameHash, index);
 			}
 		}
 
-		return true;
+		return out;
 	}
 
 
@@ -75,8 +76,8 @@ namespace LibSWBF2::Wrappers
 
 	const Sound* SoundBank::GetSound(FNVHash soundHash) const
 	{
-		auto it = m_NameToIndexMaps->SoundHashToIndex.find(soundHash);
-		if (it != m_NameToIndexMaps->SoundHashToIndex.end())
+		auto it = m_NameToIndexMaps.SoundHashToIndex.find(soundHash);
+		if (it != m_NameToIndexMaps.SoundHashToIndex.end())
 		{
 			return &m_Sounds[it->second];
 		}

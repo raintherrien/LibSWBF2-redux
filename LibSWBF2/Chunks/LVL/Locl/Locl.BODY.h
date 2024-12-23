@@ -8,7 +8,7 @@ namespace LibSWBF2::Chunks::LVL::Localization
 {
 	using Types::LocalizeEntry;
 
-	struct LIBSWBF2_API BODY : public GenericChunk<"BODY"_m>
+	struct LIBSWBF2_API BODY : public GenericChunk
 	{
 		std::vector<LocalizeEntry> m_LocalizeEntries;
 
@@ -17,5 +17,6 @@ namespace LibSWBF2::Chunks::LVL::Localization
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+		uint32_t GetHeader() override { return "BODY"_m; }
 	};
 }

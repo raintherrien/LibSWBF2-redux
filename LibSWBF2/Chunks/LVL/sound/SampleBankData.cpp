@@ -31,7 +31,7 @@ namespace LibSWBF2::Chunks::LVL::sound
 		}
 		else 
 		{
-			SampleBankInfo* info = bank -> p_Info;
+			std::shared_ptr<SampleBankInfo> info = bank -> p_Info;
 			if (info == nullptr)
 			{
 				LIBSWBF2_LOG_ERROR("Tried to read SampleBankData, but parent SampleBank's Info chunk was missing!");

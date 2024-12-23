@@ -14,24 +14,24 @@
 
 namespace LibSWBF2::Chunks::LVL::wrld
 {
-	struct LIBSWBF2_API wrld : public GenericChunk<"wrld"_m>
+	struct LIBSWBF2_API wrld : public GenericChunk
 	{
 	public:
-		STR<"NAME"_m>* p_Name;
-		STR<"TNAM"_m>* p_TerrainName;	// optional chunk, can be nullptr
-		STR<"SNAM"_m>* p_SkyName;		// optional chunk, can be nullptr
+		std::shared_ptr<STR<"NAME"_m>> p_Name;
+		std::shared_ptr<STR<"TNAM"_m>> p_TerrainName;	// optional chunk, can be nullptr
+		std::shared_ptr<STR<"SNAM"_m>> p_SkyName;		// optional chunk, can be nullptr
 
 		// a.k.a. objects placed into the world
-		std::vector<inst*> m_Instances;
+		std::vector<std::shared_ptr<inst>> m_Instances;
 
-		std::vector<regn*> m_Regions;
+		std::vector<std::shared_ptr<regn>> m_Regions;
 
-		std::vector<anim*> m_Animations;
-		std::vector<anmg*> m_AnimationGroups;
-		std::vector<anmh*> m_AnimationHierarchies;
+		std::vector<std::shared_ptr<anim>> m_Animations;
+		std::vector<std::shared_ptr<anmg>> m_AnimationGroups;
+		std::vector<std::shared_ptr<anmh>> m_AnimationHierarchies;
 
-		std::vector<BARR*> m_Barriers;
-		std::vector<Hint*> m_HintNodes;
+		std::vector<std::shared_ptr<BARR>> m_Barriers;
+		std::vector<std::shared_ptr<Hint>> m_HintNodes;
 
 	public:
 		void RefreshSize() override;
@@ -39,5 +39,7 @@ namespace LibSWBF2::Chunks::LVL::wrld
 		void ReadFromStream(FileReader& stream) override;
 
 		std::string ToString() const override;
+
+		uint32_t GetHeader() override { return "wrld"_m; }
 	};
 }

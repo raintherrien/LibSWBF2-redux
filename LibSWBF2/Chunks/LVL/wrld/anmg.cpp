@@ -23,26 +23,26 @@ namespace LibSWBF2::Chunks::LVL::wrld
         BaseChunk::ReadFromStream(stream);
         Check(stream);
 
-		while (ThereIsAnother(stream))
-		{
+        while (ThereIsAnother(stream))
+        {
             ChunkHeader next = stream.ReadChunkHeader(true);
             if (next == "INFO"_h)
             {
-                READ_CHILD(stream, p_Info);
+                p_Info = ReadChild<anmg_INFO>(stream);
             }
             else if (next == "ANIM"_h)
             {
-                READ_CHILD(stream, m_AnimObjectPairs.emplace_back());
+                m_AnimObjectPairs.emplace_back(ReadChild<STRMULT<"ANIM"_m>>(stream));
             }
             else if (next == "NOHI"_h)
             {
-                READ_CHILD(stream, p_NoHierarchy);
+                p_NoHierarchy = ReadChild<NOHI>(stream);
             }
             else
             {
-                READ_CHILD_GENERIC(stream);
+                ReadChild<GenericChunk>(stream);
             }
-		}
+        }
 
         BaseChunk::EnsureEnd(stream);
     }

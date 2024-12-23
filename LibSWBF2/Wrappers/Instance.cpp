@@ -7,7 +7,7 @@
 
 namespace LibSWBF2::Wrappers
 {
-	std::optional<Instance> Instance::FromChunk(Container *mainContainer, std::shared_ptr<inst> chunk)
+	std::optional<Instance> Instance::FromChunk(std::shared_ptr<Container> mainContainer, std::shared_ptr<inst> chunk)
 	{
 		Instance out;
 		if (!chunk)
@@ -60,11 +60,11 @@ namespace LibSWBF2::Wrappers
 
 	const EntityClass* Instance::GetEntityClass() const
 	{
-		if (p_MainContainer == nullptr)
+		if (auto container = p_MainContainer.lock())
 		{
-			return nullptr;
+			return container->FindEntityClass(GetEntityClassName());
 		}
-		return p_MainContainer->FindEntityClass(GetEntityClassName());
+		return nullptr;
 	}
 
 	bool Instance::GetProperty(FNVHash hashedPropertyName, std::string& outValue) const
@@ -130,7 +130,7 @@ namespace LibSWBF2::Wrappers
 		hashesOut.clear();
 		valuesOut.clear();
 
-		std::vector<PROP*>& properties = p_Instance -> m_OverrideProperties;
+		std::vector<std::shared_ptr<PROP>>& properties = p_Instance -> m_OverrideProperties;
 		for (int i = 0; i < properties.size(); i++)
 		{
 			hashesOut.push_back(properties[i] -> m_PropertyName);
