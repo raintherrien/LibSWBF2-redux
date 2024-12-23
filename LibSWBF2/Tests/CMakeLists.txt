@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(LibSWBF2_Tests)
 
-add_executable(parse_level ${PROJECT_SOURCE_DIR}/parse_level.c)
+add_executable(parse_level ${PROJECT_SOURCE_DIR}/parse_level.cpp)
 target_link_libraries(parse_level PRIVATE LibSWBF2)
 
 if (UNIX)

@@ -88,11 +88,18 @@ template<typename T>
 class TList {
 private:
 	CList *impl;
-public:
+
+	// This type punning is not a safe API. Use the static create function instead.
 	TList(CList *impl_) noexcept
 	: impl{impl_}
 	{
 	};
+
+public:
+	static TList<T> create(CList *impl_)
+	{
+		return {impl_};
+	}
 
 	~TList()
 	{
@@ -142,6 +149,10 @@ extern "C" {
 	LIBSWBF2_API struct Vector4 Bone_GetRotation(const struct Bone *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t Bone_GetName(const struct Bone *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API size_t Bone_GetParentName(const struct Bone *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
+#ifdef __cplusplus
+	LIBSWBF2_API std::string Bone_GetNameS(const struct Bone *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API std::string Bone_GetParentNameS(const struct Bone *) LIBSWBF2_NOEXCEPT;
+#endif
 
 	// CollisionMesh //
 	LIBSWBF2_API struct CList * /* uint16_t */ CollisionMesh_GetIndexBuffer(const struct CollisionMesh *) LIBSWBF2_NOEXCEPT;
@@ -159,6 +170,9 @@ extern "C" {
 	LIBSWBF2_API void CollisionPrimitive_GetCubeDims(const struct CollisionPrimitive *, float *sx, float *sy, float *sz) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API void CollisionPrimitive_GetCylinderDims(const struct CollisionPrimitive *, float *sr, float *sh) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API void CollisionPrimitive_GetSphereRadius(const struct CollisionPrimitive *, float *sr) LIBSWBF2_NOEXCEPT;
+#ifdef __cplusplus
+	LIBSWBF2_API std::string CollisionPrimitive_GetParentNameS(const struct CollisionPrimitive *) LIBSWBF2_NOEXCEPT;
+#endif
 
 	// Config //
 	LIBSWBF2_API const struct Field *Config_GetField(const struct Config *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
@@ -181,6 +195,8 @@ extern "C" {
 	LIBSWBF2_API size_t EntityClass_GetPropertyValue(const struct EntityClass *, uint32_t name_hash, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct CList * /* uint32_t */ EntityClass_GetAllPropertyHashes(const struct EntityClass *) LIBSWBF2_NOEXCEPT;
 #ifdef __cplusplus
+	LIBSWBF2_API std::string EntityClass_GetBaseNameS(const struct EntityClass *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API std::string EntityClass_GetPropertyValueS(const struct EntityClass *, uint32_t name_hash) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<uint32_t> EntityClass_GetAllPropertyHashesT(const struct EntityClass *) LIBSWBF2_NOEXCEPT;
 #endif
 
@@ -196,6 +212,10 @@ extern "C" {
 	LIBSWBF2_API size_t Instance_GetEntityClassName(const struct Instance *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct Vector3 Instance_GetPosition(const struct Instance *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct Vector4 Instance_GetRotation(const struct Instance *) LIBSWBF2_NOEXCEPT;
+#ifdef __cplusplus
+	LIBSWBF2_API std::string Instance_GetNameS(const struct Instance *) LIBSWBF2_NOEXCEPT;
+	LIBSWBF2_API std::string Instance_GetEntityClassNameS(const struct Instance *) LIBSWBF2_NOEXCEPT;
+#endif
 
 	// Level //
 	LIBSWBF2_API void Level_Destroy(struct Level_Owned *) LIBSWBF2_NOEXCEPT;
@@ -237,6 +257,7 @@ extern "C" {
 	LIBSWBF2_API struct CList * /* const struct Vector2 */ Segment_GetUVBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct CList * /* const struct Vector3 */ Segment_GetNormalBuffer(const struct Segment *) LIBSWBF2_NOEXCEPT;
 #ifdef __cplusplus
+	LIBSWBF2_API std::string Segment_GetBoneNameS(const struct Segment *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<uint16_t> Segment_GetIndexBufferT(const struct Segment *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<const struct Vector3> Segment_GetVertexBufferT(const struct Segment *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<const struct Vector2> Segment_GetUVBufferT(const struct Segment *) LIBSWBF2_NOEXCEPT;
@@ -261,6 +282,7 @@ extern "C" {
 	LIBSWBF2_API size_t Texture_GetName(const struct Texture *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct CList * /* uint8_t */ Texture_GetData(const struct Texture *, uint16_t *out_width, uint16_t *out_height) LIBSWBF2_NOEXCEPT;
 #ifdef __cplusplus
+	LIBSWBF2_API std::string Texture_GetNameS(const struct Texture *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<uint8_t> Texture_GetDataT(const struct Texture *, uint16_t *out_width, uint16_t *out_height) LIBSWBF2_NOEXCEPT;
 #endif
 
@@ -271,6 +293,7 @@ extern "C" {
 	LIBSWBF2_API size_t World_GetTerrainName(const struct World *, char *out_buffer, size_t out_buffer_len) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API struct CList * /* const struct Instance */ World_GetInstances(const struct World *) LIBSWBF2_NOEXCEPT;
 #ifdef __cplusplus
+	LIBSWBF2_API std::string World_GetNameS(const struct World *) LIBSWBF2_NOEXCEPT;
 	LIBSWBF2_API TList<const struct Instance> World_GetInstancesT(const struct World *) LIBSWBF2_NOEXCEPT;
 #endif
 

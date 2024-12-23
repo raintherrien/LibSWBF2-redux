@@ -140,6 +140,24 @@ namespace LibSWBF2
 		});
 	}
 
+	std::string Bone_GetNameS(const Bone *bone) noexcept
+	{
+		LIBSWBF2_LOG_INFO("Bone_GetNameS({})", fmt::ptr(bone));
+		return catchall([&] {
+			CHECKNULL(bone, std::string{});
+			return bone->m_BoneName;
+		});
+	}
+
+	std::string Bone_GetParentNameS(const Bone *bone) noexcept
+	{
+		LIBSWBF2_LOG_INFO("Bone_GetParentNameS({})", fmt::ptr(bone));
+		return catchall([&] {
+			CHECKNULL(bone, std::string{});
+			return bone->m_Parent;
+		});
+	}
+
 	// Collision Mesh //
 
 	CList *CollisionMesh_GetIndexBuffer(const CollisionMesh *mesh) noexcept
@@ -160,14 +178,14 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint16_t> CollisionMesh_GetIndexBufferT(const struct CollisionMesh *mesh) noexcept
+	TList<uint16_t> CollisionMesh_GetIndexBufferT(const CollisionMesh *mesh) noexcept
 	{
-		return {CollisionMesh_GetIndexBuffer(mesh)};
+		return TList<uint16_t>::create(CollisionMesh_GetIndexBuffer(mesh));
 	}
 
-	TList<Vector3> CollisionMesh_GetVertexBufferT(const struct CollisionMesh *mesh) noexcept
+	TList<Vector3> CollisionMesh_GetVertexBufferT(const CollisionMesh *mesh) noexcept
 	{
-		return {CollisionMesh_GetVertexBuffer(mesh)};
+		return TList<Vector3>::create(CollisionMesh_GetVertexBuffer(mesh));
 	}
 
 	// CollisionPrimitive //
@@ -249,6 +267,15 @@ namespace LibSWBF2
 		});
 	}
 
+	std::string CollisionPrimitive_GetParentNameS(const CollisionPrimitive *cp) noexcept
+	{
+		LIBSWBF2_LOG_INFO("CollisionPrimitive_GetParentNameS({})", fmt::ptr(cp));
+		return catchall([&] {
+			CHECKNULL(cp, std::string{});
+			return cp->GetParentName();
+		});
+	}
+
 	// Config //
 
 	const Field *Config_GetField(const Config *cfg, uint32_t name_hash) noexcept
@@ -269,9 +296,9 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const struct Field *> Config_GetFieldsT(const struct Config *cfg, uint32_t name_hash) noexcept
+	TList<const Field *> Config_GetFieldsT(const Config *cfg, uint32_t name_hash) noexcept
 	{
-		return {Config_GetFields(cfg, name_hash)};
+		return TList<const Field *>::create(Config_GetFields(cfg, name_hash));
 	}
 
 	// Container //
@@ -375,9 +402,31 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint32_t> EntityClass_GetAllPropertyHashesT(const struct EntityClass *ec) noexcept
+	std::string EntityClass_GetBaseNameS(const EntityClass *ec) noexcept
 	{
-		return {EntityClass_GetAllPropertyHashes(ec)};
+		LIBSWBF2_LOG_INFO("EntityClass_GetBaseNames({})", fmt::ptr(ec));
+		return catchall([&] {
+			CHECKNULL(ec, std::string{});
+			return ec->GetBaseName();
+		});
+	}
+
+	std::string EntityClass_GetPropertyValueS(const EntityClass *ec, uint32_t name_hash) noexcept
+	{
+		LIBSWBF2_LOG_INFO("EntityClass_GetPropertyValueS({}, {})", fmt::ptr(ec), name_hash);
+		return catchall([&] {
+			CHECKNULL(ec, std::string{});
+			std::string value;
+			if (!ec->GetProperty(name_hash, value)) {
+				return std::string{};
+			}
+			return value;
+		});
+	}
+
+	TList<uint32_t> EntityClass_GetAllPropertyHashesT(const EntityClass *ec) noexcept
+	{
+		return TList<uint32_t>::create(EntityClass_GetAllPropertyHashes(ec));
 	}
 
 	// Field //
@@ -454,6 +503,24 @@ namespace LibSWBF2
 		});
 	}
 
+	std::string Instance_GetNameS(const Instance *instance) noexcept
+	{
+		LIBSWBF2_LOG_INFO("Instance_GetNameS({})", fmt::ptr(instance));
+		return catchall([&] {
+			CHECKNULL(instance, std::string{});
+			return instance->GetName();
+		});
+	}
+
+	std::string Instance_GetEntityClassNameS(const Instance *instance) noexcept
+	{
+		LIBSWBF2_LOG_INFO("Instance_GetEntityClassNameS({})", fmt::ptr(instance));
+		return catchall([&] {
+			CHECKNULL(instance, std::string{});
+			return instance->GetEntityClassName();
+		});
+	}
+
 	// Level //
 
 	void Level_Destroy(Level_Owned *level) noexcept
@@ -490,9 +557,9 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const struct World> Level_GetWorldsT(const struct Level_Owned *level) noexcept
+	TList<const World> Level_GetWorldsT(const Level_Owned *level) noexcept
 	{
-		return {Level_GetWorlds(level)};
+		return TList<const World>::create(Level_GetWorlds(level));
 	}
 
 	// Material //
@@ -553,19 +620,19 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const struct Segment> Model_GetSegmentsT(const struct Model *model) noexcept
+	TList<const Segment> Model_GetSegmentsT(const Model *model) noexcept
 	{
-		return {Model_GetSegments(model)};
+		return TList<const Segment>::create(Model_GetSegments(model));
 	}
 
-	TList<const struct Bone> Model_GetBonesT(const struct Model *model) noexcept
+	TList<const Bone> Model_GetBonesT(const Model *model) noexcept
 	{
-		return {Model_GetBones(model)};
+		return TList<const Bone>::create(Model_GetBones(model));
 	}
 
-	TList<const struct CollisionPrimitive> Model_GetCollisionPrimitivesT(const struct Model *model) noexcept
+	TList<const CollisionPrimitive> Model_GetCollisionPrimitivesT(const Model *model) noexcept
 	{
-		return {Model_GetCollisionPrimitives(model)};
+		return TList<const CollisionPrimitive>::create(Model_GetCollisionPrimitives(model));
 	}
 
 	// Scope //
@@ -588,9 +655,9 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<const struct Field *> Scope_GetFieldsT(const struct Scope *scope, uint32_t name_hash) noexcept
+	TList<const Field *> Scope_GetFieldsT(const Scope *scope, uint32_t name_hash) noexcept
 	{
-		return {Scope_GetFields(scope, name_hash)};
+		return TList<const Field *>::create(Scope_GetFields(scope, name_hash));
 	}
 
 	// Segment //
@@ -660,24 +727,33 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint16_t> Segment_GetIndexBufferT(const struct Segment *seg) noexcept
+	std::string Segment_GetBoneNameS(const Segment *seg) noexcept
 	{
-		return {Segment_GetIndexBuffer(seg)};
+		LIBSWBF2_LOG_INFO("Segment_GetBoneNameS({})", fmt::ptr(seg));
+		return catchall([&] {
+			CHECKNULL(seg, std::string{});
+			return seg->GetBone();
+		});
 	}
 
-	TList<const struct Vector3> Segment_GetVertexBufferT(const struct Segment *seg) noexcept
+	TList<uint16_t> Segment_GetIndexBufferT(const Segment *seg) noexcept
 	{
-		return {Segment_GetVertexBuffer(seg)};
+		return TList<uint16_t>::create(Segment_GetIndexBuffer(seg));
 	}
 
-	TList<const struct Vector2> Segment_GetUVBufferT(const struct Segment *seg) noexcept
+	TList<const Vector3> Segment_GetVertexBufferT(const Segment *seg) noexcept
 	{
-		return {Segment_GetUVBuffer(seg)};
+		return TList<const Vector3>::create(Segment_GetVertexBuffer(seg));
 	}
 
-	TList<const struct Vector3> Segment_GetNormalBufferT(const struct Segment *seg) noexcept
+	TList<const Vector2> Segment_GetUVBufferT(const Segment *seg) noexcept
 	{
-		return {Segment_GetNormalBuffer(seg)};
+		return TList<const Vector2>::create(Segment_GetUVBuffer(seg));
+	}
+
+	TList<const Vector3> Segment_GetNormalBufferT(const Segment *seg) noexcept
+	{
+		return TList<const Vector3>::create(Segment_GetNormalBuffer(seg));
 	}
 
 	// Terrain //
@@ -735,29 +811,29 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint32_t> Terrain_GetIndexBufferT(const struct Terrain *terr) noexcept
+	TList<uint32_t> Terrain_GetIndexBufferT(const Terrain *terr) noexcept
 	{
-		return {Terrain_GetIndexBuffer(terr)};
+		return TList<uint32_t>::create(Terrain_GetIndexBuffer(terr));
 	}
 
-	TList<const struct Vector3> Terrain_GetVertexBufferT(const struct Terrain *terr) noexcept
+	TList<const Vector3> Terrain_GetVertexBufferT(const Terrain *terr) noexcept
 	{
-		return {Terrain_GetVertexBuffer(terr)};
+		return TList<const Vector3>::create(Terrain_GetVertexBuffer(terr));
 	}
 
-	TList<const struct Vector2> Terrain_GetUVBufferT(const struct Terrain *terr) noexcept
+	TList<const Vector2> Terrain_GetUVBufferT(const Terrain *terr) noexcept
 	{
-		return {Terrain_GetUVBuffer(terr)};
+		return TList<const Vector2>::create(Terrain_GetUVBuffer(terr));
 	}
 
-	TList<uint8_t> Terrain_GetBlendMapT(const struct Terrain *terr, uint32_t *out_width, uint32_t *out_num_layers) noexcept
+	TList<uint8_t> Terrain_GetBlendMapT(const Terrain *terr, uint32_t *out_width, uint32_t *out_num_layers) noexcept
 	{
-		return {Terrain_GetBlendMap(terr, out_width, out_num_layers)};
+		return TList<uint8_t>::create(Terrain_GetBlendMap(terr, out_width, out_num_layers));
 	}
 
-	TList<const struct Texture> Terrain_GetLayerTexturesT(const struct Terrain *terr, const struct Container_Owned *container) noexcept
+	TList<const Texture> Terrain_GetLayerTexturesT(const Terrain *terr, const Container_Owned *container) noexcept
 	{
-		return {Terrain_GetLayerTextures(terr, container)};
+		return TList<const Texture>::create(Terrain_GetLayerTextures(terr, container));
 	}
 
 	// Texture //
@@ -789,9 +865,18 @@ namespace LibSWBF2
 		});
 	}
 
-	TList<uint8_t> Texture_GetDataT(const struct Texture *tex, uint16_t *out_width, uint16_t *out_height) noexcept
+	std::string Texture_GetNameS(const Texture *tex) noexcept
 	{
-		return {Texture_GetData(tex, out_width, out_height)};
+		LIBSWBF2_LOG_INFO("Texture_GetNameS({})", fmt::ptr(tex));
+		return catchall([&] {
+			CHECKNULL(tex, std::string{});
+			return tex->GetName();
+		});
+	}
+
+	TList<uint8_t> Texture_GetDataT(const Texture *tex, uint16_t *out_width, uint16_t *out_height) noexcept
+	{
+		return TList<uint8_t>::create(Texture_GetData(tex, out_width, out_height));
 	}
 
 	// World //
@@ -827,9 +912,18 @@ namespace LibSWBF2
 		});
 	}
 
+	std::string World_GetNameS(const World *world) noexcept
+	{
+		LIBSWBF2_LOG_INFO("World_GetNameS({})", fmt::ptr(world));
+		return catchall([&] {
+			CHECKNULL(world, std::string{});
+			return world->GetName();
+		});
+	}
+
 	TList<const Instance> World_GetInstancesT(const World *world) noexcept
 	{
-		return {World_GetInstances(world)};
+		return TList<const Instance>::create(World_GetInstances(world));
 	}
 
 	const Terrain *World_GetTerrain(const World *world) noexcept
