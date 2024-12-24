@@ -61,10 +61,8 @@ namespace LibSWBF2
 		void *at(size_t index) noexcept override
 		{
 			if (index < data.size()) {
-				LIBSWBF2_LOG_INFO("TypedList::at({}) -> {}", index, fmt::ptr(&data[index]));
 				return &data[index];
 			} else {
-				LIBSWBF2_LOG_INFO("TypedList::at({}) > size {} -> nullptr", index, data.size());
 				return nullptr;
 			}
 		}
@@ -77,19 +75,16 @@ namespace LibSWBF2
 
 	size_t CList_size(CList *l) noexcept
 	{
-		LIBSWBF2_LOG_INFO("CList_size({})", fmt::ptr(l));
 		return l->size();
 	}
 
 	void CList_free(CList *l) noexcept
 	{
-		LIBSWBF2_LOG_INFO("CList_free({})", fmt::ptr(l));
 		delete l;
 	}
 
 	void *CList_at(CList *l, size_t i) noexcept
 	{
-		LIBSWBF2_LOG_INFO("CList_at({}, {})", fmt::ptr(l), i);
 		return l->at(i);
 	}
 
